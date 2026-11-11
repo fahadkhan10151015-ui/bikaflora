@@ -52,14 +52,17 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#2c6e54_0%,#0f2a20_50%,#07160f_100%)] text-white">
-        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/15 blur-3xl" />
+      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#2b3b62_0%,#172036_50%,#0b1121_100%)] text-white">
+        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
         <div className="absolute bottom-0 right-1/3 w-[360px] h-[360px] rounded-full bg-gold/10 blur-3xl" />
+        <Image src={siteImages.klNight} alt="" fill priority sizes="100vw" className="object-cover object-center opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-deep via-deep/75 to-deep/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-deep/40" />
         <Petals />
         <div className="relative container-x pt-10 pb-16 lg:py-20 grid lg:grid-cols-2 gap-8 items-center">
           <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
-              <Sparkles className="w-4 h-4" /> Florist in Kuala Lumpur & Selangor
+              <Sparkles className="w-4 h-4 text-gold" /> Florist in Kuala Lumpur & Selangor, Malaysia
             </div>
             <h1 className="mt-6 text-4xl sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
               Flowers that say it <span className="italic text-petal">beautifully</span>
@@ -127,8 +130,8 @@ export default function Home() {
         {deliveryMethods.map((d, i) => {
           const Icon = i === 0 ? Zap : CalendarClock;
           return (
-            <div key={d.id} className={`rounded-[2rem] p-8 md:p-10 ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white" : "bg-white border border-blush-2"}`}>
-              <Icon className={`w-10 h-10 ${i === 0 ? "text-petal" : "text-brand"}`} />
+            <div key={d.id} className={`rounded-[2rem] p-8 md:p-10 ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white ring-1 ring-gold/30" : "bg-white border border-blush-2"}`}>
+              <Icon className={`w-10 h-10 ${i === 0 ? "text-gold" : "text-gold"}`} />
               <h3 className="mt-4 text-2xl md:text-3xl font-semibold">{d.label}</h3>
               <p className={`mt-2 ${i === 0 ? "text-white/80" : "text-muted"}`}>{d.detail}. {i === 0 ? "Perfect for last-minute surprises." : "Plan ahead for birthdays, anniversaries and events."}</p>
             </div>

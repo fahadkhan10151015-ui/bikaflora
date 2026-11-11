@@ -86,3 +86,45 @@ export function Sparkle({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+
+/** Hibiscus — Bunga Raya, Malaysia's national flower. */
+export function Hibiscus({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" className={className} aria-hidden="true">
+      <defs>
+        <radialGradient id="hibiscus-g" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stopColor="#7a0019" />
+          <stop offset="28%" stopColor="#c8102e" />
+          <stop offset="100%" stopColor="#ff5a6b" />
+        </radialGradient>
+      </defs>
+      {[0, 72, 144, 216, 288].map((r) => (
+        <path key={r} d="M60 60 C 34 50, 26 18, 48 8 C 56 4, 66 4, 72 8 C 94 18, 86 50, 60 60Z" fill="url(#hibiscus-g)"
+          stroke="#ff8a96" strokeOpacity=".5" strokeWidth=".8" transform={`rotate(${r} 60 60)`} />
+      ))}
+      <path d="M60 60 L84 34" stroke="#f6d36b" strokeWidth="3" strokeLinecap="round" />
+      {[0, 1, 2, 3, 4, 5].map((i) => <circle key={i} cx={80 + (i % 3) * 3} cy={32 + Math.floor(i / 3) * 4 - (i % 3)} r="2" fill="#ffd54f" />)}
+      <circle cx="86" cy="30" r="2.6" fill="#c8102e" />
+    </svg>
+  );
+}
+
+/** Moth orchid (Phalaenopsis). */
+export function Orchid({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" className={className} aria-hidden="true">
+      <defs>
+        <radialGradient id="orchid-g" cx="50%" cy="50%" r="65%">
+          <stop offset="0%" stopColor="#d24a9a" />
+          <stop offset="45%" stopColor="#f4b6d8" />
+          <stop offset="100%" stopColor="#fff4fa" />
+        </radialGradient>
+      </defs>
+      {[0, 120, 240].map((r) => <ellipse key={r} cx="60" cy="28" rx="11" ry="26" fill="url(#orchid-g)" transform={`rotate(${r} 60 60)`} />)}
+      {[60, 300].map((r) => <ellipse key={r} cx="60" cy="30" rx="22" ry="25" fill="url(#orchid-g)" transform={`rotate(${r} 60 60)`} />)}
+      <path d="M60 64 C 48 70, 50 88, 60 92 C 70 88, 72 70, 60 64Z" fill="#a3175f" />
+      <circle cx="60" cy="58" r="6" fill="#ffe08a" />
+      <circle cx="60" cy="57" r="2.5" fill="#f2b84b" />
+    </svg>
+  );
+}

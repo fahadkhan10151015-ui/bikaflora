@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Rose, Blossom, Leaf, Sparkle } from "./Flowers";
+import { Rose, Blossom, Leaf, Sparkle, Hibiscus, Orchid } from "./Flowers";
 
 /** Bouquets that take turns in the centre of the stage (transparent cut-outs). */
 const bouquets = ["/images/hero/bouquet-a.webp", "/images/hero/bouquet-b.webp"];
 /** Flowers that orbit the bouquet (drawn in SVG). */
 const orbiters = [
-  <Rose key="r1" tint="pink" />, <Blossom key="b1" tint="blush" />, <Leaf key="l1" />, <Rose key="r2" tint="peach" />,
-  <Blossom key="b2" tint="white" />, <Rose key="r3" tint="blush" />, <Leaf key="l2" />, <Blossom key="b3" tint="pink" />,
+  <Hibiscus key="h1" />, <Rose key="r1" tint="pink" />, <Orchid key="o1" />, <Leaf key="l1" />, <Blossom key="b1" tint="blush" />,
+  <Hibiscus key="h2" />, <Rose key="r2" tint="peach" />, <Orchid key="o2" />, <Leaf key="l2" />, <Blossom key="b2" tint="white" />,
 ];
 
 /** Twinkles placed around the halo. */
@@ -17,7 +17,7 @@ const sparkles = [
   { top: "82%", left: "70%", delay: 0.6 }, { top: "45%", left: "92%", delay: 1.7 }, { top: "38%", left: "4%", delay: 2.6 },
 ];
 
-const RING_TEXT = "BIKAFLORA · FRESH FLOWERS · KUALA LUMPUR · SELANGOR · SAME-DAY EXPRESS · ";
+const RING_TEXT = "BIKAFLORA · BUNGA SEGAR · KUALA LUMPUR · SELANGOR · MALAYSIA · ";
 
 /** Animated 3D hero: floating bouquet, orbiting flower medallions and a rotating text ring. */
 export default function HeroStage() {
@@ -75,14 +75,14 @@ export default function HeroStage() {
   return (
     <div ref={stage} className="relative w-full max-w-[560px] aspect-square mx-auto" style={{ containerType: "inline-size" }} aria-hidden="true">
       {/* glowing halo */}
-      <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle_at_40%_35%,#fff6f3_0%,#f3c6d2_38%,#2c7a5c_72%,transparent_74%)] opacity-90" />
+      <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle_at_40%_35%,#fff8f5_0%,#f6cdd8_38%,#2b3b62_72%,transparent_74%)] opacity-90" />
       <div className="absolute inset-[9%] rounded-full border border-gold/40" />
       <div className="absolute inset-[3%] rounded-full border border-white/10" />
 
       {/* rotating text ring */}
       <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full animate-spin-slow">
         <defs><path id="hero-ring" d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0" /></defs>
-        <text fill="#e9d3a6" fontSize="7" letterSpacing="3">
+        <text fill="#e2c98f" fontSize="7" letterSpacing="3">
           <textPath href="#hero-ring" textLength="560" lengthAdjust="spacing">{RING_TEXT}</textPath>
         </text>
       </svg>
@@ -95,7 +95,7 @@ export default function HeroStage() {
       {/* orbiting flowers */}
       {orbiters.map((flower, i) => (
         <div key={i} ref={(n) => { orbit.current[i] = n; }}
-          className="absolute left-1/2 top-[55%] w-[15%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)] [&>svg]:w-full [&>svg]:h-full">
+          className="absolute left-1/2 top-[55%] w-[14%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)] [&>svg]:w-full [&>svg]:h-full">
           {flower}
         </div>
       ))}
@@ -105,7 +105,7 @@ export default function HeroStage() {
         <div className="absolute inset-[10%] hero-float" style={{ transform: "rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg))", transformStyle: "preserve-3d" }}>
           {bouquets.map((src, i) => (
             <Image key={src} src={src} alt="" fill priority={i === 0} sizes="(max-width:1024px) 80vw, 500px"
-              className={`object-contain drop-shadow-[0_30px_40px_rgba(5,20,14,.6)] transition-all duration-1000 ${i === active ? "opacity-100 [transform:rotateY(0deg)_scale(1)]" : "opacity-0 [transform:rotateY(90deg)_scale(.9)]"}`} />
+              className={`object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)] transition-all duration-1000 ${i === active ? "opacity-100 [transform:rotateY(0deg)_scale(1)]" : "opacity-0 [transform:rotateY(90deg)_scale(.9)]"}`} />
           ))}
         </div>
       </div>

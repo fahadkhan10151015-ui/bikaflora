@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Emerald & Blush theme */
-  --color-deep: #0f2a20;
-  --color-brand: #1f5a43;
-  --color-brand-dark: #154232;
-  --color-petal: #e7a3b5;
-  --color-blush: #f6e7e4;
-  --color-blush-2: #e9d4cf;
-  --color-cream: #fbf8f2;
+  /* Royal Navy & Gold theme */
+  --color-deep: #10172a;
+  --color-brand: #1f2a44;
+  --color-brand-dark: #151d31;
+  --color-petal: #f2b8c6;
+  --color-blush: #fbf1f3;
+  --color-blush-2: #eedfe3;
+  --color-cream: #fbf9f4;
   --color-sage: #7e9c86;
-  --color-gold: #c6a15b;
-  --color-ink: #1d2420;
-  --color-muted: #5f6b65;
+  --color-gold: #c9a45c;
+  --color-ink: #1c2233;
+  --color-muted: #626a7a;
   --color-wa: #25d366;
   --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -30,15 +30,15 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .btn-wa:hover { filter: brightness(.93); }
 .btn-outline { border: 1.5px solid var(--color-brand); color: var(--color-brand); background: #fff; }
 .btn-outline:hover { background: var(--color-blush); }
-.input { width: 100%; border: 1px solid #e4ddd6; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
-.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(31,90,67,.15); }
+.input { width: 100%; border: 1px solid #e6e1d8; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
+.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(31,42,68,.15); }
 .label { display:block; font-size:.85rem; font-weight:600; margin-bottom:.35rem; color: var(--color-ink); }
 .eyebrow { text-transform: uppercase; letter-spacing: .28em; font-size: .7rem; font-weight: 500; color: var(--color-gold); }
 .prose-bf p { margin: .75rem 0; line-height: 1.8; color: var(--color-muted); }
 .prose-bf h2 { font-size: 1.9rem; margin-top: 2rem; color: var(--color-ink); }
 .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
-.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(15,42,32,.28); }
-.petal-bg { background-image: radial-gradient(circle at 10% 20%, #fbe9ee 0, transparent 40%), radial-gradient(circle at 90% 10%, #e6efe8 0, transparent 35%); }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(16,23,42,.25); }
+.petal-bg { background-image: radial-gradient(circle at 10% 20%, #fbe9ee 0, transparent 40%), radial-gradient(circle at 90% 10%, #f4ecdc 0, transparent 35%); }
 
 /* ---------- falling petals ---------- */
 .petal { position: absolute; top: -40px; border-radius: 150% 0 150% 0; background: radial-gradient(circle at 30% 30%, #ffe3ec, #f28fb0 55%, #c2416f); opacity: .75; box-shadow: inset -2px -2px 4px rgba(120,20,50,.25); animation-name: petalFall; animation-iteration-count: infinite; animation-timing-function: linear; }
@@ -51,7 +51,7 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .animate-fade { animation: fade .2s ease-out }
 .animate-rise { animation: rise .25s ease-out }
 .tilt { transform-style: preserve-3d; transition: transform .35s ease, box-shadow .35s ease; }
-.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateY(-6px); box-shadow: 0 30px 50px -25px rgba(15,42,32,.4); }
+.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateY(-6px); box-shadow: 0 30px 50px -25px rgba(16,23,42,.35); }
 .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 
 /* ---------- 3D hero stage ---------- */
