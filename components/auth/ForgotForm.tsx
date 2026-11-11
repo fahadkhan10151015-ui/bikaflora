@@ -25,7 +25,7 @@ export default function ForgotForm() {
     setBusy(false);
     if (error) return setErr(error.message);
     setStep("code");
-    setMsg(`If an account exists for ${email}, a 6-digit reset code has been sent. Check your inbox and spam folder.`);
+    setMsg(`If an account exists for ${email}, we sent a password reset email. Tap the link in it to set a new password. (Check your spam folder too.)`);
   };
 
   const reset = async (e: React.FormEvent) => {
@@ -46,12 +46,13 @@ export default function ForgotForm() {
     <form onSubmit={reset} className="grid gap-4">
       {msg && <Alert kind="success">{msg}</Alert>}
       {err && <Alert kind="error">{err}</Alert>}
+      <p className="text-sm text-muted">Did your email include a 6-digit code instead? Enter it with your new password:</p>
       <div><label className="label" htmlFor="code">6-digit code from your email</label>
         <input id="code" inputMode="numeric" autoComplete="one-time-code" maxLength={8} required className="input text-center text-2xl tracking-[0.5em] font-semibold" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} /></div>
       <div><label className="label" htmlFor="pw">New password</label><PasswordInput id="pw" required minLength={8} autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} /></div>
       <div><label className="label" htmlFor="pw2">Confirm new password</label><PasswordInput id="pw2" required autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} /></div>
       <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Saving…" : "Reset password"}</button>
-      <button type="button" onClick={() => sendCode()} className="text-sm text-brand font-semibold">Resend code</button>
+      <button type="button" onClick={() => sendCode()} className="text-sm text-brand font-semibold">Resend email</button>
     </form>
   );
 
@@ -59,7 +60,7 @@ export default function ForgotForm() {
     <form onSubmit={sendCode} className="grid gap-4">
       {err && <Alert kind="error">{err}</Alert>}
       <div><label className="label" htmlFor="email">Email</label><input id="email" type="email" required autoComplete="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-      <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Sending…" : "Send reset code"}</button>
+      <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Sending…" : "Send reset email"}</button>
       <p className="text-sm text-center text-muted">Remembered it? <Link href="/login" className="text-brand font-semibold">Back to login</Link></p>
     </form>
   );

@@ -31,7 +31,7 @@ export default function SignupForm() {
     if (data.session) return router.push("/account");
     if (data.user && data.user.identities?.length === 0) return setErr("An account with this email already exists. Please log in.");
     setStep("verify");
-    setMsg(`We sent a 6-digit code to ${f.email}. Enter it below to activate your account.`);
+    setMsg(`Almost done! We sent a confirmation email to ${f.email}. Open it and tap the confirmation link — you will be signed in automatically. (Check your spam folder too.)`);
   };
 
   const verify = async (e: React.FormEvent) => {
@@ -47,17 +47,18 @@ export default function SignupForm() {
   const resend = async () => {
     setErr(""); const sb = getSupabase(); if (!sb) return;
     const { error } = await sb.auth.resend({ type: "signup", email: f.email.trim() });
-    if (error) setErr(error.message); else setMsg("A new code has been sent. Please check your inbox and spam folder.");
+    if (error) setErr(error.message); else setMsg("We sent a new confirmation email. Please check your inbox and spam folder.");
   };
 
   if (step === "verify") return (
     <form onSubmit={verify} className="grid gap-4">
       {msg && <Alert kind="success">{msg}</Alert>}
       {err && <Alert kind="error">{err}</Alert>}
+      <p className="text-sm text-muted">Did your email include a 6-digit code instead? Enter it here:</p>
       <div><label className="label" htmlFor="code">Verification code</label>
         <input id="code" inputMode="numeric" autoComplete="one-time-code" maxLength={8} required className="input text-center text-2xl tracking-[0.5em] font-semibold" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} /></div>
       <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Verifying…" : "Verify & continue"}</button>
-      <button type="button" onClick={resend} className="text-sm text-brand font-semibold">Resend code</button>
+      <button type="button" onClick={resend} className="text-sm text-brand font-semibold">Resend confirmation email</button>
     </form>
   );
 
