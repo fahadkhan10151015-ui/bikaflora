@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rose-950: #4a0f24;
+  --color-brand: #a3284f;
+  --color-brand-dark: #7d1b3b;
+  --color-blush: #fbe9ee;
+  --color-blush-2: #f6d6e0;
+  --color-cream: #fffaf5;
+  --color-sage: #6f8f74;
+  --color-gold: #c8a24a;
+  --color-ink: #2b1d22;
+  --color-muted: #6f5f65;
+  --color-wa: #25d366;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-cream); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, .font-serif { font-family: var(--font-serif); }
+
+.container-x { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: 1.25rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 9999px; padding: .8rem 1.4rem; font-weight: 600; font-size: .95rem; transition: all .2s ease; }
+.btn-primary { background: var(--color-brand); color: #fff; }
+.btn-primary:hover { background: var(--color-brand-dark); }
+.btn-wa { background: var(--color-wa); color: #fff; }
+.btn-wa:hover { filter: brightness(.93); }
+.btn-outline { border: 1.5px solid var(--color-brand); color: var(--color-brand); background: #fff; }
+.btn-outline:hover { background: var(--color-blush); }
+.input { width: 100%; border: 1px solid #ead9de; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
+.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(163,40,79,.12); }
+.label { display:block; font-size:.85rem; font-weight:600; margin-bottom:.35rem; color: var(--color-ink); }
+.eyebrow { text-transform: uppercase; letter-spacing: .18em; font-size: .72rem; font-weight: 600; color: var(--color-brand); }
+.prose-bf p { margin: .75rem 0; line-height: 1.8; color: var(--color-muted); }
+.prose-bf h2 { font-size: 1.5rem; margin-top: 2rem; color: var(--color-ink); }
+.card-hover { transition: transform .25s ease, box-shadow .25s ease; }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(125,27,59,.35); }
+.petal-bg { background-image: radial-gradient(circle at 10% 20%, #fbe9ee 0, transparent 40%), radial-gradient(circle at 90% 10%, #f3ecdf 0, transparent 35%); }
+
+/* ---------- hero animation (video-like slideshow) ---------- */
+.hero-slide { animation-name: heroFade; animation-iteration-count: infinite; animation-timing-function: ease-in-out; animation-fill-mode: both; }
+.hero-zoom { animation-name: heroZoom; animation-iteration-count: infinite; animation-timing-function: linear; animation-fill-mode: both; }
+@keyframes heroFade { 0% { opacity: 0 } 5% { opacity: 1 } 25% { opacity: 1 } 30% { opacity: 0 } 100% { opacity: 0 } }
+@keyframes heroZoom { 0% { transform: scale(1) translateY(0) } 30% { transform: scale(1.07) translateY(-1.5%) } 100% { transform: scale(1.07) } }
+.petal { position: absolute; top: -40px; width: 14px; height: 18px; border-radius: 80% 0 80% 0; background: linear-gradient(135deg,#f6b8c9,#e57f9c); opacity: .55; animation-name: petalFall; animation-iteration-count: infinite; animation-timing-function: linear; }
+@keyframes petalFall { 0% { transform: translate(0,-40px) rotate(0) } 50% { transform: translate(40px,50vh) rotate(180deg) } 100% { transform: translate(-20px,110vh) rotate(360deg) } }
+@media (prefers-reduced-motion: reduce) { .hero-slide, .hero-zoom, .petal { animation: none !important } .petal { display: none } }

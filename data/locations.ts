@@ -1,0 +1,118 @@
+// ============================================================
+//  DELIVERY AREAS — each becomes an SEO page: /flower-delivery/<slug>
+// ============================================================
+
+export type Location = {
+  slug: string;
+  name: string;
+  state: "Selangor" | "Kuala Lumpur";
+  nearby: string[];
+  landmarks: string[];
+  blurb: string;
+};
+
+export const locations: Location[] = [
+  // ---------------- SELANGOR ----------------
+  { slug: "shah-alam", name: "Shah Alam", state: "Selangor", nearby: ["Klang", "Subang Jaya", "Setia Alam"],
+    landmarks: ["UiTM Shah Alam", "i-City", "Masjid Sultan Salahuddin Abdul Aziz Shah", "Hospital Shah Alam"],
+    blurb: "Shah Alam is Selangor's state capital and home to UiTM, so convocation season is one of our busiest times here. We deliver to homes in Section 7, Section 13, Setia Alam and Kota Kemuning, as well as offices around Persiaran Perbandaran." },
+  { slug: "petaling-jaya", name: "Petaling Jaya", state: "Selangor", nearby: ["Damansara", "Subang Jaya", "Bangsar"],
+    landmarks: ["1 Utama", "Universiti Malaya (border)", "Paradigm Mall", "Assunta Hospital"],
+    blurb: "From SS2 and Damansara Utama to Section 17 and Kelana Jaya, PJ has a mix of busy offices and family homes. Many customers here order desk bouquets for colleagues and surprise birthday deliveries to condos." },
+  { slug: "subang-jaya", name: "Subang Jaya", state: "Selangor", nearby: ["USJ", "Puchong", "Bandar Sunway"],
+    landmarks: ["Subang Parade", "Sunway Medical Centre", "Taylor's University", "Empire Shopping Gallery"],
+    blurb: "Subang Jaya and USJ are close to Taylor's University and Sunway, so we often deliver graduation and get-well-soon bouquets here. Hospital drop-offs at Subang Jaya Medical Centre are also common." },
+  { slug: "klang", name: "Klang", state: "Selangor", nearby: ["Port Klang", "Shah Alam", "Bukit Tinggi"],
+    landmarks: ["Istana Alam Shah", "AEON Bukit Tinggi", "Hospital Tengku Ampuan Rahimah"],
+    blurb: "Klang is one of Selangor's oldest royal towns. We deliver across Bukit Tinggi, Bandar Botanic, Taman Sentosa and Klang town centre for birthdays, anniversaries and business openings." },
+  { slug: "kajang", name: "Kajang", state: "Selangor", nearby: ["Bangi", "Semenyih", "Cheras"],
+    landmarks: ["Kajang town (satay street)", "Hospital Kajang", "Metro Point Kajang"],
+    blurb: "Famous for its satay, Kajang has grown into a busy residential hub linked by MRT. We deliver to Sungai Chua, Bandar Baru Bangi border areas and Kajang town." },
+  { slug: "cyberjaya", name: "Cyberjaya", state: "Selangor", nearby: ["Putrajaya", "Sepang", "Puchong"],
+    landmarks: ["Multimedia University (MMU)", "Limkokwing University", "DPulze Shopping Centre", "Cyberjaya Hospital"],
+    blurb: "Cyberjaya is full of tech offices and university students. Office deliveries, MMU and Limkokwing convocations, and late-afternoon birthday surprises are very popular here." },
+  { slug: "sepang", name: "Sepang", state: "Selangor", nearby: ["Cyberjaya", "Salak Tinggi", "KLIA"],
+    landmarks: ["Sepang International Circuit", "KLIA area", "Xiamen University Malaysia"],
+    blurb: "Sepang covers Salak Tinggi, Bandar Baru Salak Tinggi and areas near KLIA. Please share a clear address or Waze pin on WhatsApp, as some areas are spread out." },
+  { slug: "puchong", name: "Puchong", state: "Selangor", nearby: ["Subang Jaya", "Bandar Kinrara", "Cyberjaya"],
+    landmarks: ["IOI Mall Puchong", "Setiawalk", "Bandar Puteri"],
+    blurb: "Puchong is a big family neighbourhood with Bandar Puteri, Puchong Jaya and Bandar Kinrara. Birthday and anniversary bouquets to homes are the most common orders here." },
+  { slug: "rawang", name: "Rawang", state: "Selangor", nearby: ["Sungai Buloh", "Kuang", "Selayang"],
+    landmarks: ["Bandar Country Homes", "Anggun City", "Rawang town"],
+    blurb: "Rawang is growing fast with new townships like Anggun City and Bandar Country Homes. Order early in the day for same-day delivery to Rawang." },
+  { slug: "ampang", name: "Ampang", state: "Selangor", nearby: ["Ampang Hilir", "Pandan Indah", "Cheras"],
+    landmarks: ["Ampang Point", "Ampang Puteri Specialist Hospital", "Taman Tasik Ampang"],
+    blurb: "Ampang Jaya sits on the eastern edge of KL. We deliver to Taman Melawati border, Pandan Indah and Ampang town, including hospital deliveries to Ampang Puteri." },
+  { slug: "bangi", name: "Bangi", state: "Selangor", nearby: ["Kajang", "Putrajaya", "Semenyih"],
+    landmarks: ["Universiti Kebangsaan Malaysia (UKM)", "Bangi Gateway", "Evo Mall"],
+    blurb: "Bandar Baru Bangi is home to UKM, so convocation bouquets are a big part of our Bangi orders. We also deliver to Seksyen 9, Seksyen 7 and Bangi Avenue." },
+  { slug: "semenyih", name: "Semenyih", state: "Selangor", nearby: ["Kajang", "Bangi", "Broga"],
+    landmarks: ["University of Nottingham Malaysia", "Eco Majestic", "Broga Hill"],
+    blurb: "Semenyih is quieter and greener, with townships like Eco Majestic and the University of Nottingham campus. We deliver convocation and birthday bouquets here regularly." },
+  { slug: "banting", name: "Banting", state: "Selangor", nearby: ["Telok Panglima Garang", "Jenjarom", "Sepang"],
+    landmarks: ["Banting town", "Morib beach", "Jugra"],
+    blurb: "Banting is the heart of the Kuala Langat district. Delivery here is best scheduled in advance; message us to confirm your slot." },
+  { slug: "kuala-selangor", name: "Kuala Selangor", state: "Selangor", nearby: ["Tanjung Karang", "Bestari Jaya", "Ijok"],
+    landmarks: ["Bukit Melawati", "Kampung Kuantan fireflies", "Kuala Selangor Nature Park"],
+    blurb: "Kuala Selangor is known for its fireflies and Bukit Melawati. Because it is further from the city, please order at least one day ahead for Kuala Selangor delivery." },
+  { slug: "sungai-buloh", name: "Sungai Buloh", state: "Selangor", nearby: ["Kota Damansara", "Rawang", "Kepong"],
+    landmarks: ["Hospital Sungai Buloh", "UiTM Sungai Buloh", "Sungai Buloh nurseries"],
+    blurb: "Sungai Buloh has one of the largest hospitals in the country, so get-well-soon bouquets are common. We also deliver to Bandar Baru Sungai Buloh and Taman Bukit Rahman Putra." },
+  { slug: "port-klang", name: "Port Klang", state: "Selangor", nearby: ["Klang", "Pandamaran", "Pulau Indah"],
+    landmarks: ["Westport & Northport", "Pandamaran", "Pulau Indah"],
+    blurb: "Port Klang is Malaysia's busiest port. We deliver to offices at the ports and to homes in Pandamaran and Bandar Sultan Suleiman." },
+  { slug: "seri-kembangan", name: "Seri Kembangan", state: "Selangor", nearby: ["Serdang", "Puchong", "Sri Petaling"],
+    landmarks: ["Universiti Putra Malaysia (UPM)", "The Mines", "IOI City Mall area", "Hospital Serdang"],
+    blurb: "Seri Kembangan is right next to UPM and Hospital Serdang, so we deliver lots of convocation and get-well bouquets here, along with home deliveries around The Mines." },
+  { slug: "kota-damansara", name: "Kota Damansara", state: "Selangor", nearby: ["Mutiara Damansara", "Sungai Buloh", "Petaling Jaya"],
+    landmarks: ["The Curve & IKEA Damansara", "SEGi University", "Encorp Strand Mall"],
+    blurb: "Kota Damansara and Mutiara Damansara are busy with offices, malls and SEGi University. Office desk bouquets and graduation flowers are popular here." },
+  { slug: "bandar-sunway", name: "Bandar Sunway", state: "Selangor", nearby: ["Subang Jaya", "PJ South", "Puchong"],
+    landmarks: ["Sunway Pyramid", "Sunway University", "Sunway Medical Centre", "Monash University Malaysia"],
+    blurb: "Bandar Sunway is home to Sunway University and Monash Malaysia, plus Sunway Medical Centre. Convocation, hospital and condo deliveries keep us busy here all year." },
+
+  // ---------------- KUALA LUMPUR ----------------
+  { slug: "kuala-lumpur", name: "Kuala Lumpur", state: "Kuala Lumpur", nearby: ["KLCC", "Bukit Bintang", "Bangsar"],
+    landmarks: ["KLCC & Petronas Twin Towers", "Pavilion KL", "Hospital Kuala Lumpur", "Merdeka 118"],
+    blurb: "We deliver everywhere in the city of Kuala Lumpur, from office towers in KLCC to condos in Mont Kiara and homes in Cheras. Same-day delivery is available for orders confirmed before the cut-off time." },
+  { slug: "cheras", name: "Cheras", state: "Kuala Lumpur", nearby: ["Taman Connaught", "Kajang", "Sri Petaling"],
+    landmarks: ["Hospital Canselor Tuanku Muhriz (HUKM)", "EkoCheras Mall", "Taman Connaught"],
+    blurb: "Cheras is one of KL's biggest residential areas. We deliver to Taman Connaught, Taman Midah, Cheras Traders Square and HUKM for get-well-soon bouquets." },
+  { slug: "setapak", name: "Setapak", state: "Kuala Lumpur", nearby: ["Wangsa Maju", "Titiwangsa", "Gombak"],
+    landmarks: ["TAR UMT", "Setapak Central", "Danau Kota"],
+    blurb: "Setapak is a student-heavy area near TAR UMT. Graduation bouquets and budget-friendly birthday flowers are our top orders here." },
+  { slug: "wangsa-maju", name: "Wangsa Maju", state: "Kuala Lumpur", nearby: ["Setapak", "Melawati", "Gombak"],
+    landmarks: ["AEON Big Wangsa Maju", "Wangsa Walk Mall", "Section 1–10 Wangsa Maju"],
+    blurb: "Wangsa Maju is a friendly neighbourhood with LRT access and plenty of family homes. We deliver to all sections and nearby Taman Melawati." },
+  { slug: "bukit-bintang", name: "Bukit Bintang", state: "Kuala Lumpur", nearby: ["KLCC", "Pudu", "Imbi"],
+    landmarks: ["Pavilion KL", "Lot 10", "Jalan Alor", "Changkat"],
+    blurb: "Bukit Bintang is KL's shopping and hotel district. We can deliver to hotel lobbies and condos for surprise anniversaries and proposals; please share the guest name and room details on WhatsApp." },
+  { slug: "bangsar", name: "Bangsar", state: "Kuala Lumpur", nearby: ["Bangsar South", "Mid Valley", "Petaling Jaya"],
+    landmarks: ["Bangsar Village", "Bangsar Shopping Centre", "Mid Valley Megamall", "Pantai Hospital KL"],
+    blurb: "Bangsar and Bangsar South mix trendy cafés, offices and homes. Office deliveries to Bangsar South and hospital drop-offs at Pantai Hospital are very common." },
+  { slug: "mont-kiara", name: "Mont Kiara", state: "Kuala Lumpur", nearby: ["Sri Hartamas", "Solaris Dutamas", "Segambut"],
+    landmarks: ["Publika", "Arcoris", "Plaza Mont Kiara", "international schools"],
+    blurb: "Mont Kiara is home to many expats and international schools. Condo deliveries are smooth when you share the block, unit number and a phone number for the guardhouse." },
+  { slug: "sri-petaling", name: "Sri Petaling", state: "Kuala Lumpur", nearby: ["Bukit Jalil", "Seri Kembangan", "Cheras"],
+    landmarks: ["Bukit Jalil National Stadium", "Pavilion Bukit Jalil", "Endah Parade"],
+    blurb: "Sri Petaling and Bukit Jalil are close to the National Stadium and Pavilion Bukit Jalil. We deliver to homes, condos and nearby offices." },
+  { slug: "sentul", name: "Sentul", state: "Kuala Lumpur", nearby: ["Titiwangsa", "Segambut", "Kepong"],
+    landmarks: ["KLPAC", "Sentul Park", "Sentul Depot"],
+    blurb: "Sentul blends old KL charm with new condos around Sentul Park and KLPAC. Perfect for surprise deliveries before a show or dinner." },
+  { slug: "kepong", name: "Kepong", state: "Kuala Lumpur", nearby: ["Menjalara", "Sungai Buloh", "Segambut"],
+    landmarks: ["FRIM Kepong", "Desa ParkCity", "Kepong Baru", "Metro Prima"],
+    blurb: "Kepong covers Kepong Baru, Menjalara and Desa ParkCity. We deliver birthday, anniversary and grand-opening flowers across the area." },
+  { slug: "segambut", name: "Segambut", state: "Kuala Lumpur", nearby: ["Mont Kiara", "Sentul", "Kepong"],
+    landmarks: ["Segambut Dalam", "Taman Sri Sinar", "MATRADE Centre"],
+    blurb: "Segambut sits between Mont Kiara and Kepong. We deliver to homes in Taman Sri Sinar and businesses near MATRADE and Jalan Duta." },
+  { slug: "titiwangsa", name: "Titiwangsa", state: "Kuala Lumpur", nearby: ["Setapak", "Chow Kit", "Sentul"],
+    landmarks: ["Taman Tasik Titiwangsa", "Istana Budaya", "National Art Gallery"],
+    blurb: "Titiwangsa is known for its lake park, Istana Budaya and the National Art Gallery. Send flowers to performers after a show or to loved ones nearby." },
+  { slug: "ampang-hilir", name: "Ampang Hilir", state: "Kuala Lumpur", nearby: ["Ampang", "KLCC", "Jalan Tun Razak"],
+    landmarks: ["Embassy Row", "Great Eastern Mall", "Ampang Park"],
+    blurb: "Ampang Hilir is a leafy area with embassies, luxury homes and Great Eastern Mall. We deliver elegant bouquets for corporate gifts and private celebrations." },
+];
+
+export const getLocation = (slug: string) => locations.find((l) => l.slug === slug);
+export const selangor = locations.filter((l) => l.state === "Selangor");
+export const kl = locations.filter((l) => l.state === "Kuala Lumpur");
