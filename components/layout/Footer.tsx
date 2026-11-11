@@ -9,7 +9,7 @@ export default function Footer() {
   const topAreas = ["kuala-lumpur", "petaling-jaya", "shah-alam", "subang-jaya", "cheras", "puchong", "cyberjaya", "bangsar"]
     .map((s) => locations.find((l) => l.slug === s)!).filter(Boolean);
   return (
-    <footer className="bg-rose-950 text-white/80 mt-20">
+    <footer className="bg-rose-950 text-white/80">
       <div className="container-x py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Logo light />

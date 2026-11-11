@@ -18,5 +18,5 @@ export const faqs = [
   { q: "Can I request a custom bouquet?",
     a: "Yes. Choose “Request a custom version” on any bouquet, or send us a reference photo, colours and budget on WhatsApp." },
   { q: "Do I need an account to order?",
-    a: "No. An account simply adds your name and email to WhatsApp messages automatically and lets you save favourite bouquets." },
+    a: "No. An account simply adds your name and email to WhatsApp messages automatically." },
 ];

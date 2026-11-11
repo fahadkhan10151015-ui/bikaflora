@@ -12,7 +12,7 @@ export default function AuthCard({ title, sub, children }: { title: string; sub?
           <div className="absolute inset-0 bg-gradient-to-t from-rose-950/70 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <h2 className="text-3xl font-semibold">Welcome to BikaFlora</h2>
-            <p className="mt-2 text-white/85 text-sm">Save favourite bouquets and order faster on WhatsApp with your details filled in.</p>
+            <p className="mt-2 text-white/85 text-sm">Order faster — your name and contact details are added to your WhatsApp messages automatically.</p>
           </div>
         </div>
         <div className="p-7 md:p-12">

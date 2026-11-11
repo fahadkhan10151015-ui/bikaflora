@@ -1,10 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Heart, Zap, CalendarClock, Check } from "lucide-react";
+import { Zap, CalendarClock, Check } from "lucide-react";
 import type { Product } from "@/data/products";
 import { deliveryMethods, formatPrice, type DeliveryMethodId } from "@/lib/site";
 import { productMessages } from "@/lib/whatsapp";
-import { useFavourites } from "@/lib/favourites";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useWhatsAppChooser } from "@/components/whatsapp/WhatsAppChooser";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
@@ -13,7 +12,6 @@ const deliveryIcons = { express: Zap, scheduled: CalendarClock };
 
 export default function OrderPanel({ p }: { p: Product }) {
   const { user } = useAuth();
-  const { has, toggle } = useFavourites();
   const openChooser = useWhatsAppChooser();
   const [opt, setOpt] = useState(0);
   const [delivery, setDelivery] = useState<DeliveryMethodId>("express");
@@ -76,9 +74,6 @@ export default function OrderPanel({ p }: { p: Product }) {
       <div className="grid gap-3">
         <button type="button" onClick={openWhatsApp} className="btn btn-wa !py-4 text-base shadow-lg shadow-wa/25">
           <WhatsAppIcon className="w-6 h-6" /> Order or ask on WhatsApp
-        </button>
-        <button type="button" onClick={() => toggle(p.slug)} className="btn btn-outline">
-          <Heart className={`w-4 h-4 ${has(p.slug) ? "fill-brand" : ""}`} /> {has(p.slug) ? "Saved to favourites" : "Save to favourites"}
         </button>
         <p className="text-xs text-muted text-center">Pick a message — order, question, custom request or delivery check. We confirm the total before you pay.</p>
       </div>

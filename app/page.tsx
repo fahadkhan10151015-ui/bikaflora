@@ -8,11 +8,12 @@ import { faqs } from "@/data/faqs";
 import ProductCard from "@/components/product/ProductCard";
 import Photo from "@/components/ui/Photo";
 import HeroStage from "@/components/sections/HeroStage";
+import Petals from "@/components/sections/Petals";
+import VideoBand from "@/components/sections/VideoBand";
 import SectionTitle from "@/components/sections/SectionTitle";
 import TrustBar from "@/components/sections/TrustBar";
 import Reviews from "@/components/sections/Reviews";
 import Faq from "@/components/sections/Faq";
-import WaCta from "@/components/sections/WaCta";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import { site, deliveryMethods } from "@/lib/site";
 import { siteImages } from "@/lib/images";
@@ -54,10 +55,8 @@ export default function Home() {
       <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#7d1b3b_0%,#4a0f24_45%,#26060f_100%)] text-white">
         <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-brand/30 blur-3xl" />
         <div className="absolute bottom-0 right-1/3 w-[360px] h-[360px] rounded-full bg-gold/10 blur-3xl" />
-        {[8, 22, 38, 55, 71, 88].map((left, i) => (
-          <span key={left} className="petal" style={{ left: `${left}%`, animationDelay: `${i * 1.9}s`, animationDuration: `${12 + i}s` }} />
-        ))}
-        <div className="relative container-x pt-14 pb-28 lg:py-24 grid lg:grid-cols-2 gap-6 items-center">
+        <Petals />
+        <div className="relative container-x pt-10 pb-16 lg:py-20 grid lg:grid-cols-2 gap-8 items-center">
           <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
               <Sparkles className="w-4 h-4" /> Florist in Kuala Lumpur & Selangor
@@ -82,7 +81,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container-x -mt-12 relative z-10"><TrustBar /></section>
+      <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>
 
       {/* OCCASIONS */}
       <section className="container-x mt-14">
@@ -239,7 +238,7 @@ export default function Home() {
         <Faq items={faqs.slice(0, 6)} />
       </section>
 
-      <WaCta />
+      <VideoBand />
     </>
   );
 }
