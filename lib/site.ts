@@ -9,7 +9,7 @@ export const site = {
   tagline: "Fresh Flower Delivery in Kuala Lumpur & Selangor",
   description:
     "BikaFlora is an online florist delivering fresh hand bouquets, rose bouquets, flower boxes, convocation flowers and grand opening flower stands across Kuala Lumpur and Selangor. Order easily on WhatsApp with same-day delivery.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora.vercel.app").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora-one.vercel.app").replace(/\/$/, ""),
 
   // WhatsApp number in international format, digits only (no +, no spaces)
   whatsapp: "923350947538",

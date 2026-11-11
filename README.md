@@ -38,8 +38,8 @@ npm run dev
 Accounts use **Supabase** (free). Your keys are in `.env.local`. Do these steps once in the Supabase dashboard (https://supabase.com/dashboard → project **bikaflora**):
 
 1. **Authentication → URL Configuration**
-   - Site URL: your live address, e.g. `https://bikaflora.vercel.app`
-   - Redirect URLs: add `https://bikaflora.vercel.app/**` and `http://localhost:3000/**`
+   - Site URL: your live address, e.g. `https://bikaflora-one.vercel.app`
+   - Redirect URLs: add `https://bikaflora-one.vercel.app/**` and `http://localhost:3000/**`
 2. **Authentication → Emails → Templates** (so customers get a 6-digit **code**):
    - *Confirm signup*: add the line `Your code is: {{ .Token }}`
    - *Reset password*: add the line `Your password reset code is: {{ .Token }}`
