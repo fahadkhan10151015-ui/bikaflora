@@ -45,17 +45,23 @@ Accounts use **Supabase** (free). Your keys are in `.env.local`. Do these steps 
    - *Reset password*: add the line `Your password reset code is: {{ .Token }}`
 3. **Recommended for real customers:** Supabase's built-in email sender is limited to a few emails per hour. Go to **Authentication → Emails → SMTP Settings** and connect a free sender such as Resend or Brevo, using your business email as the sender.
 
-## 4. Put the site live on Vercel (one command)
+## 4. Live site & updates
 
-A Vercel project called **bikaflora** is already created, with the Supabase keys saved in it, and this folder is already linked to it (`.vercel/project.json`). In the VS Code terminal run:
+The site is on GitHub (`fahadkhan10151015-ui/bikaflora`) and linked to Vercel. Every time you push a change to the `main` branch, Vercel puts it live automatically:
 
 ```bash
-npx vercel --prod
+git add -A
+git commit -m "my change"
+git push
 ```
 
-The first time it opens your browser so you can log in to the Vercel account that owns the **bikaflora** project. After that it uploads and builds the site, then prints your live link (normally `https://bikaflora.vercel.app`). Run the same command again whenever you change something.
+Environment variables (already set in Vercel → bikaflora → Settings → Environment Variables):
 
-**Better long-term:** push this folder to a GitHub repo, then in Vercel → bikaflora → Settings → Git connect that repo. After that, every change you push goes live automatically.
+```
+NEXT_PUBLIC_SITE_URL
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
 
 ## 5. SEO checklist after going live
 
