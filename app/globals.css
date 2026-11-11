@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-rose-950: #2a0a17;
-  --color-brand: #9b2c55;
-  --color-brand-dark: #6e1838;
-  --color-blush: #f9e8ee;
-  --color-blush-2: #f1d3dd;
-  --color-cream: #fdf9f5;
-  --color-sage: #6f8f74;
-  --color-gold: #c9a35c;
-  --color-ink: #241418;
-  --color-muted: #6f5f65;
+  /* Emerald & Blush theme */
+  --color-deep: #0f2a20;
+  --color-brand: #1f5a43;
+  --color-brand-dark: #154232;
+  --color-petal: #e7a3b5;
+  --color-blush: #f6e7e4;
+  --color-blush-2: #e9d4cf;
+  --color-cream: #fbf8f2;
+  --color-sage: #7e9c86;
+  --color-gold: #c6a15b;
+  --color-ink: #1d2420;
+  --color-muted: #5f6b65;
   --color-wa: #25d366;
   --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -28,15 +30,15 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .btn-wa:hover { filter: brightness(.93); }
 .btn-outline { border: 1.5px solid var(--color-brand); color: var(--color-brand); background: #fff; }
 .btn-outline:hover { background: var(--color-blush); }
-.input { width: 100%; border: 1px solid #ead9de; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
-.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(163,40,79,.12); }
+.input { width: 100%; border: 1px solid #e4ddd6; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
+.input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(31,90,67,.15); }
 .label { display:block; font-size:.85rem; font-weight:600; margin-bottom:.35rem; color: var(--color-ink); }
 .eyebrow { text-transform: uppercase; letter-spacing: .28em; font-size: .7rem; font-weight: 500; color: var(--color-gold); }
 .prose-bf p { margin: .75rem 0; line-height: 1.8; color: var(--color-muted); }
 .prose-bf h2 { font-size: 1.9rem; margin-top: 2rem; color: var(--color-ink); }
 .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
-.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(125,27,59,.35); }
-.petal-bg { background-image: radial-gradient(circle at 10% 20%, #fbe9ee 0, transparent 40%), radial-gradient(circle at 90% 10%, #f3ecdf 0, transparent 35%); }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(15,42,32,.28); }
+.petal-bg { background-image: radial-gradient(circle at 10% 20%, #fbe9ee 0, transparent 40%), radial-gradient(circle at 90% 10%, #e6efe8 0, transparent 35%); }
 
 /* ---------- falling petals ---------- */
 .petal { position: absolute; top: -40px; border-radius: 150% 0 150% 0; background: radial-gradient(circle at 30% 30%, #ffe3ec, #f28fb0 55%, #c2416f); opacity: .75; box-shadow: inset -2px -2px 4px rgba(120,20,50,.25); animation-name: petalFall; animation-iteration-count: infinite; animation-timing-function: linear; }
@@ -49,7 +51,7 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .animate-fade { animation: fade .2s ease-out }
 .animate-rise { animation: rise .25s ease-out }
 .tilt { transform-style: preserve-3d; transition: transform .35s ease, box-shadow .35s ease; }
-.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateY(-6px); box-shadow: 0 30px 50px -25px rgba(125,27,59,.45); }
+.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateY(-6px); box-shadow: 0 30px 50px -25px rgba(15,42,32,.4); }
 .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 
 /* ---------- 3D hero stage ---------- */
@@ -59,4 +61,6 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .hero-float { animation: float 6s ease-in-out infinite; }
 .hero-shadow { animation: shadow-pulse 6s ease-in-out infinite; }
 .animate-spin-slow { animation: spin-slow 40s linear infinite; }
+@keyframes twinkle { 0%,100% { opacity: 0; transform: scale(.4) rotate(0deg) } 50% { opacity: 1; transform: scale(1) rotate(45deg) } }
+.sparkle { animation: twinkle 3.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .hero-float, .hero-shadow, .animate-spin-slow { animation: none } }

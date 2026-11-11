@@ -48,10 +48,10 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         provider: { "@id": absoluteUrl("/#business") }, areaServed: { "@type": "City", name: l.name, containedInPlace: { "@type": "State", name: l.state } }, url: absoluteUrl(`/flower-delivery/${l.slug}`) }} />
       <div className="relative overflow-hidden text-white">
         <Image src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} fill priority sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-rose-950/90 to-rose-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-deep/90 to-deep/50" />
         <div className="relative container-x pb-14 [&_nav]:text-white/70 [&_nav_span]:text-white">
           <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
-          <div className="eyebrow !text-blush-2 mb-2 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
+          <div className="eyebrow !text-petal mb-2 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
           <h1 className="text-4xl md:text-5xl font-semibold">Flower Delivery in {l.name}</h1>
           <p className="mt-4 text-white/85 max-w-3xl leading-relaxed">{l.blurb}</p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">

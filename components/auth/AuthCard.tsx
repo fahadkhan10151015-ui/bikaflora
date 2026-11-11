@@ -9,7 +9,7 @@ export default function AuthCard({ title, sub, children }: { title: string; sub?
       <div className="grid lg:grid-cols-2 bg-white rounded-[2rem] border border-blush-2/70 overflow-hidden max-w-5xl mx-auto shadow-sm">
         <div className="relative hidden lg:block min-h-[560px] bg-blush">
           <Photo src={siteImages.cover} alt="" sizes="50vw" />
-          <div className="absolute inset-0 bg-gradient-to-t from-rose-950/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-deep/70 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <h2 className="text-3xl font-semibold">Welcome to BikaFlora</h2>
             <p className="mt-2 text-white/85 text-sm">Order faster — your name and contact details are added to your WhatsApp messages automatically.</p>

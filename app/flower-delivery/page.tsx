@@ -23,7 +23,7 @@ export default function Areas() {
         <p className="mt-3 text-muted max-w-2xl">We deliver across Kuala Lumpur and Selangor. Orders confirmed before {site.sameDayCutoff} can usually be delivered the same day. Choose your area for local delivery details.</p>
         <div className="relative mt-8 h-56 md:h-80 rounded-[2rem] overflow-hidden">
           <Image src={siteImages.klNight} alt="Kuala Lumpur skyline at night" fill priority sizes="(max-width:1240px) 100vw, 1240px" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-rose-950/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-deep/70 to-transparent" />
           <p className="absolute bottom-6 left-6 text-white font-serif text-2xl md:text-3xl">Kuala Lumpur · Selangor</p>
         </div>
         <div className="mt-10 grid md:grid-cols-2 gap-8">

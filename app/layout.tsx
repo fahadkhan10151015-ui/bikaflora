@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   icons: { icon: "/icon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#a3284f" };
+export const viewport: Viewport = { themeColor: "#1f5a43" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <WhatsAppChooserProvider>
             <Header />
-            <main className="pb-20 has-[>.flush-bottom]:pb-0">{children}</main>
+            <main className="pb-24">{children}</main>
             <Footer />
             <FloatingWhatsApp />
           </WhatsAppChooserProvider>

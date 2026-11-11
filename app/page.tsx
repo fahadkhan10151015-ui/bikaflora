@@ -52,8 +52,8 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#7d1b3b_0%,#4a0f24_45%,#26060f_100%)] text-white">
-        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-brand/30 blur-3xl" />
+      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#2c6e54_0%,#0f2a20_50%,#07160f_100%)] text-white">
+        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/15 blur-3xl" />
         <div className="absolute bottom-0 right-1/3 w-[360px] h-[360px] rounded-full bg-gold/10 blur-3xl" />
         <Petals />
         <div className="relative container-x pt-10 pb-16 lg:py-20 grid lg:grid-cols-2 gap-8 items-center">
@@ -62,7 +62,7 @@ export default function Home() {
               <Sparkles className="w-4 h-4" /> Florist in Kuala Lumpur & Selangor
             </div>
             <h1 className="mt-6 text-4xl sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
-              Flowers that say it <span className="italic text-blush-2">beautifully</span>
+              Flowers that say it <span className="italic text-petal">beautifully</span>
             </h1>
             <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
               Hand-tied bouquets and luxury flower boxes, delivered same-day or on the date you choose — ordered in one tap on WhatsApp.
@@ -73,7 +73,7 @@ export default function Home() {
             </div>
             <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0">
               {[["32", "delivery areas"], ["Same-day", "express delivery"], ["100%", "hand-tied"]].map(([value, label]) => (
-                <div key={label}><dt className="font-serif text-2xl font-semibold text-blush-2">{value}</dt><dd className="text-xs text-white/70">{label}</dd></div>
+                <div key={label}><dt className="font-serif text-2xl sm:text-3xl font-semibold text-gold whitespace-nowrap">{value}</dt><dd className="text-xs text-white/70">{label}</dd></div>
               ))}
             </dl>
           </div>
@@ -101,7 +101,7 @@ export default function Home() {
           {categories.map((c) => (
             <Link key={c.slug} href={`/category/${c.slug}`} className="group tilt relative aspect-[4/5] rounded-3xl overflow-hidden">
               <Photo src={c.image} tone={c.tone} alt={`${c.name} delivery KL Selangor`} sizes="(max-width:768px) 50vw, 25vw" imgClassName="group-hover:scale-110 transition duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-rose-950/85 via-rose-950/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-deep/85 via-deep/10 to-transparent" />
               <div className="absolute bottom-0 p-4 md:p-5 text-white">
                 <h3 className="font-serif text-base md:text-xl font-semibold leading-tight">{c.name}</h3>
                 <p className="hidden sm:block text-xs md:text-sm text-white/80">{c.short}</p>
@@ -127,8 +127,8 @@ export default function Home() {
         {deliveryMethods.map((d, i) => {
           const Icon = i === 0 ? Zap : CalendarClock;
           return (
-            <div key={d.id} className={`rounded-[2rem] p-8 md:p-10 ${i === 0 ? "bg-gradient-to-br from-brand to-rose-950 text-white" : "bg-white border border-blush-2"}`}>
-              <Icon className={`w-10 h-10 ${i === 0 ? "text-blush-2" : "text-brand"}`} />
+            <div key={d.id} className={`rounded-[2rem] p-8 md:p-10 ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white" : "bg-white border border-blush-2"}`}>
+              <Icon className={`w-10 h-10 ${i === 0 ? "text-petal" : "text-brand"}`} />
               <h3 className="mt-4 text-2xl md:text-3xl font-semibold">{d.label}</h3>
               <p className={`mt-2 ${i === 0 ? "text-white/80" : "text-muted"}`}>{d.detail}. {i === 0 ? "Perfect for last-minute surprises." : "Plan ahead for birthdays, anniversaries and events."}</p>
             </div>
@@ -143,7 +143,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6">
             {steps.map(({ icon: Icon, title, text }, i) => (
               <div key={title} className="tilt bg-cream rounded-3xl p-8 text-center border border-blush-2/70">
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-brand to-rose-950 text-white grid place-items-center"><Icon className="w-6 h-6" /></div>
+                <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-brand to-deep text-white grid place-items-center"><Icon className="w-6 h-6" /></div>
                 <h3 className="mt-5 text-xl font-semibold">{i + 1}. {title}</h3>
                 <p className="mt-2 text-muted text-[15px] leading-relaxed">{text}</p>
               </div>
@@ -182,10 +182,10 @@ export default function Home() {
       {/* MALAYSIA / AREAS */}
       <section className="mt-28 relative overflow-hidden">
         <Image src={siteImages.klNight} alt="Kuala Lumpur skyline with the Petronas Twin Towers" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-rose-950/80" />
+        <div className="absolute inset-0 bg-deep/80" />
         <div className="relative container-x py-20 text-white">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="eyebrow !text-blush-2 mb-2 flex items-center justify-center gap-1"><MapPin className="w-4 h-4" /> Delivery areas</div>
+            <div className="eyebrow !text-petal mb-2 flex items-center justify-center gap-1"><MapPin className="w-4 h-4" /> Delivery areas</div>
             <h2 className="text-3xl md:text-5xl font-semibold">Delivering across Kuala Lumpur & Selangor</h2>
             <p className="mt-3 text-white/80">From KLCC towers to Shah Alam homes — tap your area for local delivery details.</p>
           </div>

@@ -9,7 +9,7 @@ export default function Footer() {
   const topAreas = ["kuala-lumpur", "petaling-jaya", "shah-alam", "subang-jaya", "cheras", "puchong", "cyberjaya", "bangsar"]
     .map((s) => locations.find((l) => l.slug === s)!).filter(Boolean);
   return (
-    <footer className="bg-rose-950 text-white/80">
+    <footer className="bg-deep text-white/80">
       <div className="container-x py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Logo light />
@@ -33,7 +33,7 @@ export default function Footer() {
           <h3 className="text-white font-semibold mb-3 font-sans">Flower Delivery</h3>
           <ul className="space-y-2 text-sm">
             {topAreas.map((l) => <li key={l.slug}><Link href={`/flower-delivery/${l.slug}`} className="hover:text-white">Florist {l.name}</Link></li>)}
-            <li><Link href="/flower-delivery" className="text-blush-2 hover:text-white">All delivery areas →</Link></li>
+            <li><Link href="/flower-delivery" className="text-petal hover:text-white">All delivery areas →</Link></li>
           </ul>
         </div>
         <div>
