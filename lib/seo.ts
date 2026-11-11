@@ -3,7 +3,7 @@ import { site, absoluteUrl } from "./site";
 import { siteImages } from "./images";
 
 export function pageMeta({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): Metadata {
-  const img = image || siteImages.heroPoster;
+  const img = image || siteImages.cover;
   const imgUrl = img.startsWith("http") ? img : absoluteUrl(img);
   return {
     title,
@@ -20,7 +20,7 @@ export const orgSchema = () => ({
   "@id": absoluteUrl("/#business"),
   name: site.name,
   url: site.url,
-  image: siteImages.heroPoster,
+  image: siteImages.cover,
   telephone: `+${site.whatsapp}`,
   email: site.email,
   priceRange: "RM89 - RM399",

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   keywords: ["florist KL", "flower delivery Kuala Lumpur", "flower delivery Selangor", "rose bouquet Malaysia", "flower box KL", "convocation flowers", "same day flower delivery"],
-  openGraph: { siteName: site.name, locale: "en_MY", type: "website", images: [siteImages.heroPoster] },
+  openGraph: { siteName: site.name, locale: "en_MY", type: "website", images: [siteImages.cover] },
   robots: { index: true, follow: true },
   icons: { icon: "/icon.svg" },
 };

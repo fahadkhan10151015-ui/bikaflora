@@ -7,7 +7,7 @@ import { selangor, kl } from "@/data/locations";
 import { faqs } from "@/data/faqs";
 import ProductCard from "@/components/product/ProductCard";
 import Photo from "@/components/ui/Photo";
-import HeroVisual from "@/components/sections/HeroVisual";
+import HeroStage from "@/components/sections/HeroStage";
 import SectionTitle from "@/components/sections/SectionTitle";
 import TrustBar from "@/components/sections/TrustBar";
 import Reviews from "@/components/sections/Reviews";
@@ -51,25 +51,34 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden min-h-[78vh] flex items-center bg-rose-950">
-        <HeroVisual />
-        <div className="absolute inset-0 bg-gradient-to-r from-rose-950/85 via-rose-950/55 to-rose-950/10" />
-        <div className="relative container-x py-24">
-          <div className="max-w-2xl text-white">
-            <div className="inline-flex items-center gap-2 glass !bg-white/15 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
+      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#7d1b3b_0%,#4a0f24_45%,#26060f_100%)] text-white">
+        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-brand/30 blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 w-[360px] h-[360px] rounded-full bg-gold/10 blur-3xl" />
+        {[8, 22, 38, 55, 71, 88].map((left, i) => (
+          <span key={left} className="petal" style={{ left: `${left}%`, animationDelay: `${i * 1.9}s`, animationDuration: `${12 + i}s` }} />
+        ))}
+        <div className="relative container-x pt-14 pb-28 lg:py-24 grid lg:grid-cols-2 gap-6 items-center">
+          <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
               <Sparkles className="w-4 h-4" /> Florist in Kuala Lumpur & Selangor
             </div>
-            <h1 className="mt-6 text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.05]">
+            <h1 className="mt-6 text-4xl sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
               Flowers that say it <span className="italic text-blush-2">beautifully</span>
             </h1>
-            <p className="mt-6 text-lg text-white/85 leading-relaxed max-w-xl">
+            <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
               Hand-tied bouquets and luxury flower boxes, delivered same-day or on the date you choose — ordered in one tap on WhatsApp.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link href="/shop" className="btn bg-white text-brand hover:bg-blush !px-7 !py-4">Shop Bouquets <ArrowRight className="w-4 h-4" /></Link>
               <WhatsAppButton label="Order on WhatsApp" className="btn btn-wa !px-7 !py-4 shadow-xl shadow-wa/30" />
             </div>
+            <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0">
+              {[["32", "delivery areas"], ["Same-day", "express delivery"], ["100%", "hand-tied"]].map(([value, label]) => (
+                <div key={label}><dt className="font-serif text-2xl font-semibold text-blush-2">{value}</dt><dd className="text-xs text-white/70">{label}</dd></div>
+              ))}
+            </dl>
           </div>
+          <div className="order-1 lg:order-2"><HeroStage /></div>
         </div>
       </section>
 

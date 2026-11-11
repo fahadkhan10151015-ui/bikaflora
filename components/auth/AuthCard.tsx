@@ -8,7 +8,7 @@ export default function AuthCard({ title, sub, children }: { title: string; sub?
     <div className="container-x py-10 md:py-16">
       <div className="grid lg:grid-cols-2 bg-white rounded-[2rem] border border-blush-2/70 overflow-hidden max-w-5xl mx-auto shadow-sm">
         <div className="relative hidden lg:block min-h-[560px] bg-blush">
-          <Photo src={siteImages.heroPoster} alt="" sizes="50vw" />
+          <Photo src={siteImages.cover} alt="" sizes="50vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-rose-950/70 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <h2 className="text-3xl font-semibold">Welcome to BikaFlora</h2>

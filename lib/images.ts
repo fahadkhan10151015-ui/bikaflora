@@ -7,7 +7,7 @@ export const unsplash = (id: string, w = 1200) =>
 
 /** Shared site images (not tied to a product). */
 export const siteImages = {
-  heroPoster: unsplash("1561729098-cbab0f7a9f7c", 1600),
+  cover: unsplash("1561729098-cbab0f7a9f7c", 1600),
   florist: unsplash("1642751652611-bb9a7cad58a3", 1200),
   holdingBouquet: unsplash("1567696153798-9111f9cd3d0d", 1000),
   klNight: unsplash("1596422846543-75c6fc197f07", 1800),

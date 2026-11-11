@@ -18,9 +18,6 @@ export const site = {
   openingHours: "Daily, 9:00 AM – 9:00 PM",
   addressRegion: "Kuala Lumpur & Selangor, Malaysia",
 
-  // Hero background video (free Pexels clip). Replace with "/video/your-video.mp4" to use your own.
-  heroVideo: "https://videos.pexels.com/video-files/3914572/3914572-hd_1920_1080_30fps.mp4",
-
   social: {
     instagram: "https://instagram.com/",
     facebook: "https://facebook.com/",
