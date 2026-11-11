@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { Product } from "@/data/products";
 import { categories } from "@/data/categories";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 
 export default function ShopGrid({ items, initialCat = "" }: { items: Product[]; initialCat?: string }) {
   const [cat, setCat] = useState(initialCat);

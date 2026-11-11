@@ -1,70 +1,80 @@
 import { site, absoluteUrl, formatPrice } from "./site";
 
-export type WaProduct = {
-  name: string;
-  sku: string;
-  slug: string;
-  price: number;
-  option?: string;
-};
+/** Opens a WhatsApp chat with a message already typed in. */
+export const waLink = (text: string) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 
-export type WaDetails = {
-  area?: string;
-  date?: string;
-  cardMessage?: string;
-  customerName?: string;
-  customerEmail?: string;
-};
+export type WaProduct = { name: string; sku: string; slug: string; price: number; size?: string };
+export type WaCustomer = { name?: string; email?: string };
 
-export function waLink(text: string) {
-  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
-}
+export type MessageOption = { id: string; title: string; hint: string; text: string };
 
-/** Order message — the product appears at the TOP so you instantly know what the customer wants. */
-export function orderMessage(p: WaProduct, d: WaDetails = {}) {
-  const lines = [
-    `🌸 *NEW ORDER — ${site.name}*`,
-    ``,
-    `*Product:* ${p.name}`,
-    `*Code:* ${p.sku}`,
-    p.option ? `*Size:* ${p.option}` : null,
-    `*Price:* ${formatPrice(p.price)}`,
-    `*Link:* ${absoluteUrl(`/product/${p.slug}`)}`,
-    ``,
-    `*Delivery area:* ${d.area || "(please fill in)"}`,
-    `*Delivery date:* ${d.date || "(please fill in)"}`,
-    d.cardMessage ? `*Card message:* ${d.cardMessage}` : null,
-    d.customerName ? `*My name:* ${d.customerName}` : null,
-    d.customerEmail ? `*My email:* ${d.customerEmail}` : null,
-    ``,
-    `Hi ${site.name}, I would like to order this item. Please confirm availability and total with delivery. Thank you!`,
-  ];
-  return lines.filter((l) => l !== null).join("\n");
-}
+const join = (lines: (string | false | undefined)[]) => lines.filter((l) => l !== false && l !== undefined).join("\n");
+const signOff = (c?: WaCustomer) => (c?.name ? `\n\nThank you,\n${c.name}${c.email ? ` (${c.email})` : ""}` : "\n\nThank you!");
 
-/** Question message — also starts with the product so you know what they are asking about. */
-export function enquiryMessage(p: WaProduct, d: WaDetails = {}) {
-  const lines = [
-    `❓ *PRODUCT ENQUIRY — ${site.name}*`,
-    ``,
-    `*Product:* ${p.name} (${p.sku})`,
-    `*Price:* ${formatPrice(p.price)}`,
-    `*Link:* ${absoluteUrl(`/product/${p.slug}`)}`,
-    d.customerName ? `*My name:* ${d.customerName}` : null,
-    ``,
-    `Hi ${site.name}, I have a question about this product: `,
-  ];
-  return lines.filter((l) => l !== null).join("\n");
-}
+/** The messages a customer can pick from on a product page. Product details always come first. */
+export function productMessages(p: WaProduct, delivery: string, c?: WaCustomer): MessageOption[] {
+  const header = join([
+    `*${p.name}*`,
+    `Code: ${p.sku}`,
+    p.size && `Size: ${p.size}`,
+    `Price: ${formatPrice(p.price)}`,
+    absoluteUrl(`/product/${p.slug}`),
+  ]);
 
-/** General message from any page — includes the page the customer was looking at. */
-export function pageMessage(pageTitle: string, path: string) {
   return [
-    `💬 *ENQUIRY — ${site.name}*`,
-    ``,
-    `*Page:* ${pageTitle}`,
-    `*Link:* ${absoluteUrl(path)}`,
-    ``,
-    `Hi ${site.name}, I need some help: `,
-  ].join("\n");
+    {
+      id: "order",
+      title: "Order this bouquet",
+      hint: "Place an order for this item",
+      text: `Hi ${site.name}, I would like to order:\n\n${header}\nDelivery: ${delivery}\n\nPlease confirm availability and the total price.${signOff(c)}`,
+    },
+    {
+      id: "info",
+      title: "Ask about this bouquet",
+      hint: "Questions about flowers, size or colours",
+      text: `Hi ${site.name}, I have a question about this bouquet:\n\n${header}\n\nCould you share more details?${signOff(c)}`,
+    },
+    {
+      id: "custom",
+      title: "Request a custom version",
+      hint: "Different colours, more stems or a budget",
+      text: `Hi ${site.name}, I like this bouquet and would like a custom version:\n\n${header}\n\nCan you make it in different colours or a different size?${signOff(c)}`,
+    },
+    {
+      id: "delivery",
+      title: "Check delivery to my area",
+      hint: "Ask about delivery time and fee",
+      text: `Hi ${site.name}, can you deliver this bouquet to my area?\n\n${header}\nDelivery: ${delivery}\n\nMy area is: `,
+    },
+  ];
+}
+
+/** The messages a customer can pick from anywhere else on the site. */
+export function generalMessages(c?: WaCustomer): MessageOption[] {
+  return [
+    {
+      id: "order",
+      title: "Place an order",
+      hint: "Get help choosing and ordering a bouquet",
+      text: `Hi ${site.name}, I would like to order a bouquet. Can you help me choose?${signOff(c)}`,
+    },
+    {
+      id: "info",
+      title: "Ask a question",
+      hint: "Prices, flowers, payment and more",
+      text: `Hi ${site.name}, I have a question about your flowers.${signOff(c)}`,
+    },
+    {
+      id: "custom",
+      title: "Custom bouquet",
+      hint: "Your colours, flowers and budget",
+      text: `Hi ${site.name}, I would like a custom bouquet. My budget and preferred colours are: `,
+    },
+    {
+      id: "delivery",
+      title: "Check delivery area",
+      hint: "Same-day or scheduled delivery",
+      text: `Hi ${site.name}, do you deliver to my area? My area is: `,
+    },
+  ];
 }

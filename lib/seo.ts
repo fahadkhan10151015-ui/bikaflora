@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { site, absoluteUrl } from "./site";
+import { siteImages } from "./images";
 
 export function pageMeta({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): Metadata {
-  const img = image || "/images/products/bouquet-b.webp";
+  const img = image || siteImages.heroPoster;
+  const imgUrl = img.startsWith("http") ? img : absoluteUrl(img);
   return {
     title,
     description,
     alternates: { canonical: absoluteUrl(path) },
-    openGraph: { title, description, url: absoluteUrl(path), siteName: site.name, images: [{ url: absoluteUrl(img) }], locale: "en_MY", type: "website" },
-    twitter: { card: "summary_large_image", title, description, images: [absoluteUrl(img)] },
+    openGraph: { title, description, url: absoluteUrl(path), siteName: site.name, images: [{ url: imgUrl }], locale: "en_MY", type: "website" },
+    twitter: { card: "summary_large_image", title, description, images: [imgUrl] },
   };
 }
 
@@ -18,7 +20,7 @@ export const orgSchema = () => ({
   "@id": absoluteUrl("/#business"),
   name: site.name,
   url: site.url,
-  image: absoluteUrl("/images/products/bouquet-b.webp"),
+  image: siteImages.heroPoster,
   telephone: `+${site.whatsapp}`,
   email: site.email,
   priceRange: "RM89 - RM399",

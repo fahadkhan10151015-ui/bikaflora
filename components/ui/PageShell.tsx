@@ -1,4 +1,4 @@
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 export default function PageShell({ title, path, intro, children }: { title: string; path: string; intro?: string; children: React.ReactNode }) {
   return (
     <div className="container-x">

@@ -1,4 +1,5 @@
 // Blog posts for SEO. Add more posts by copying an entry.
+import { unsplash } from "@/lib/images";
 export type Post = {
   slug: string;
   title: string;
@@ -15,8 +16,7 @@ export const posts: Post[] = [
     title: "Convocation Flowers in Malaysia: A Simple Guide for Proud Families",
     description: "How to choose, time and deliver a convocation bouquet in KL and Selangor, from UM and UKM to UiTM and Taylor's.",
     date: "2026-10-20",
-    image: "/images/products/bouquet-b.webp",
-    tone: "lavender",
+    image: unsplash("1601884928885-92a922f7962f", 1400),
     sections: [
       { heading: "Why everlasting bouquets work best for konvo", body: "Convocation days are long and hot. Fresh flowers can droop after a few hours of photos, while crochet and soap bouquets still look perfect at the end of the day and become a keepsake on the graduate's shelf." },
       { heading: "Order early in convocation season", body: "University convocations in the Klang Valley often happen in the same few weeks. Message us at least three days before the ceremony so we can reserve your bouquet and delivery slot." },
@@ -29,8 +29,7 @@ export const posts: Post[] = [
     title: "Soap Flowers vs Fresh Flowers: Which Gift Should You Choose?",
     description: "Compare soap flowers, crochet flowers and fresh flowers by price, lifespan and occasion to pick the right bouquet in Malaysia.",
     date: "2026-09-12",
-    image: "/images/products/bouquet-a.webp",
-    tone: "cream",
+    image: unsplash("1491994336086-44f5d76dd8f2", 1400),
     sections: [
       { heading: "Lifespan", body: "Fresh flowers usually last 5–7 days in Malaysia's warm weather. Soap flowers last for months and crochet flowers can last for years." },
       { heading: "Fragrance and allergies", body: "Soap flowers carry a light scent and have no pollen, so they suit people with allergies and hospital visits where fresh flowers may not be allowed." },
@@ -42,8 +41,7 @@ export const posts: Post[] = [
     title: "Flower Colour Meanings: What Your Bouquet Says in Malaysia",
     description: "Red, pink, white or yellow? Learn what flower colours mean for birthdays, anniversaries, Hari Raya, CNY and Deepavali gifts.",
     date: "2026-08-05",
-    image: "/images/products/bouquet-a.webp",
-    tone: "blush",
+    image: unsplash("1572454591674-2739f30d8c40", 1400),
     sections: [
       { heading: "Red and pink", body: "Red means love and passion; pink means care, admiration and thanks. Both are favourites for anniversaries and birthdays." },
       { heading: "White", body: "White means purity and new beginnings. It is elegant for weddings, but in Chinese culture an all-white bouquet is usually linked with funerals, so add colour for celebrations." },

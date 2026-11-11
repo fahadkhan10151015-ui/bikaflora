@@ -2,12 +2,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, User, ChevronDown, Truck } from "lucide-react";
-import Logo from "./Logo";
+import Logo from "@/components/layout/Logo";
 import { categories } from "@/data/categories";
-import { useAuth, displayName } from "./AuthProvider";
+import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { site } from "@/lib/site";
-import { waLink } from "@/lib/whatsapp";
-import { WhatsAppIcon } from "./WhatsAppIcon";
+import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 
 const nav = [
   { href: "/shop", label: "Shop All" },
@@ -25,7 +24,7 @@ export default function Header() {
       <div className="bg-brand text-white text-xs sm:text-sm">
         <div className="container-x flex items-center justify-center gap-2 py-2 text-center">
           <Truck className="w-4 h-4 shrink-0" />
-          <span>Same-day delivery in KL &amp; Selangor — order before {site.sameDayCutoff}</span>
+          <span>Same-day express in KL &amp; Selangor — order before {site.sameDayCutoff} · or schedule 1–2 days ahead</span>
         </div>
       </div>
       <div className="bg-white/90 backdrop-blur border-b border-blush-2">
@@ -51,9 +50,7 @@ export default function Header() {
             <Link href={user ? "/account" : "/login"} className="hidden sm:flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full hover:bg-blush">
               <User className="w-5 h-5" /> {user ? displayName(user) : "Login"}
             </Link>
-            <a href={waLink(`Hi ${site.name}, I would like to ask about your flowers.`)} target="_blank" rel="noopener" className="btn btn-wa !py-2 !px-4 text-sm">
-              <WhatsAppIcon className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp</span>
-            </a>
+            <WhatsAppButton label="WhatsApp" className="btn btn-wa !py-2 !px-4 text-sm [&>span]:hidden sm:[&>span]:inline" iconClassName="w-4 h-4" />
             <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
               {open ? <X /> : <Menu />}
             </button>

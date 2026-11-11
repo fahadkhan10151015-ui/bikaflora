@@ -1,8 +1,9 @@
 // ============================================================
 //  PRODUCTS — sample products. Replace with your real ones.
-//  Put your photos in /public/images/products/ and update "images".
-//  "categories" must match slugs in data/categories.ts
+//  images: your own photo ("/images/products/x.jpg") or unsplash("<photo id>")
+//  categories: must match slugs in data/categories.ts
 // ============================================================
+import { unsplash } from "@/lib/images";
 
 export type Product = {
   slug: string;
@@ -13,7 +14,7 @@ export type Product = {
   options?: { label: string; price: number }[];
   categories: string[];
   images: string[];
-  /** backdrop colour for each image: blush | cream | sage | lavender | peach | white */
+  /** Optional soft backdrop behind transparent (cut-out) photos: blush | cream | sage | lavender | peach | white */
   tones?: string[];
   badge?: string;
   short: string;
@@ -22,187 +23,230 @@ export type Product = {
   featured?: boolean;
 };
 
-const P = (n: "a" | "b") => `/images/products/bouquet-${n}.webp`;
+const own = (file: string) => `/images/products/${file}`;
 
 export const products: Product[] = [
   {
-    slug: "rosie-blush-soap-rose-bouquet",
+    slug: "classic-red-rose-bouquet",
     sku: "BF-001",
-    name: "Rosie Blush Soap Rose Bouquet",
-    price: 129,
-    compareAt: 159,
-    options: [
-      { label: "Regular (5 roses)", price: 129 },
-      { label: "Large (9 roses)", price: 179 },
-    ],
-    categories: ["soap-flower-bouquets", "rose-bouquets", "anniversary-flowers"],
-    images: [P("a"), P("a"), P("a")],
-    tones: ["blush", "white", "cream"],
-    badge: "Best Seller",
-    short: "Red and pink soap roses with purple baby's breath in a soft white wrap.",
-    description:
-      "Rosie Blush mixes deep red and soft pink soap roses with dried purple baby's breath and a bunny-tail accent, wrapped in white with a burgundy ribbon. The roses are lightly scented and do not wilt, so the bouquet stays beautiful on a desk or shelf for months. A safe, romantic pick for anniversaries, birthdays and apologies.",
-    includes: ["Red & pink soap roses", "Dried baby's breath", "Bunny tail accent", "Gift card with your message"],
-    featured: true,
-  },
-  {
-    slug: "tulip-dream-crochet-bouquet",
-    sku: "BF-002",
-    name: "Tulip Dream Crochet Bouquet",
-    price: 149,
-    options: [
-      { label: "Regular (7 tulips)", price: 149 },
-      { label: "Large (12 tulips)", price: 219 },
-    ],
-    categories: ["crochet-flower-bouquets", "tulip-bouquets", "graduation-flowers"],
-    images: [P("b"), P("b"), P("b")],
-    tones: ["cream", "white", "blush"],
-    badge: "Handmade",
-    short: "Hand-crocheted pink tulips with golden dried leaves and a satin bow.",
-    description:
-      "Tulip Dream features hand-crocheted coral-pink tulips framed with golden ruscus, dried flowers and white wrapping finished with a champagne satin bow. Each tulip is made by hand, so it will never wilt. Popular for convocation photos and as a forever keepsake.",
-    includes: ["Handmade crochet tulips", "Golden dried leaves", "Dried filler flowers", "Satin ribbon", "Gift card"],
-    featured: true,
-  },
-  {
-    slug: "forever-love-red-rose-bouquet",
-    sku: "BF-003",
-    name: "Forever Love Red Rose Bouquet",
+    name: "Classic Red Rose Bouquet",
     price: 169,
+    compareAt: 199,
     options: [
       { label: "9 roses", price: 169 },
-      { label: "11 roses", price: 199 },
-      { label: "21 roses", price: 329 },
+      { label: "12 roses", price: 209 },
+      { label: "24 roses", price: 359 },
     ],
     categories: ["rose-bouquets", "anniversary-flowers"],
-    images: [P("a"), P("a")],
-    tones: ["lavender", "blush"],
-    short: "Classic red roses for your favourite person.",
+    images: [unsplash("1561729098-cbab0f7a9f7c"), unsplash("1730749387748-79e6d50a269c"), unsplash("1620346328449-f8fb90a40ad5")],
+    badge: "Best Seller",
+    short: "Velvet red roses hand-tied with greenery — the timeless way to say I love you.",
     description:
-      "A romantic bouquet led by velvet red roses with pink accents and baby's breath. Choose 9, 11 or 21 stems to match the moment, from a sweet anniversary to a big surprise.",
-    includes: ["Red roses", "Pink accent roses", "Baby's breath", "Gift card"],
+      "Our most-loved bouquet. Long-stem red roses are hand-tied with fresh greenery and wrapped in premium paper with a satin ribbon. Perfect for anniversaries, Valentine's Day, proposals and every moment that deserves a classic.",
+    includes: ["Premium red roses", "Seasonal greenery", "Premium wrapping & ribbon", "Message card"],
     featured: true,
   },
   {
-    slug: "golden-meadow-dried-tulip-bouquet",
-    sku: "BF-004",
-    name: "Golden Meadow Dried Tulip Bouquet",
-    price: 139,
-    categories: ["dried-preserved-flowers", "tulip-bouquets", "birthday-flowers"],
-    images: [P("b"), P("b")],
-    tones: ["peach", "cream"],
-    short: "Pink tulips with golden dried foliage on a warm peach backdrop.",
-    description:
-      "Golden Meadow pairs pink tulips with golden dried leaves and soft cream filler flowers for a warm, rustic look. Long-lasting and perfect for birthdays and housewarmings.",
-    includes: ["Pink tulips", "Golden dried leaves", "Cream filler flowers", "Gift card"],
-    featured: true,
-  },
-  {
-    slug: "sweet-peach-birthday-bouquet",
-    sku: "BF-005",
-    name: "Sweet Peach Birthday Bouquet",
-    price: 119,
-    categories: ["birthday-flowers", "soap-flower-bouquets"],
-    images: [P("a"), P("a")],
-    tones: ["peach", "cream"],
-    badge: "New",
-    short: "A cheerful mix of roses and baby's breath for birthdays.",
-    description:
-      "Bright, cheerful and easy to love. Sweet Peach brings together red and pink roses with purple baby's breath. A perfect birthday surprise for friends, sisters and colleagues.",
-    includes: ["Mixed roses", "Baby's breath", "Gift card"],
-    featured: true,
-  },
-  {
-    slug: "convocation-glory-tulip-bouquet",
-    sku: "BF-006",
-    name: "Convocation Glory Tulip Bouquet",
-    price: 159,
-    categories: ["graduation-flowers", "crochet-flower-bouquets"],
-    images: [P("b"), P("b")],
-    tones: ["lavender", "white"],
-    short: "Graduation bouquet that still looks perfect after the ceremony.",
-    description:
-      "Made for convocation day. Handmade tulips with golden leaves stay fresh-looking through hours of photos under the sun. Add a mini graduation bear or a custom ribbon message on WhatsApp.",
-    includes: ["Handmade tulips", "Golden dried leaves", "Ribbon", "Gift card"],
-    featured: true,
-  },
-  {
-    slug: "lavender-whisper-soap-bouquet",
-    sku: "BF-007",
-    name: "Lavender Whisper Soap Bouquet",
-    price: 135,
-    categories: ["soap-flower-bouquets", "anniversary-flowers"],
-    images: [P("a"), P("a")],
-    tones: ["lavender", "white"],
-    short: "Soft lavender tones with pink and red roses.",
-    description:
-      "Lavender Whisper is a gentle, romantic bouquet with pink and red soap roses and lilac baby's breath. Lightly fragrant and long-lasting.",
-    includes: ["Soap roses", "Lilac baby's breath", "Gift card"],
-  },
-  {
-    slug: "sage-garden-tulip-bouquet",
-    sku: "BF-008",
-    name: "Sage Garden Tulip Bouquet",
-    price: 145,
-    categories: ["tulip-bouquets", "crochet-flower-bouquets", "birthday-flowers"],
-    images: [P("b"), P("b")],
-    tones: ["sage", "cream"],
-    short: "Fresh, calm tones with coral tulips and dried leaves.",
-    description:
-      "Coral tulips and golden dried leaves set against soft sage tones. A calm and elegant gift for mothers, teachers and new homes.",
-    includes: ["Handmade tulips", "Dried leaves", "Gift card"],
-  },
-  {
-    slug: "classic-cream-rose-bouquet",
-    sku: "BF-009",
-    name: "Classic Cream Rose Bouquet",
-    price: 125,
-    categories: ["rose-bouquets", "soap-flower-bouquets"],
-    images: [P("a"), P("a")],
-    tones: ["cream", "peach"],
-    short: "Elegant roses with a soft, neutral wrap.",
-    description:
-      "A timeless rose bouquet in a cream wrap. Suitable for any occasion: thank-you gifts, get well soon, or a simple \"thinking of you\".",
-    includes: ["Roses", "Baby's breath", "Gift card"],
-  },
-  {
-    slug: "pure-white-tulip-bouquet",
-    sku: "BF-010",
-    name: "Pure White Wrap Tulip Bouquet",
-    price: 155,
-    categories: ["tulip-bouquets", "graduation-flowers"],
-    images: [P("b"), P("b")],
-    tones: ["white", "sage"],
-    short: "Minimalist white wrap that lets the tulips shine.",
-    description:
-      "Clean white wrapping, champagne ribbon and bold coral tulips. A modern, minimalist bouquet that photographs beautifully.",
-    includes: ["Handmade tulips", "Dried fillers", "Champagne ribbon", "Gift card"],
-  },
-  {
-    slug: "sage-romance-rose-bouquet",
-    sku: "BF-011",
-    name: "Sage Romance Rose Bouquet",
-    price: 139,
-    categories: ["rose-bouquets", "dried-preserved-flowers"],
-    images: [P("a"), P("a")],
-    tones: ["sage", "blush"],
-    short: "Roses and dried baby's breath with a natural feel.",
-    description:
-      "Red and pink roses mixed with dried baby's breath for a natural, garden-style look. A lovely gift for someone who prefers soft, earthy colours.",
-    includes: ["Roses", "Dried baby's breath", "Gift card"],
-  },
-  {
-    slug: "blush-tulip-love-bouquet",
-    sku: "BF-012",
-    name: "Blush Tulip Love Bouquet",
+    slug: "blush-pink-rose-bouquet",
+    sku: "BF-002",
+    name: "Blush Pink Rose Bouquet",
     price: 149,
-    categories: ["tulip-bouquets", "anniversary-flowers"],
-    images: [P("b"), P("b")],
-    tones: ["blush", "peach"],
-    short: "Pink tulips in a blush setting, made for romance.",
+    options: [
+      { label: "10 roses", price: 149 },
+      { label: "20 roses", price: 249 },
+    ],
+    categories: ["rose-bouquets", "birthday-flowers"],
+    images: [unsplash("1680563094046-5d846e2c59d1"), unsplash("1562158756-c9667871dba2")],
+    badge: "New",
+    short: "Soft pink roses in blush wrapping — sweet, gentle and full of charm.",
     description:
-      "Pink tulips stand for caring love. Blush Tulip Love is a sweet romantic gift that lasts, perfect for anniversaries and 520.",
-    includes: ["Handmade tulips", "Dried fillers", "Gift card"],
+      "Pink roses stand for admiration and gratitude. This bouquet pairs blush pink roses with matching wrap for a soft, romantic look that suits birthdays, mothers, best friends and thank-you moments.",
+    includes: ["Pink roses", "Blush wrapping", "Satin ribbon", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "rosie-blush-soap-rose-bouquet",
+    sku: "BF-003",
+    name: "Rosie Blush Soap Rose Bouquet",
+    price: 129,
+    categories: ["everlasting-bouquets", "anniversary-flowers"],
+    images: [own("bouquet-a.webp"), own("bouquet-a.webp")],
+    tones: ["blush", "cream"],
+    badge: "Long-lasting",
+    short: "Red and pink soap roses with purple baby's breath that stay beautiful for months.",
+    description:
+      "Soap roses look like real roses, carry a light fragrance and never wilt. Rosie Blush mixes red and pink soap roses with dried purple baby's breath, wrapped in white with a burgundy ribbon — a keepsake for anniversaries and apologies.",
+    includes: ["Red & pink soap roses", "Dried baby's breath", "Bunny-tail accent", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "tulip-dream-everlasting-bouquet",
+    sku: "BF-004",
+    name: "Tulip Dream Everlasting Bouquet",
+    price: 149,
+    categories: ["everlasting-bouquets", "tulip-bouquets", "graduation-flowers"],
+    images: [own("bouquet-b.webp"), own("bouquet-b.webp")],
+    tones: ["cream", "sage"],
+    badge: "Handmade",
+    short: "Handmade coral tulips with golden dried leaves — a gift that lasts forever.",
+    description:
+      "Handmade tulips framed with golden ruscus and dried fillers, finished with a champagne satin bow. They never wilt, so they look perfect in convocation photos and stay on the shelf for years.",
+    includes: ["Handmade tulips", "Golden dried leaves", "Dried fillers", "Satin ribbon"],
+  },
+  {
+    slug: "pastel-tulip-bouquet",
+    sku: "BF-005",
+    name: "Pastel Tulip Bouquet",
+    price: 189,
+    categories: ["tulip-bouquets", "birthday-flowers"],
+    images: [unsplash("1775301331506-f7b0d0b3ac44"), unsplash("1561181286-d3fee7d55364")],
+    short: "Pink and white tulips in a fresh, airy arrangement.",
+    description:
+      "Tulips mean perfect love and happy beginnings. This pastel bouquet mixes pink and white tulips for a clean, modern look that brightens any room.",
+    includes: ["Pink & white tulips", "Greenery", "Premium wrapping", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "sunshine-sunflower-bouquet",
+    sku: "BF-006",
+    name: "Sunshine Sunflower Bouquet",
+    price: 119,
+    options: [
+      { label: "3 sunflowers", price: 119 },
+      { label: "6 sunflowers", price: 179 },
+    ],
+    categories: ["sunflower-bouquets", "graduation-flowers", "birthday-flowers"],
+    images: [unsplash("1601884928885-92a922f7962f"), unsplash("1629386255808-c3ceb405173c"), unsplash("1543409777-30250849aa3e")],
+    badge: "Convocation Pick",
+    short: "Bright sunflowers that bring instant happiness — a convocation favourite.",
+    description:
+      "Sunflowers stand for loyalty, warmth and success, which makes them the most popular convocation flower in Malaysia. Wrapped in kraft paper with soft fillers.",
+    includes: ["Fresh sunflowers", "Fillers & greenery", "Kraft wrapping", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "pink-rose-flower-box",
+    sku: "BF-007",
+    name: "Pink Rose Flower Box",
+    price: 219,
+    categories: ["flower-boxes", "anniversary-flowers"],
+    images: [unsplash("1560583035-79c3e11ae176"), unsplash("1581264692636-3cf6f29655c2")],
+    badge: "Premium",
+    short: "Pink roses arranged in a keepsake box — no vase needed.",
+    description:
+      "A luxurious box arrangement of pink roses, ready to display. Flower boxes are perfect for office desks, hotel rooms and anyone who doesn't have a vase at home.",
+    includes: ["Pink roses", "Keepsake box", "Floral foam (water-ready)", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "pink-lily-bouquet",
+    sku: "BF-008",
+    name: "Pink Lily Bouquet",
+    price: 179,
+    categories: ["flower-boxes", "birthday-flowers"],
+    images: [unsplash("1712260710751-71335d444503"), unsplash("1685307298280-a6655309a0bf"), unsplash("1712260777360-ce2533cf0a25")],
+    short: "Fragrant pink lilies that open beautifully over several days.",
+    description:
+      "Lilies stand for devotion and good wishes. Pink lilies open over several days and fill the room with fragrance — great for birthdays, new homes and get-well wishes.",
+    includes: ["Pink lilies", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "purple-hydrangea-bouquet",
+    sku: "BF-009",
+    name: "Purple Hydrangea Bouquet",
+    price: 199,
+    categories: ["flower-boxes", "anniversary-flowers"],
+    images: [unsplash("1641366638032-557d4a999d80"), unsplash("1652346064068-1ae0d97502c3")],
+    short: "Lush purple hydrangeas for a full, elegant statement.",
+    description:
+      "Big, cloud-like hydrangea heads make this bouquet look generous and elegant. A beautiful choice for anniversaries, mothers and congratulations.",
+    includes: ["Purple hydrangeas", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "garden-mix-bouquet",
+    sku: "BF-010",
+    name: "Garden Mix Bouquet",
+    price: 159,
+    categories: ["birthday-flowers"],
+    images: [unsplash("1572454591674-2739f30d8c40"), unsplash("1589100534833-475e31a17b4e")],
+    short: "A cheerful mix of seasonal blooms in pink, beige and red.",
+    description:
+      "Our florists pick the freshest seasonal flowers of the day for this colourful garden-style bouquet. Every bouquet is a little different and always joyful.",
+    includes: ["Seasonal mixed flowers", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "rose-and-babys-breath-bouquet",
+    sku: "BF-011",
+    name: "Rose & Baby's Breath Bouquet",
+    price: 139,
+    categories: ["rose-bouquets", "graduation-flowers"],
+    images: [unsplash("1620752379460-d4adfe02a5ce"), unsplash("1613052271194-5427710fb39d")],
+    short: "Pink roses surrounded by clouds of white baby's breath.",
+    description:
+      "A sweet and classic pairing: soft pink roses framed with airy baby's breath. Lovely for graduations, birthdays and first dates.",
+    includes: ["Pink roses", "Baby's breath", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "peony-romance-bouquet",
+    sku: "BF-012",
+    name: "Peony Romance Bouquet",
+    price: 289,
+    categories: ["anniversary-flowers", "flower-boxes"],
+    images: [unsplash("1780498802979-3d75e2b87ff2"), unsplash("1780498803120-aac176cf365e"), unsplash("1560256608-43f0b6f7588e")],
+    badge: "Luxury",
+    short: "Lush pink peonies — the most romantic flower of all.",
+    description:
+      "Peonies symbolise romance, prosperity and a happy marriage. Full, ruffled pink peonies make this our most luxurious bouquet. Availability depends on season — message us to confirm.",
+    includes: ["Pink peonies", "Greenery", "Luxury wrapping", "Message card"],
+    featured: true,
+  },
+  {
+    slug: "blue-and-white-bouquet",
+    sku: "BF-013",
+    name: "Blue & White Bouquet",
+    price: 169,
+    categories: ["graduation-flowers"],
+    images: [unsplash("1638098917136-d8681d39fbc3"), unsplash("1610841802859-94794ea50e1b")],
+    short: "Calm blue and white blooms — elegant for convocations and congratulations.",
+    description:
+      "Blue stands for trust and calm, white for new beginnings. This fresh bouquet is a stylish choice for graduates, new jobs and congratulations.",
+    includes: ["Blue & white flowers", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "lavender-dream-bouquet",
+    sku: "BF-014",
+    name: "Lavender Dream Bouquet",
+    price: 159,
+    categories: ["birthday-flowers", "anniversary-flowers"],
+    images: [unsplash("1602136303098-f5aa2b9c9df9"), unsplash("1624466548064-b98215a03cf3")],
+    short: "White and purple flowers in a dreamy, soft arrangement.",
+    description:
+      "Soft purples and whites create a calm, dreamy bouquet. A thoughtful gift for birthdays, colleagues and anyone who loves gentle colours.",
+    includes: ["White & purple flowers", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "rainbow-tulip-bouquet",
+    sku: "BF-015",
+    name: "Rainbow Tulip Bouquet",
+    price: 209,
+    categories: ["tulip-bouquets", "birthday-flowers"],
+    images: [unsplash("1619962992057-be492a5816f6"), unsplash("1491994336086-44f5d76dd8f2")],
+    short: "Pink, white and red tulips together — bright and full of life.",
+    description:
+      "A colourful mix of tulips that instantly lifts the mood. Ideal for birthdays, get-well wishes and \"just because\" surprises.",
+    includes: ["Mixed tulips", "Greenery", "Premium wrapping", "Message card"],
+  },
+  {
+    slug: "sweetheart-pink-bouquet",
+    sku: "BF-016",
+    name: "Sweetheart Pink Bouquet",
+    price: 129,
+    categories: ["birthday-flowers", "rose-bouquets"],
+    images: [unsplash("1623406795110-99f1c4325084"), unsplash("1587317997383-2e6c1b24040f")],
+    short: "Pink and white blooms in a sweet, budget-friendly bouquet.",
+    description:
+      "Pretty, fresh and affordable. The Sweetheart bouquet mixes pink and white flowers for a lovely surprise without breaking the bank.",
+    includes: ["Pink & white flowers", "Greenery", "Wrapping & ribbon", "Message card"],
   },
 ];
 

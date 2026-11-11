@@ -1,5 +1,5 @@
 import Link from "next/link";
-import JsonLd from "./JsonLd";
+import JsonLd from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo";
 
 export default function Breadcrumbs({ items }: { items: { name: string; path: string }[] }) {

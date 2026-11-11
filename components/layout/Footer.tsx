@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, Phone, Clock, MapPin } from "lucide-react";
-import Logo from "./Logo";
+import Logo from "@/components/layout/Logo";
 import { site } from "@/lib/site";
 import { categories } from "@/data/categories";
 import { locations } from "@/data/locations";

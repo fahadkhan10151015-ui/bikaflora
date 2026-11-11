@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { categories, getCategory } from "@/data/categories";
 import { productsInCategory } from "@/data/products";
-import ProductCard from "@/components/ProductCard";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import WaCta from "@/components/WaCta";
-import JsonLd from "@/components/JsonLd";
+import ProductCard from "@/components/product/ProductCard";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import WaCta from "@/components/sections/WaCta";
+import JsonLd from "@/components/ui/JsonLd";
 import { pageMeta } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           {categories.filter((x) => x.slug !== c.slug).map((x) => <Link key={x.slug} href={`/category/${x.slug}`} className="px-4 py-2 rounded-full bg-white border border-blush-2 text-sm hover:bg-blush">{x.name}</Link>)}
         </div>
       </div>
-      <WaCta message={`Hi BikaFlora, I'm looking for ${c.name.toLowerCase()}. Can you help me choose?`} />
+      <WaCta />
     </>
   );
 }

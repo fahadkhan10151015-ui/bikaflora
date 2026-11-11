@@ -1,4 +1,4 @@
-import PageShell from "@/components/PageShell";
+import PageShell from "@/components/ui/PageShell";
 import { pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 

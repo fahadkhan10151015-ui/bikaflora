@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Photo from "@/components/Photo";
-import PageShell from "@/components/PageShell";
+import Photo from "@/components/ui/Photo";
+import PageShell from "@/components/ui/PageShell";
 import { posts } from "@/data/posts";
 import { pageMeta } from "@/lib/seo";
 
@@ -12,7 +12,7 @@ export default function Blog() {
       <div className="grid md:grid-cols-3 gap-6">
         {posts.map((p) => (
           <Link key={p.slug} href={`/blog/${p.slug}`} className="bg-white rounded-3xl overflow-hidden border border-blush-2/70 card-hover">
-            <div className="relative aspect-[4/3]"><Photo src={p.image} tone={p.tone} alt={p.title} sizes="33vw" imgClassName="!object-contain" /></div>
+            <div className="relative aspect-[4/3]"><Photo src={p.image} tone={p.tone} alt={p.title} sizes="33vw"  /></div>
             <div className="p-5"><div className="text-xs text-muted">{new Date(p.date).toLocaleDateString("en-MY", { dateStyle: "medium" })}</div>
               <h2 className="mt-1 text-xl font-semibold leading-snug">{p.title}</h2><p className="mt-2 text-sm text-muted line-clamp-3">{p.description}</p></div>
           </Link>

@@ -19,19 +19,33 @@ npm run dev
 
 | What | File |
 |---|---|
-| WhatsApp number, email, cut-off time, opening hours | `lib/site.ts` |
+| WhatsApp number, email, cut-off time, hero video | `lib/site.ts` |
+| Delivery methods (Same-day Express / Scheduled) | `lib/site.ts` → `deliveryMethods` |
+| WhatsApp message choices (order, question, custom, delivery) | `lib/whatsapp.ts` |
 | Products (name, price, sizes, photos, description) | `data/products.ts` |
 | Categories + SEO text | `data/categories.ts` |
 | Delivery areas (32 SEO pages) | `data/locations.ts` |
-| Reviews (**replace the samples with real ones**, then set `reviewsAreSamples: false` in `lib/site.ts`) | `data/reviews.ts` |
-| FAQ | `data/faqs.ts` |
-| Blog posts | `data/posts.ts` |
-| Colours & fonts | `app/globals.css` |
-| Hero video | put `hero.mp4` in `public/video/` and set `heroVideo: "/video/hero.mp4"` in `lib/site.ts` (a sample video is included) |
+| Reviews (replace samples, then set `reviewsAreSamples: false`) | `data/reviews.ts` |
+| FAQ / Blog | `data/faqs.ts`, `data/posts.ts` |
+| Site-wide photos (hero, KL skyline) | `lib/images.ts` |
+| Colours, fonts, effects | `app/globals.css` |
 
-**Product photos:** put them in `public/images/products/` (JPG or WebP, ideally 1000×1250 px) and use the path in `data/products.ts`, e.g. `"/images/products/red-roses.jpg"`.
+**Product photos:** put your photos in `public/images/products/` and use `"/images/products/your-photo.jpg"` in `data/products.ts`. Sample photos come free from Unsplash and Pexels.
 
-**WhatsApp number format:** digits only with the country code, no `+` or spaces. A Malaysian number like 012-345 6789 becomes `60123456789`.
+### Project structure
+
+```
+app/                 pages (one folder per URL)
+components/
+  auth/              login, signup, forgot password, account
+  layout/            header, footer, logo
+  product/           product card, gallery, order panel
+  sections/          hero, reviews, FAQ, call-to-action blocks
+  ui/                small shared pieces (photo, breadcrumbs, JSON-LD)
+  whatsapp/          WhatsApp button + message chooser
+data/                products, categories, areas, reviews, FAQ, blog
+lib/                 settings, WhatsApp messages, SEO, images, Supabase
+```
 
 ## 3. Login / Sign up (Supabase)
 

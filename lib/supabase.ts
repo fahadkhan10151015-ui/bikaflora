@@ -13,4 +13,3 @@ export function getSupabase(): SupabaseClient | null {
   return client;
 }
 
-export const authConfigured = Boolean(url && key);

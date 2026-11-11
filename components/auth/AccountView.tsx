@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
-import Photo from "../Photo";
+import Photo from "@/components/ui/Photo";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut, Heart, User as UserIcon, Lock } from "lucide-react";
-import { useAuth, displayName } from "../AuthProvider";
+import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase";
 import { useFavourites } from "@/lib/favourites";
 import { products } from "@/data/products";
 import { formatPrice, site } from "@/lib/site";
 import { waLink } from "@/lib/whatsapp";
-import { WhatsAppIcon } from "../WhatsAppIcon";
+import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 import { Alert } from "./AuthCard";
 import PasswordInput from "./PasswordInput";
 

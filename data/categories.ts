@@ -1,7 +1,7 @@
 // ============================================================
-//  CATEGORIES — replace with your real categories later.
-//  "slug" becomes the URL: /category/<slug>
+//  CATEGORIES — "slug" becomes the URL: /category/<slug>
 // ============================================================
+import { unsplash } from "@/lib/images";
 
 export type Category = {
   slug: string;
@@ -20,154 +20,98 @@ export const categories: Category[] = [
     slug: "rose-bouquets",
     name: "Rose Bouquets",
     short: "Timeless red & pink roses",
-    image: "/images/products/bouquet-a.webp",
-    tone: "blush",
+    image: unsplash("1730749387748-79e6d50a269c", 800),
     seoTitle: "Rose Bouquet Delivery KL & Selangor | Red & Pink Roses",
-    seoDescription:
-      "Order rose bouquets in Kuala Lumpur and Selangor. Red, pink and mixed rose hand bouquets with same-day delivery. Order easily on WhatsApp with BikaFlora.",
-    intro:
-      "Roses are still the most-requested flower in Malaysia for birthdays, anniversaries and \"just because\" surprises. Our rose bouquets are wrapped by hand and delivered across KL and Selangor.",
+    seoDescription: "Order rose bouquets in Kuala Lumpur and Selangor. Red, pink and mixed roses with same-day express or scheduled delivery. Order easily on WhatsApp.",
+    intro: "Roses are still Malaysia's most-requested flower for birthdays, anniversaries and surprises. Every rose bouquet is hand-tied and delivered across KL and Selangor.",
     content: [
-      {
-        heading: "What each rose colour means",
-        body: "Red roses say love and passion, pink roses say gratitude and admiration, and white roses suit new beginnings and remembrance. Mixed bouquets let you combine meanings, for example red with pink for a partner you also want to thank.",
-      },
-      {
-        heading: "How many roses should I send?",
-        body: "A single rose is a sweet gesture, 9 or 11 stems is a popular anniversary choice, and 99 roses is the classic grand proposal in Malaysia. Tell us your budget on WhatsApp and we will suggest the best size.",
-      },
-    ],
-  },
-  {
-    slug: "soap-flower-bouquets",
-    name: "Soap Flower Bouquets",
-    short: "Everlasting, fragrant & no wilting",
-    image: "/images/products/bouquet-a.webp",
-    tone: "cream",
-    seoTitle: "Soap Flower Bouquet Malaysia | Long-Lasting Gift | BikaFlora",
-    seoDescription:
-      "Soap flower bouquets that stay beautiful for months. Lightly scented roses and baby's breath, delivered across Kuala Lumpur and Selangor. Order on WhatsApp.",
-    intro:
-      "Soap flowers look like real roses, carry a soft fragrance and do not wilt, so the gift stays on display for months. They are a favourite for anniversaries, teachers and office desks.",
-    content: [
-      {
-        heading: "Why choose soap flowers?",
-        body: "No water, no wilting and no pollen, which makes soap flowers good for people with allergies or busy schedules. They keep their shape and colour for a long time when kept away from humidity and direct sun.",
-      },
-      {
-        heading: "Care tips",
-        body: "Keep the bouquet in a dry, air-conditioned room if possible. Do not wet the petals. Dust gently with a soft brush.",
-      },
-    ],
-  },
-  {
-    slug: "crochet-flower-bouquets",
-    name: "Crochet & Handmade Bouquets",
-    short: "Handcrafted tulips that last forever",
-    image: "/images/products/bouquet-b.webp",
-    tone: "cream",
-    seoTitle: "Crochet Flower Bouquet Malaysia | Handmade Tulips | BikaFlora",
-    seoDescription:
-      "Handmade crochet and fabric flower bouquets in KL & Selangor. Tulips, roses and dried flower mixes that last forever. Custom colours available on WhatsApp.",
-    intro:
-      "Every crochet bloom is made stitch by stitch, so no two bouquets are exactly the same. A thoughtful keepsake for graduations, birthdays and anniversaries.",
-    content: [
-      {
-        heading: "A gift that lasts forever",
-        body: "Handmade flowers never wilt, so your graduate, partner or friend can keep the bouquet for years. We can match colours to university robes, wedding themes or a favourite colour.",
-      },
-      {
-        heading: "Custom orders",
-        body: "Want a specific colour or number of stems? Send us a WhatsApp message with a reference photo and we will confirm price and timing.",
-      },
-    ],
-  },
-  {
-    slug: "dried-preserved-flowers",
-    name: "Dried & Preserved Flowers",
-    short: "Rustic, elegant, long-lasting",
-    image: "/images/products/bouquet-b.webp",
-    tone: "peach",
-    seoTitle: "Dried & Preserved Flower Bouquets KL Selangor | BikaFlora",
-    seoDescription:
-      "Dried and preserved flower bouquets with baby's breath, bunny tails and pampas. Long-lasting gifts delivered in Kuala Lumpur and Selangor.",
-    intro:
-      "Dried and preserved flowers bring a soft, rustic look that suits modern homes. They last much longer than fresh stems and need no water.",
-    content: [
-      {
-        heading: "Popular dried flowers",
-        body: "Baby's breath, bunny tails, pampas grass and golden ruscus leaves are the favourites in our mixes. They pair well with soap roses and crochet tulips.",
-      },
-    ],
-  },
-  {
-    slug: "birthday-flowers",
-    name: "Birthday Flowers",
-    short: "Make their day extra special",
-    image: "/images/products/bouquet-a.webp",
-    tone: "peach",
-    seoTitle: "Birthday Flower Delivery KL & Selangor | Same Day | BikaFlora",
-    seoDescription:
-      "Send birthday flowers in Kuala Lumpur and Selangor. Bright bouquets with free card message and same-day delivery. Order in minutes on WhatsApp.",
-    intro:
-      "Surprise someone on their birthday with a bouquet delivered to their home, office or campus. Add a card message and we will hand-write it for you.",
-    content: [
-      {
-        heading: "Choosing birthday flowers",
-        body: "Bright pinks and reds feel cheerful and romantic, while pastel mixes suit mothers, friends and colleagues. If you are not sure, tell us who it is for and we will recommend one.",
-      },
-    ],
-  },
-  {
-    slug: "anniversary-flowers",
-    name: "Love & Anniversary",
-    short: "Romantic bouquets for your partner",
-    image: "/images/products/bouquet-a.webp",
-    tone: "lavender",
-    seoTitle: "Anniversary Flowers Delivery KL | Romantic Bouquets | BikaFlora",
-    seoDescription:
-      "Romantic anniversary and Valentine's bouquets delivered across KL and Selangor. Red roses, soap roses and everlasting bouquets. Order on WhatsApp.",
-    intro: "Celebrate your love with romantic red and pink bouquets, perfect for anniversaries, Valentine's Day and 520.",
-    content: [
-      {
-        heading: "Plan ahead for Valentine's Day",
-        body: "Orders for 14 February and 20 May fill up quickly. Message us on WhatsApp a few days early to reserve your bouquet and delivery slot.",
-      },
-    ],
-  },
-  {
-    slug: "graduation-flowers",
-    name: "Convocation Flowers",
-    short: "For graduates at UM, UiTM, UKM & more",
-    image: "/images/products/bouquet-b.webp",
-    tone: "lavender",
-    seoTitle: "Convocation Flowers Malaysia | Graduation Bouquet KL Selangor",
-    seoDescription:
-      "Convocation bouquets for graduates at UM, UiTM, UKM, UPM, Taylor's, Sunway and more. Delivery to campus in KL and Selangor. Order on WhatsApp.",
-    intro:
-      "Congratulate your graduate with a convocation bouquet delivered to campus. Everlasting bouquets are popular because they still look perfect in photos at the end of a long day.",
-    content: [
-      {
-        heading: "Campus delivery",
-        body: "We deliver to major campuses in the Klang Valley including UM, UKM, UPM, UiTM Shah Alam, Taylor's, Sunway, MMU Cyberjaya and more. Share your hall name and time on WhatsApp and we will arrange the drop-off.",
-      },
+      { heading: "What each rose colour means", body: "Red says love and passion, pink says gratitude and admiration, and white suits new beginnings. Mix colours to combine meanings — red with pink for a partner you also want to thank." },
+      { heading: "How many roses should I send?", body: "9 or 12 stems is a popular anniversary choice, 24 makes a bold statement, and 99 roses is the classic grand proposal in Malaysia. Tell us your budget on WhatsApp and we'll suggest the right size." },
     ],
   },
   {
     slug: "tulip-bouquets",
     name: "Tulip Bouquets",
-    short: "Elegant tulips in every colour",
-    image: "/images/products/bouquet-b.webp",
-    tone: "blush",
+    short: "Fresh, modern & elegant",
+    image: unsplash("1775301331506-f7b0d0b3ac44", 800),
     seoTitle: "Tulip Bouquet Delivery Kuala Lumpur & Selangor | BikaFlora",
-    seoDescription:
-      "Tulip bouquets in pink, red and pastel colours. Handmade everlasting tulips and dried flower mixes delivered in KL and Selangor.",
-    intro: "Tulips stand for perfect love and fresh starts. Our handmade tulip bouquets keep their shape for years.",
+    seoDescription: "Pink, white and rainbow tulip bouquets delivered in KL and Selangor with same-day express or scheduled delivery.",
+    intro: "Tulips stand for perfect love and fresh starts. Our tulip bouquets bring a clean, modern look to any celebration.",
     content: [
-      {
-        heading: "Tulip colour meanings",
-        body: "Red tulips mean deep love, pink tulips mean care and happiness, and yellow tulips mean cheerful thoughts. A mixed bouquet is a safe choice for any occasion.",
-      },
+      { heading: "Tulip colour meanings", body: "Red tulips mean deep love, pink means care and happiness, and white means new beginnings. A mixed bouquet is a safe choice for any occasion." },
+    ],
+  },
+  {
+    slug: "sunflower-bouquets",
+    name: "Sunflower Bouquets",
+    short: "Sunshine for any day",
+    image: unsplash("1629386255808-c3ceb405173c", 800),
+    seoTitle: "Sunflower Bouquet Delivery KL & Selangor | Convocation Flowers",
+    seoDescription: "Bright sunflower bouquets for convocations, birthdays and congratulations. Delivered across Kuala Lumpur & Selangor.",
+    intro: "Sunflowers stand for warmth, loyalty and success — no wonder they're Malaysia's favourite convocation flower.",
+    content: [
+      { heading: "Why sunflowers for convocation?", body: "Their bright yellow colour looks amazing in photos and their meaning — success and positivity — fits graduation day perfectly." },
+    ],
+  },
+  {
+    slug: "flower-boxes",
+    name: "Flower Boxes",
+    short: "Luxury, vase-free gifts",
+    image: unsplash("1560583035-79c3e11ae176", 800),
+    seoTitle: "Flower Box Delivery Malaysia | Luxury Rose Boxes KL",
+    seoDescription: "Luxury flower boxes and arrangements delivered in KL & Selangor. No vase needed — perfect for offices, hotels and homes.",
+    intro: "Flower boxes arrive ready to display — no vase needed. A premium gift for offices, hotel rooms and special celebrations.",
+    content: [
+      { heading: "Care tips", body: "Add a little water to the floral foam every two days and keep the box away from direct sunlight and air-conditioner vents." },
+    ],
+  },
+  {
+    slug: "everlasting-bouquets",
+    name: "Everlasting Bouquets",
+    short: "Soap & handmade — never wilt",
+    image: "/images/products/bouquet-b.webp",
+    tone: "cream",
+    seoTitle: "Soap Flower & Handmade Bouquets Malaysia | Long-Lasting Gifts",
+    seoDescription: "Soap rose and handmade tulip bouquets that stay beautiful for months. Delivered across Kuala Lumpur and Selangor.",
+    intro: "Soap roses and handmade tulips look real, never wilt and stay beautiful for months — the perfect keepsake.",
+    content: [
+      { heading: "Why choose everlasting flowers?", body: "No water, no wilting and no pollen, so they suit people with allergies and hospital visits. Keep them dry and away from direct sun." },
+    ],
+  },
+  {
+    slug: "birthday-flowers",
+    name: "Birthday Flowers",
+    short: "Make their day special",
+    image: unsplash("1572454591674-2739f30d8c40", 800),
+    seoTitle: "Birthday Flower Delivery KL & Selangor | Same-Day Express",
+    seoDescription: "Send birthday flowers in Kuala Lumpur and Selangor with same-day express delivery. Order in minutes on WhatsApp.",
+    intro: "Surprise someone on their birthday with a bouquet delivered to their home, office or campus.",
+    content: [
+      { heading: "Choosing birthday flowers", body: "Bright pinks and mixed colours feel cheerful, while pastels suit mothers, friends and colleagues. Not sure? Tell us who it's for and we'll recommend one." },
+    ],
+  },
+  {
+    slug: "anniversary-flowers",
+    name: "Love & Anniversary",
+    short: "Romantic bouquets",
+    image: unsplash("1780498802979-3d75e2b87ff2", 800),
+    seoTitle: "Anniversary Flowers Delivery KL | Romantic Bouquets | BikaFlora",
+    seoDescription: "Romantic anniversary and Valentine's bouquets delivered across KL and Selangor — roses, peonies and flower boxes.",
+    intro: "Celebrate your love with romantic roses, peonies and flower boxes — perfect for anniversaries, Valentine's Day and 520.",
+    content: [
+      { heading: "Plan ahead for Valentine's Day", body: "Orders for 14 February and 20 May fill up fast. Message us on WhatsApp a few days early to reserve your bouquet." },
+    ],
+  },
+  {
+    slug: "graduation-flowers",
+    name: "Convocation Flowers",
+    short: "For UM, UiTM, UKM & more",
+    image: unsplash("1601884928885-92a922f7962f", 800),
+    seoTitle: "Convocation Flowers Malaysia | Graduation Bouquet KL Selangor",
+    seoDescription: "Convocation bouquets for graduates at UM, UiTM, UKM, UPM, Taylor's, Sunway and more. Campus delivery in KL and Selangor.",
+    intro: "Congratulate your graduate with a bouquet delivered to campus. Sunflowers and everlasting bouquets are the top convocation picks.",
+    content: [
+      { heading: "Campus delivery", body: "We deliver to major Klang Valley campuses including UM, UKM, UPM, UiTM Shah Alam, Taylor's, Sunway and MMU Cyberjaya. Share the hall and time on WhatsApp." },
     ],
   },
 ];

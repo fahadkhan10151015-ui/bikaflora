@@ -2,14 +2,14 @@
 import { useState } from "react";
 import { waLink } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
-import { WhatsAppIcon } from "./WhatsAppIcon";
+import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 
 export default function ContactForm() {
   const [f, setF] = useState({ name: "", phone: "", topic: "Order enquiry", msg: "" });
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
   const send = (e: React.FormEvent) => {
     e.preventDefault();
-    const text = `📩 *CONTACT FORM — ${site.name}*\n\n*Topic:* ${f.topic}\n*Name:* ${f.name}\n*Phone:* ${f.phone}\n\n${f.msg}`;
+    const text = `Hi ${site.name}, my name is ${f.name}${f.phone ? ` (${f.phone})` : ""}.\n\nTopic: ${f.topic}\n\n${f.msg}`;
     window.open(waLink(text), "_blank");
   };
   return (

@@ -1,7 +1,7 @@
 import { products } from "@/data/products";
-import ShopGrid from "@/components/ShopGrid";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import WaCta from "@/components/WaCta";
+import ShopGrid from "@/components/product/ShopGrid";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import WaCta from "@/components/sections/WaCta";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({

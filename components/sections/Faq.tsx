@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import JsonLd from "./JsonLd";
+import JsonLd from "@/components/ui/JsonLd";
 import { faqSchema } from "@/lib/seo";
 
 export default function Faq({ items, schema = true }: { items: { q: string; a: string }[]; schema?: boolean }) {
