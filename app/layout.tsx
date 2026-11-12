@@ -13,6 +13,7 @@ import FloatingWhatsApp from "@/components/whatsapp/FloatingWhatsApp";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { WhatsAppChooserProvider } from "@/components/whatsapp/WhatsAppChooser";
 import { OrderListProvider } from "@/components/order/OrderListProvider";
+import { FavouritesProvider } from "@/components/favourites/FavouritesProvider";
 import OrderListDrawer from "@/components/order/OrderListDrawer";
 import ChatBot from "@/components/chat/ChatBot";
 import JsonLd from "@/components/ui/JsonLd";
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           <WhatsAppChooserProvider>
+            <FavouritesProvider>
             <OrderListProvider>
               <Header />
               <main className="pb-24">{children}</main>
@@ -50,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <OrderListDrawer />
               <ChatBot />
             </OrderListProvider>
+            </FavouritesProvider>
           </WhatsAppChooserProvider>
         </AuthProvider>
       </body>

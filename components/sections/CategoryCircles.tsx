@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { categories } from "@/data/categories";
 
 /** "Shop by category": round photos that slide by themselves; customers can also swipe or use the arrows. */
-export default function CategoryCircles() {
+export default function CategoryCircles({ compact = false }: { compact?: boolean }) {
   const track = useRef<HTMLDivElement>(null);
   const pausedUntil = useRef(0);
 
@@ -33,11 +33,11 @@ export default function CategoryCircles() {
   const pause = () => (pausedUntil.current = Date.now() + 7000);
 
   return (
-    <section className="container-x mt-10 md:mt-14" aria-labelledby="shop-by-category">
+    <section className={`container-x ${compact ? "mt-6" : "mt-10 md:mt-14"}`} aria-labelledby="shop-by-category">
       <div className="flex items-end justify-between mb-4 md:mb-6">
         <div>
-          <div className="eyebrow mb-1">Browse</div>
-          <h2 id="shop-by-category" className="text-[22px] sm:text-3xl md:text-4xl font-semibold">Shop by category</h2>
+          {!compact && <div className="eyebrow mb-1">Browse</div>}
+          <h2 id="shop-by-category" className={compact ? "text-xl sm:text-2xl font-semibold" : "text-[22px] sm:text-3xl md:text-4xl font-semibold"}>Shop by category</h2>
         </div>
         <div className="hidden sm:flex gap-2">
           <button onClick={() => { pause(); step(-1); }} className="w-10 h-10 rounded-full border border-brand/25 grid place-items-center hover:bg-blush" aria-label="Previous categories"><ChevronLeft className="w-5 h-5" /></button>

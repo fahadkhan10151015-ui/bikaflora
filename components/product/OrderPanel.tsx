@@ -40,7 +40,14 @@ export default function OrderPanel({ p }: { p: Product }) {
       <Stars rating={p.rating} reviews={p.reviews} className="!text-sm" />
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-semibold text-brand">{formatPrice(price)}</span>
-        {p.compareAt && opt === 0 && <span className="text-muted line-through">{formatPrice(p.compareAt)}</span>}
+        {p.compareAt && opt === 0 && (
+          <>
+            <span className="text-muted line-through">{formatPrice(p.compareAt)}</span>
+            <span className="self-center bg-petal/60 text-deep text-xs font-bold px-2.5 py-1 rounded-full">
+              Save {formatPrice(p.compareAt - p.price)} ({Math.round((1 - p.price / p.compareAt) * 100)}% off)
+            </span>
+          </>
+        )}
       </div>
 
       {p.options && (

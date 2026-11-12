@@ -4,6 +4,7 @@ import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
 import Stars from "./Stars";
 import CardActions from "./CardActions";
+import HeartButton from "@/components/favourites/HeartButton";
 
 export default function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
   return (
@@ -17,6 +18,9 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
         {p.badge && <span className="absolute top-2 left-2 sm:top-3 sm:left-3 glass text-brand text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">{p.badge}</span>}
         {p.compareAt && <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-petal text-deep text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">-{Math.round((1 - p.price / p.compareAt) * 100)}%</span>}
       </Link>
+      <div className="relative">
+        <HeartButton slug={p.slug} name={p.name} className="absolute -top-11 sm:-top-13 right-2 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 z-10" />
+      </div>
       <div className="p-2.5 sm:p-4 flex flex-col flex-1">
         <Stars rating={p.rating} reviews={p.reviews} />
         <Link href={`/product/${p.slug}`} className="mt-1">

@@ -20,7 +20,8 @@ export default function LoginForm() {
     const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
     if (error) return setErr(error.message === "Invalid login credentials" ? "Wrong email or password." : error.message);
-    router.push("/account");
+    const next = new URLSearchParams(window.location.search).get("next") || "";
+    router.push(next.startsWith("/") && !next.startsWith("//") ? next : "/account");
   };
 
   return (

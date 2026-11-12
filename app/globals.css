@@ -98,3 +98,9 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 @keyframes craft-s3 { 0%,60%,78%,100% { background: transparent; border-color: transparent; box-shadow: none } 63%,75% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } }
 @keyframes craft-s4 { 0%,76% { background: transparent; border-color: transparent; box-shadow: none } 80%,96% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } 100% { background: transparent; border-color: transparent } }
 @media (prefers-reduced-motion: reduce) { .craft * { animation: none !important } }
+
+/* Scrolling announcement bar */
+@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+.marquee { animation: marquee 38s linear infinite; }
+.marquee-wrap:hover .marquee { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }

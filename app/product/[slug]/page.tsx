@@ -5,6 +5,8 @@ import { products, getProduct, relatedProducts, isAddOn, addOns } from "@/data/p
 import { getCategory } from "@/data/categories";
 import Gallery from "@/components/product/Gallery";
 import OrderPanel from "@/components/product/OrderPanel";
+import HeartButton from "@/components/favourites/HeartButton";
+import ProductReviews from "@/components/product/ProductReviews";
 import MobileOrderBar from "@/components/product/MobileOrderBar";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -76,7 +78,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <Gallery images={p.images} tones={p.tones} alt={`${p.name} by ${site.name}`} />
         <div>
           {p.badge && <span className="inline-block bg-blush text-brand text-xs font-semibold px-3 py-1 rounded-full">{p.badge}</span>}
-          <h1 className="mt-3 text-3xl md:text-4xl font-semibold leading-tight">{p.name}</h1>
+          <div className="mt-3 flex items-start justify-between gap-3">
+            <h1 className="text-3xl md:text-4xl font-semibold leading-tight">{p.name}</h1>
+            <HeartButton slug={p.slug} name={p.name} className="w-11 h-11 shrink-0 border border-blush-2" />
+          </div>
           <p className="mt-1 text-sm text-muted">Product code: {p.sku}</p>
           <p className="mt-4 text-muted leading-relaxed">{p.short}</p>
           <div className="mt-6"><OrderPanel p={p} /></div>
@@ -109,6 +114,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
         </aside>
       </section>
+
+      <ProductReviews slug={p.slug} productName={p.name} />
 
       <section className="mt-16"><SectionTitle title="Questions about this bouquet" /><Faq items={faqs} /></section>
 

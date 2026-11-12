@@ -1,5 +1,6 @@
 import { products } from "@/data/products";
 import ShopGrid from "@/components/product/ShopGrid";
+import CategoryCircles from "@/components/sections/CategoryCircles";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import WaCta from "@/components/sections/WaCta";
 import { pageMeta } from "@/lib/seo";
@@ -16,8 +17,11 @@ export default function Shop() {
       <div className="container-x">
         <Breadcrumbs items={[{ name: "Shop", path: "/shop" }]} />
         <h1 className="text-4xl font-semibold">Shop all bouquets</h1>
-        <p className="mt-2 text-muted max-w-2xl mb-8">Handmade bouquets for every occasion, delivered across Kuala Lumpur & Selangor. Tap any bouquet to order on WhatsApp.</p>
-        <ShopGrid items={products} />
+        <p className="mt-2 text-muted max-w-2xl">Handmade bouquets for every occasion, delivered across Kuala Lumpur & Selangor. Tap any bouquet to order on WhatsApp.</p>
+      </div>
+      <CategoryCircles compact />
+      <div className="container-x mt-10">
+        <ShopGrid items={products} showChips={false} />
       </div>
       <WaCta />
     </>

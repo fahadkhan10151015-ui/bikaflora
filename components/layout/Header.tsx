@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, User, ChevronDown, Truck } from "lucide-react";
+import { Menu, X, User, ChevronDown } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import { categories } from "@/data/categories";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
-import { site } from "@/lib/site";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import OrderListButton from "@/components/order/OrderListButton";
+import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import FavouritesLink from "@/components/favourites/FavouritesLink";
 
 const nav = [
   { href: "/shop", label: "Shop All" },
@@ -22,13 +23,7 @@ export default function Header() {
   const { user } = useAuth();
   return (
     <header className="sticky top-0 z-40">
-      <div className="bg-brand text-white text-xs sm:text-sm">
-        <div className="container-x flex items-center justify-center gap-2 py-2 text-center">
-          <Truck className="w-4 h-4 shrink-0" />
-          <span className="sm:hidden">Instant delivery &amp; pre-order · KL &amp; Selangor</span>
-          <span className="hidden sm:inline">Instant delivery in KL &amp; Selangor (order before {site.sameDayCutoff}) · Pre-order &amp; custom bouquets available</span>
-        </div>
-      </div>
+      <AnnouncementBar />
       <div className="bg-white/90 backdrop-blur border-b border-blush-2">
         <div className="container-x flex items-center justify-between h-16 md:h-20">
           <Logo />
@@ -52,6 +47,7 @@ export default function Header() {
             <Link href={user ? "/account" : "/login"} className="hidden sm:flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full hover:bg-blush">
               <User className="w-5 h-5" /> {user ? displayName(user) : "Login"}
             </Link>
+            <FavouritesLink />
             <OrderListButton />
             <WhatsAppButton label="WhatsApp" className="btn btn-wa !py-2 !px-4 text-sm [&>span]:hidden sm:[&>span]:inline" iconClassName="w-4 h-4" />
             <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">

@@ -81,7 +81,7 @@ export default function Home() {
       <CategoryCircles />
 
       {/* PRODUCTS BY CATEGORY (like a shop front) */}
-      <ProductRow eyebrow="Customer favourites" title="Best Seller 😍" href="/category/best-seller" items={featuredProducts()} priority />
+      <ProductRow eyebrow="Customer favourites" title="Best Seller" href="/category/best-seller" items={featuredProducts()} priority />
       <ProductRow eyebrow="Hand-tied today" title="Fresh Flowers" href="/category/fresh-flowers" items={productsInCategory("fresh-flowers")} />
       <ProductRow eyebrow="No vase needed" title="Flower Gift Box" href="/category/flower-gift-box" items={productsInCategory("flower-gift-box")} />
 
@@ -90,9 +90,9 @@ export default function Home() {
 
       <ProductRow eyebrow="Big moments" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
       <ProductRow eyebrow="Great value" title="Below RM100 Bouquet" href="/category/below-100" items={productsInCategory("below-100")} />
-      <ProductRow eyebrow="Handmade, forever" title="Crochet Bouquet 🧶" href="/category/crochet-bouquets" items={productsInCategory("crochet-bouquets")} />
-      <ProductRow eyebrow="Sweet gifts" title="Chocolate & Flower Bouquets 🍫" href="/category/chocolate-flower-bouquets" items={productsInCategory("chocolate-flower-bouquets")} />
-      <ProductRow eyebrow="Small & cute" title="Mini Bouquet Series 🥰" href="/category/mini-bouquets" items={productsInCategory("mini-bouquets")} />
+      <ProductRow eyebrow="Handmade, forever" title="Crochet Bouquet" href="/category/crochet-bouquets" items={productsInCategory("crochet-bouquets")} />
+      <ProductRow eyebrow="Sweet gifts" title="Chocolate & Flower Bouquets" href="/category/chocolate-flower-bouquets" items={productsInCategory("chocolate-flower-bouquets")} />
+      <ProductRow eyebrow="Small & cute" title="Mini Bouquet Series" href="/category/mini-bouquets" items={productsInCategory("mini-bouquets")} />
       <ProductRow eyebrow="Made to your idea" title="Pre-Order" href="/category/pre-order" items={productsInCategory("pre-order")} />
       <ProductRow eyebrow="Make it extra special" title="Add On" href="/category/add-ons" items={productsInCategory("add-ons")} />
 
