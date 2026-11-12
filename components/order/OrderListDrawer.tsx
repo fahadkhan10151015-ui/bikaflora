@@ -2,20 +2,20 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X, Minus, Plus, Trash2, ShoppingBag, Zap, CalendarClock } from "lucide-react";
-import { deliveryMethods, formatPrice, type DeliveryMethodId } from "@/lib/site";
+import { deliveryMethods, formatPrice, paymentNote, type DeliveryMethodId } from "@/lib/site";
 import { multiOrderMessage, waLink } from "@/lib/whatsapp";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import Photo from "@/components/ui/Photo";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 import { useOrderList } from "./OrderListProvider";
 
-const icons = { express: Zap, scheduled: CalendarClock };
+const icons = { instant: Zap, preorder: CalendarClock };
 
 /** Slide-in list of everything the customer picked. One tap sends it all in one WhatsApp message. */
 export default function OrderListDrawer() {
   const list = useOrderList();
   const { user } = useAuth();
-  const [delivery, setDelivery] = useState<DeliveryMethodId>("express");
+  const [delivery, setDelivery] = useState<DeliveryMethodId>("instant");
 
   useEffect(() => {
     if (!list.isOpen) return;
@@ -101,7 +101,7 @@ export default function OrderListDrawer() {
                 <WhatsAppIcon className="w-6 h-6" /> Send order on WhatsApp
               </a>
               <div className="flex justify-between text-xs text-muted">
-                <span>No payment here. We confirm the total with delivery first.</span>
+                <span>We confirm the total with delivery. {paymentNote}</span>
                 <button onClick={list.clear} className="underline shrink-0 ml-2">Clear list</button>
               </div>
             </div>

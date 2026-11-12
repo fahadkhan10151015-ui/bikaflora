@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, Zap, CalendarClock, MapPin } from "lucide-react";
+import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin } from "lucide-react";
 import { featuredProducts, productsInCategory } from "@/data/products";
+import CategoryCircles from "@/components/sections/CategoryCircles";
+import DeliveryWays from "@/components/sections/DeliveryWays";
 import { selangor, kl } from "@/data/locations";
 import { faqs } from "@/data/faqs";
 import ProductRow from "@/components/product/ProductRow";
@@ -14,37 +16,28 @@ import TrustBar from "@/components/sections/TrustBar";
 import Reviews from "@/components/sections/Reviews";
 import Faq from "@/components/sections/Faq";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
-import { site, deliveryMethods } from "@/lib/site";
+import { site } from "@/lib/site";
 import { siteImages } from "@/lib/images";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: `${site.name} | Florist & Same-Day Flower Delivery in KL & Selangor`,
+  title: `${site.name} | Florist & Flower Delivery in KL & Selangor`,
   description:
-    "Rose bouquets, tulips, sunflowers, flower boxes and convocation flowers. Same-day express or scheduled delivery across Kuala Lumpur & Selangor. Order on WhatsApp in 1 minute.",
+    "Fresh flowers, premium bouquets, flower gift boxes, crochet and chocolate bouquets. Instant delivery or pre-order across Kuala Lumpur & Selangor. Order on WhatsApp in 1 minute.",
   path: "/",
 });
 
-const occasions = [
-  { label: "Birthday", href: "/category/birthday-flowers", emoji: "🎂" },
-  { label: "Anniversary", href: "/category/anniversary-flowers", emoji: "💕" },
-  { label: "Convocation", href: "/category/graduation-flowers", emoji: "🎓" },
-  { label: "Get Well Soon", href: "/category/everlasting-bouquets", emoji: "🌷" },
-  { label: "Luxury Boxes", href: "/category/flower-boxes", emoji: "🎁" },
-  { label: "Just Because", href: "/category/tulip-bouquets", emoji: "✨" },
-];
-
 const steps = [
   { icon: MousePointerClick, title: "Tap “Order now”", text: "Tap Order now on any bouquet. Want several? Tap + to add them to your order list." },
-  { icon: MessageCircle, title: "Send on WhatsApp", text: "WhatsApp opens with the bouquet name, code, size and price already typed. Just press send." },
-  { icon: Truck, title: "Confirm & we deliver", text: "We confirm the total, send a photo of your bouquet and deliver it with care." },
+  { icon: MessageCircle, title: "Confirm & pay in advance", text: "WhatsApp opens with everything typed. We confirm the total with delivery, then you pay in advance." },
+  { icon: Truck, title: "We prepare & deliver", text: "We send a photo of your bouquet, then deliver it by Grab Express, Lalamove or J&T Express." },
 ];
 
 const reasons = [
   { icon: Heart, title: "Hand-tied with care", text: "Every bouquet is arranged by hand, never mass-produced." },
   { icon: Leaf, title: "Fresh every morning", text: "Flowers sourced daily from trusted growers." },
-  { icon: ShieldCheck, title: "Pay after confirming", text: "We confirm the total on WhatsApp before you pay." },
-  { icon: Truck, title: "KL & Selangor wide", text: "32 delivery areas, express or scheduled." },
+  { icon: ShieldCheck, title: "Confirmed before you pay", text: "We confirm your order and total on WhatsApp, then you pay in advance." },
+  { icon: Truck, title: "KL & Selangor wide", text: "32 delivery areas, instant delivery or pre-order." },
 ];
 
 export default function Home() {
@@ -67,14 +60,14 @@ export default function Home() {
               Flowers that say it <span className="italic text-petal">beautifully</span>
             </h1>
             <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Hand-tied bouquets and luxury flower boxes, delivered same-day or on the date you choose — ordered in one tap on WhatsApp.
+              Fresh bouquets, flower gift boxes, crochet and chocolate bouquets. Instant delivery today or pre-order for your date, ordered in one tap on WhatsApp.
             </p>
             <div className="mt-9 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link href="/shop" className="btn bg-white text-brand hover:bg-blush !px-7 !py-4">Shop Bouquets <ArrowRight className="w-4 h-4" /></Link>
               <WhatsAppButton label="Order on WhatsApp" className="btn btn-wa !px-7 !py-4 shadow-xl shadow-wa/30" />
             </div>
             <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0">
-              {[["32", "delivery areas"], ["Same-day", "express delivery"], ["100%", "hand-tied"]].map(([value, label]) => (
+              {[["32", "delivery areas"], ["Instant", "or pre-order"], ["100%", "handmade"]].map(([value, label]) => (
                 <div key={label}><dt className="font-serif text-2xl sm:text-3xl font-semibold text-gold whitespace-nowrap">{value}</dt><dd className="text-xs text-white/70">{label}</dd></div>
               ))}
             </dl>
@@ -85,42 +78,26 @@ export default function Home() {
 
       <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>
 
-      {/* OCCASIONS */}
-      <section className="container-x mt-14">
-        <div className="flex gap-3 overflow-x-auto pb-2 md:justify-center">
-          {occasions.map((o) => (
-            <Link key={o.label} href={o.href} className="shrink-0 flex items-center gap-2 bg-white border border-blush-2 rounded-full px-5 py-2.5 text-sm font-medium hover:bg-blush hover:border-brand transition">
-              <span>{o.emoji}</span> {o.label}
-            </Link>
-          ))}
-        </div>
-      </section>
+      <CategoryCircles />
 
       {/* PRODUCTS BY CATEGORY (like a shop front) */}
-      <ProductRow eyebrow="Customer favourites" title="Popular bouquets" href="/shop" items={featuredProducts()} priority />
-      <ProductRow eyebrow="Timeless" title="Rose bouquets" href="/category/rose-bouquets" items={productsInCategory("rose-bouquets")} />
-      <ProductRow eyebrow="No vase needed" title="Luxury flower boxes" href="/category/flower-boxes" items={productsInCategory("flower-boxes")} />
+      <ProductRow eyebrow="Customer favourites" title="Best Seller 😍" href="/category/best-seller" items={featuredProducts()} priority />
+      <ProductRow eyebrow="Hand-tied today" title="Fresh Flowers" href="/category/fresh-flowers" items={productsInCategory("fresh-flowers")} />
+      <ProductRow eyebrow="No vase needed" title="Flower Gift Box" href="/category/flower-gift-box" items={productsInCategory("flower-gift-box")} />
 
       {/* HOW IT'S MADE (animated) */}
       <BouquetCraft />
 
-      <ProductRow eyebrow="Congrats, graduate" title="Convocation flowers" href="/category/graduation-flowers" items={productsInCategory("graduation-flowers")} />
-      <ProductRow eyebrow="Make their day" title="Birthday flowers" href="/category/birthday-flowers" items={productsInCategory("birthday-flowers")} />
-      <ProductRow eyebrow="Lasts for months" title="Everlasting bouquets" href="/category/everlasting-bouquets" items={productsInCategory("everlasting-bouquets")} />
+      <ProductRow eyebrow="Big moments" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
+      <ProductRow eyebrow="Great value" title="Below RM100 Bouquet" href="/category/below-100" items={productsInCategory("below-100")} />
+      <ProductRow eyebrow="Handmade, forever" title="Crochet Bouquet 🧶" href="/category/crochet-bouquets" items={productsInCategory("crochet-bouquets")} />
+      <ProductRow eyebrow="Sweet gifts" title="Chocolate & Flower Bouquets 🍫" href="/category/chocolate-flower-bouquets" items={productsInCategory("chocolate-flower-bouquets")} />
+      <ProductRow eyebrow="Small & cute" title="Mini Bouquet Series 🥰" href="/category/mini-bouquets" items={productsInCategory("mini-bouquets")} />
+      <ProductRow eyebrow="Made to your idea" title="Pre-Order" href="/category/pre-order" items={productsInCategory("pre-order")} />
+      <ProductRow eyebrow="Make it extra special" title="Add On" href="/category/add-ons" items={productsInCategory("add-ons")} />
 
-      {/* DELIVERY OPTIONS */}
-      <section className="container-x mt-24 grid md:grid-cols-2 gap-6">
-        {deliveryMethods.map((d, i) => {
-          const Icon = i === 0 ? Zap : CalendarClock;
-          return (
-            <div key={d.id} className={`rounded-[2rem] p-8 md:p-10 ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white ring-1 ring-gold/30" : "bg-white border border-blush-2"}`}>
-              <Icon className={`w-10 h-10 ${i === 0 ? "text-gold" : "text-gold"}`} />
-              <h3 className="mt-4 text-2xl md:text-3xl font-semibold">{d.label}</h3>
-              <p className={`mt-2 ${i === 0 ? "text-white/80" : "text-muted"}`}>{d.detail}. {i === 0 ? "Perfect for last-minute surprises." : "Plan ahead for birthdays, anniversaries and events."}</p>
-            </div>
-          );
-        })}
-      </section>
+      {/* INSTANT / PRE-ORDER / CUSTOM + PARTNERS + PAYMENT */}
+      <DeliveryWays />
 
       {/* HOW TO ORDER */}
       <section className="mt-24 bg-white border-y border-blush-2 petal-bg">
@@ -202,18 +179,18 @@ export default function Home() {
         <div className="max-w-4xl mx-auto prose-bf">
           <h2 className="text-3xl font-semibold text-center">Online florist in Kuala Lumpur & Selangor</h2>
           <p>
-            Looking for a florist near you in the Klang Valley? {site.name} delivers hand-tied bouquets to homes, offices, hospitals and university campuses across Kuala Lumpur and Selangor — from Shah Alam, Petaling Jaya and Subang Jaya to Cheras, Bangsar and Mont Kiara.
+            Looking for a florist near you in the Klang Valley? {site.name} delivers fresh flowers, premium bouquets and flower gift boxes to homes, offices, hospitals and campuses across Kuala Lumpur and Selangor, from Shah Alam, Petaling Jaya and Subang Jaya to Cheras, Bangsar and Mont Kiara.
           </p>
           <p>
-            Choose from classic red rose bouquets, soft pink roses, tulips, bright sunflowers for convocation, fragrant lilies, luxury peonies and flower boxes that need no vase. Prefer something that lasts? Our soap rose and handmade bouquets stay beautiful for months.
+            Shop our best sellers, fresh flower bouquets, handmade crochet bouquets that last forever, chocolate and flower bouquets with Ferrero Rocher, cute mini bouquets and beautiful bouquets below RM100. Add a teddy bear, balloons or chocolates to make it extra special.
           </p>
-          <h2>Same-day express or scheduled delivery</h2>
+          <h2>Instant delivery or pre-order</h2>
           <p>
-            Order before {site.sameDayCutoff} for Same-day Express delivery, or choose Scheduled Delivery for 1–2 days ahead. Ordering is simple: open a bouquet, tap the WhatsApp button and pick a message — the bouquet name, size, price and delivery choice are added for you.
+            Need flowers today? Choose Instant Delivery: order before {site.sameDayCutoff} and we send it by Grab Express or Lalamove. Planning ahead? Pre-order and tell us exactly what you want and the date. You can even send us a photo and we will make it for you. Payment is made in advance once we confirm your order on WhatsApp.
           </p>
           <h2>Flowers for every Malaysian celebration</h2>
           <p>
-            From Hari Raya open houses and Chinese New Year visits to Deepavali, Mother&apos;s Day, Valentine&apos;s Day and 520, we prepare bouquets in the colours and styles each celebration calls for. Need something special? Send a reference photo and we&apos;ll create a custom bouquet within your budget.
+            From Hari Raya open houses and Chinese New Year visits to Deepavali, convocations, Mother&apos;s Day, Valentine&apos;s Day and 520, we prepare bouquets in the colours and styles each celebration calls for.
           </p>
         </div>
       </section>

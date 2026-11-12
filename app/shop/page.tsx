@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Shop Flower Bouquets Online | KL & Selangor Delivery",
-  description: "Browse all BikaFlora bouquets: soap roses, crochet tulips, dried flowers, convocation and birthday bouquets. Order on WhatsApp with same-day delivery in KL & Selangor.",
+  description: "Browse all BikaFlora bouquets: fresh flowers, flower gift boxes, crochet, chocolate and mini bouquets. Order on WhatsApp with instant delivery in KL & Selangor.",
   path: "/shop",
 });
 

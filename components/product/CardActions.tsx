@@ -17,7 +17,7 @@ export default function CardActions({ p }: { p: Product }) {
   const orderNow = waLink(
     productMessages(
       { name: p.name, sku: p.sku, slug: p.slug, price, size: option?.label },
-      "Please advise (Same-day Express or Scheduled)",
+      p.categories.includes("pre-order") ? "Pre-order (I will share my date)" : "Instant Delivery or Pre-order (please advise)",
       user ? { name: displayName(user), email: user.email } : undefined,
     )[0].text,
   );

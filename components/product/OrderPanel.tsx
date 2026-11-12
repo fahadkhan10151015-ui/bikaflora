@@ -4,20 +4,21 @@ import { Zap, CalendarClock, Check, Plus } from "lucide-react";
 import { useOrderList } from "@/components/order/OrderListProvider";
 import Stars from "./Stars";
 import type { Product } from "@/data/products";
-import { deliveryMethods, formatPrice, type DeliveryMethodId } from "@/lib/site";
+import { deliveryMethods, formatPrice, paymentNote, type DeliveryMethodId } from "@/lib/site";
 import { productMessages } from "@/lib/whatsapp";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useWhatsAppChooser } from "@/components/whatsapp/WhatsAppChooser";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 
-const deliveryIcons = { express: Zap, scheduled: CalendarClock };
+const deliveryIcons = { instant: Zap, preorder: CalendarClock };
 
 export default function OrderPanel({ p }: { p: Product }) {
   const { user } = useAuth();
   const openChooser = useWhatsAppChooser();
   const list = useOrderList();
   const [opt, setOpt] = useState(0);
-  const [delivery, setDelivery] = useState<DeliveryMethodId>("express");
+  const preorderOnly = p.categories.includes("pre-order") && !p.categories.includes("best-seller");
+  const [delivery, setDelivery] = useState<DeliveryMethodId>(preorderOnly ? "preorder" : "instant");
 
   const option = p.options?.[opt];
   const price = option?.price ?? p.price;
@@ -36,7 +37,7 @@ export default function OrderPanel({ p }: { p: Product }) {
 
   return (
     <div className="space-y-6">
-      <Stars rating={p.rating} reviews={p.reviews} className="!text-sm -mb-3" />
+      <Stars rating={p.rating} reviews={p.reviews} className="!text-sm" />
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-semibold text-brand">{formatPrice(price)}</span>
         {p.compareAt && opt === 0 && <span className="text-muted line-through">{formatPrice(p.compareAt)}</span>}
@@ -57,9 +58,9 @@ export default function OrderPanel({ p }: { p: Product }) {
       )}
 
       <fieldset>
-        <legend className="label">Delivery method</legend>
+        <legend className="label">How would you like it?</legend>
         <div className="grid sm:grid-cols-2 gap-3">
-          {deliveryMethods.map((d) => {
+          {deliveryMethods.filter((d) => !(preorderOnly && d.id === "instant")).map((d) => {
             const Icon = deliveryIcons[d.id];
             const active = d.id === delivery;
             return (
@@ -82,7 +83,7 @@ export default function OrderPanel({ p }: { p: Product }) {
         <button type="button" onClick={() => { list.add({ slug: p.slug, size: option?.label, price }); list.open(); }} className="btn btn-outline !py-3.5">
           <Plus className="w-5 h-5" /> Add to order list
         </button>
-        <p className="text-xs text-muted text-center">Ordering more than one bouquet? Add them to your order list and send everything in one WhatsApp message. We confirm the total before you pay.</p>
+        <p className="text-xs text-muted text-center">Ordering more than one item? Add them to your order list and send everything in one WhatsApp message. {paymentNote}</p>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const l = getLocation((await params).city);
   if (!l) return {};
   return pageMeta({
-    title: `Florist ${l.name} | Same-Day Flower Delivery ${l.name}`,
+    title: `Florist ${l.name} | Flower Delivery ${l.name}`,
     description: `Flower delivery in ${l.name}, ${l.state}. Handmade bouquets, soap roses & convocation flowers delivered to ${l.landmarks[0]} and nearby. Order on WhatsApp.`,
     path: `/flower-delivery/${l.slug}`,
   });
@@ -36,9 +36,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const sameState = locations.filter((x) => x.state === l.state && x.slug !== l.slug).slice(0, 10);
 
   const faqs = [
-    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: `Yes. Orders confirmed before ${site.sameDayCutoff} can usually be delivered to ${l.name} on the same day, subject to stock and traffic.${l.slug === "kuala-selangor" || l.slug === "banting" ? " For this area we recommend ordering one day ahead." : ""}` },
+    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: `Yes. Orders confirmed before ${site.sameDayCutoff} can usually be delivered to ${l.name} on the same day by Grab Express or Lalamove, subject to stock and traffic.${l.slug === "kuala-selangor" || l.slug === "banting" ? " For this area we recommend ordering one day ahead." : ""}` },
     { q: `Can you deliver to ${l.landmarks[0]}?`, a: `Yes. Share the exact location, the recipient's name and phone number on WhatsApp, and we will coordinate the drop-off at ${l.landmarks[0]}.` },
-    { q: `How much is delivery to ${l.name}?`, a: `The fee depends on the exact address in ${l.name} and the time slot. We confirm the total on WhatsApp before you pay.` },
+    { q: `How much is delivery to ${l.name}?`, a: `The fee depends on the exact address in ${l.name} and the courier. We confirm the total on WhatsApp first, and payment is made in advance.` },
     { q: `Do you also deliver near ${l.name}?`, a: `Yes, we also cover ${l.nearby.join(", ")} and other areas in ${l.state}.` },
   ];
 
@@ -55,8 +55,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <h1 className="text-4xl md:text-5xl font-semibold">Flower Delivery in {l.name}</h1>
           <p className="mt-4 text-white/85 max-w-3xl leading-relaxed">{l.blurb}</p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Zap className="w-4 h-4" /> Same-day express</span>
-            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Clock className="w-4 h-4" /> Or scheduled 1–2 days</span>
+            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Zap className="w-4 h-4" /> Instant delivery</span>
+            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Clock className="w-4 h-4" /> Pre-order &amp; custom</span>
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Camera className="w-4 h-4" /> Photo before delivery</span>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           <div className="flex flex-wrap justify-center gap-2">{sameState.map((x) => <Link key={x.slug} href={`/flower-delivery/${x.slug}`} className="px-4 py-2 rounded-full bg-white border border-blush-2 text-sm hover:bg-blush">Florist {x.name}</Link>)}</div>
         </section>
       </div>
-      <WaCta title={`Sending flowers to ${l.name}?`} text="Chat with our florist on WhatsApp for recommendations and same-day availability." />
+      <WaCta title={`Sending flowers to ${l.name}?`} text="Chat with our florist on WhatsApp for recommendations, instant delivery or pre-orders." />
     </>
   );
 }

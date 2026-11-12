@@ -19,7 +19,7 @@ const steps = [
   { icon: Flower2, title: "Fresh blooms selected", text: "We pick the freshest stems every morning." },
   { icon: Gift, title: "Hand-tied & wrapped", text: "Arranged by hand, wrapped and finished with a ribbon." },
   { icon: Camera, title: "Photo sent to you", text: "You see your actual bouquet on WhatsApp first." },
-  { icon: Truck, title: "Delivered with care", text: "Same-day express or on your scheduled date." },
+  { icon: Truck, title: "Delivered with care", text: "Instant delivery today or on your pre-order date." },
 ];
 
 /** "How your bouquet is made" — an animated 3D assembly that plays when it scrolls into view. */

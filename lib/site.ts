@@ -5,13 +5,13 @@
 export const site = {
   name: "BikaFlora",
   description:
-    "BikaFlora is an online florist in Kuala Lumpur & Selangor. Rose bouquets, tulips, sunflowers, flower boxes and convocation flowers with same-day express or scheduled delivery. Order easily on WhatsApp.",
+    "BikaFlora is an online florist in Kuala Lumpur & Selangor. Fresh flowers, premium bouquets, flower gift boxes, crochet and chocolate bouquets with instant delivery or pre-order. Order easily on WhatsApp.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora.vercel.app").replace(/\/$/, ""),
 
   // WhatsApp number: country code + number, digits only (Malaysia example: 60123456789)
-  whatsapp: "923350947538",
-  phoneDisplay: "+92 335 094 7538",
-  email: "fahadkhan10151015@gmail.com",
+  whatsapp: "601161326484",
+  phoneDisplay: "+60 11-6132 6484",
+  email: "bikaflora01@gmail.com",
 
   currency: "RM",
   sameDayCutoff: "2:00 PM",
@@ -28,11 +28,22 @@ export const site = {
   reviewsAreSamples: true,
 };
 
-/** Delivery methods the customer can choose on a product page. */
+/** The two ways a customer can order. */
 export const deliveryMethods = [
-  { id: "express", label: "Same-day Express", detail: `Order before ${site.sameDayCutoff}, delivered today` },
-  { id: "scheduled", label: "Scheduled Delivery", detail: "Delivered in 1-2 days" },
+  { id: "instant", label: "Instant Delivery", detail: `Ready bouquets, delivered today (order before ${site.sameDayCutoff})` },
+  { id: "preorder", label: "Pre-order", detail: "Tell us what you want and the date, we prepare it for you" },
 ] as const;
+
+/** Couriers we use. */
+export const deliveryPartners = [
+  { name: "Grab Express", use: "Instant same-day delivery in KL & Selangor" },
+  { name: "Lalamove", use: "Instant same-day delivery in KL & Selangor" },
+  { name: "J&T Express", use: "Crochet bouquets & gifts sent further away" },
+];
+
+/** Payment policy shown across the site. */
+export const paymentNote = "Full payment in advance. We start preparing once payment is received.";
+export const paymentMethods = "Online bank transfer (FPX / DuitNow) or e-wallet (Touch 'n Go)";
 
 export type DeliveryMethodId = (typeof deliveryMethods)[number]["id"];
 

@@ -38,7 +38,7 @@ export function productMessages(p: WaProduct, delivery: string, c?: WaCustomer):
       id: "custom",
       title: "Request a custom version",
       hint: "Different colours, more stems or a budget",
-      text: `Hi ${site.name}, I like this bouquet and would like a custom version:\n\n${header}\n\nCan you make it in different colours or a different size?${signOff(c)}`,
+      text: `Hi ${site.name}, I like this bouquet and would like a custom version:\n\n${header}\n\nCan you make it in different colours or a different size? I can send a reference photo.${signOff(c)}`,
     },
     {
       id: "delivery",
@@ -66,14 +66,14 @@ export function generalMessages(c?: WaCustomer): MessageOption[] {
     },
     {
       id: "custom",
-      title: "Custom bouquet",
-      hint: "Your colours, flowers and budget",
-      text: `Hi ${site.name}, I would like a custom bouquet. My budget and preferred colours are: `,
+      title: "Pre-order / custom bouquet",
+      hint: "Send us a photo of what you want",
+      text: `Hi ${site.name}, I would like to pre-order a custom bouquet. I will send a reference photo.\n\nDate needed: \nBudget: \nColours / flowers: \nDelivery area: `,
     },
     {
       id: "delivery",
       title: "Check delivery area",
-      hint: "Same-day or scheduled delivery",
+      hint: "Instant delivery or pre-order to your area",
       text: `Hi ${site.name}, do you deliver to my area? My area is: `,
     },
   ];
@@ -91,5 +91,5 @@ export function multiOrderMessage(items: ListItem[], delivery: string, c?: WaCus
     ]),
   );
   const total = items.reduce((n, it) => n + it.qty * it.price, 0);
-  return `Hi ${site.name}, I would like to order these items:\n\n${lines.join("\n\n")}\n\nSubtotal: ${formatPrice(total)}\nDelivery: ${delivery}\n\nPlease confirm availability and the total with delivery.${signOff(c)}`;
+  return `Hi ${site.name}, I would like to order these items:\n\n${lines.join("\n\n")}\n\nSubtotal: ${formatPrice(total)}\nDelivery: ${delivery}\n\nPlease confirm availability and the total with delivery. I understand payment is made in advance.${signOff(c)}`;
 }

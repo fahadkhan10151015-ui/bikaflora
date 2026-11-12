@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Check, Zap, CalendarClock, Camera, ShieldCheck } from "lucide-react";
-import { products, getProduct, relatedProducts } from "@/data/products";
+import { products, getProduct, relatedProducts, isAddOn, addOns } from "@/data/products";
 import { getCategory } from "@/data/categories";
 import Gallery from "@/components/product/Gallery";
 import OrderPanel from "@/components/product/OrderPanel";
@@ -12,7 +12,7 @@ import JsonLd from "@/components/ui/JsonLd";
 import Faq from "@/components/sections/Faq";
 import SectionTitle from "@/components/sections/SectionTitle";
 import { pageMeta } from "@/lib/seo";
-import { site, absoluteUrl } from "@/lib/site";
+import { site, absoluteUrl, paymentMethods } from "@/lib/site";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -23,17 +23,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return pageMeta({
     title: `${p.name} – RM${p.price} | Delivery KL & Selangor`,
-    description: `${p.short} Order on WhatsApp with same-day express or scheduled delivery in Kuala Lumpur & Selangor. From RM${p.price}.`,
+    description: `${p.short} Order on WhatsApp with instant delivery or pre-order in Kuala Lumpur & Selangor. From RM${p.price}.`,
     path: `/product/${p.slug}`,
     image: p.images[0],
   });
 }
 
 const perks = [
-  { icon: Zap, text: "Same-day express" },
-  { icon: CalendarClock, text: "Scheduled in 1–2 days" },
+  { icon: Zap, text: "Instant delivery" },
+  { icon: CalendarClock, text: "Pre-order & custom" },
   { icon: Camera, text: "Photo before delivery" },
-  { icon: ShieldCheck, text: "Pay after confirming" },
+  { icon: ShieldCheck, text: "Confirmed on WhatsApp" },
 ];
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -61,9 +61,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   };
 
   const faqs = [
-    { q: `Can ${p.name} be delivered today?`, a: `Yes — choose Same-day Express and order before ${site.sameDayCutoff}. Delivery is within Kuala Lumpur and Selangor.` },
+    { q: `Can ${p.name} be delivered today?`, a: p.categories.includes("pre-order") ? `This item is made to order, so please pre-order and tell us your date on WhatsApp.` : `Yes. Choose Instant Delivery and order before ${site.sameDayCutoff}. We deliver by Grab Express or Lalamove within Kuala Lumpur and Selangor.` },
     { q: "Will it look exactly like the photo?", a: "We follow the design closely. Flowers and wrapping may vary slightly with the season, and we always send you a photo of your actual bouquet before delivery." },
-    { q: "How do I pay?", a: "After you message us on WhatsApp we confirm the total, including delivery, and share bank transfer / e-wallet details." },
+    { q: "How do I pay?", a: `Payment is made in advance. After you message us on WhatsApp we confirm the total including delivery, then share payment details: ${paymentMethods}. We start preparing once payment is received.` },
   ];
 
   return (
@@ -94,7 +94,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p>{p.description}</p>
           <h2>Delivery in Kuala Lumpur & Selangor</h2>
           <p>
-            Choose <strong>Same-day Express</strong> (order before {site.sameDayCutoff}) or <strong>Scheduled Delivery</strong> in 1–2 days. We deliver to homes, offices, hospitals and campuses across KL and Selangor — see all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
+            Choose <strong>Instant Delivery</strong> (order before {site.sameDayCutoff}, sent by Grab Express or Lalamove) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor — see all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
           </p>
         </div>
         <aside className="bg-white rounded-3xl border border-blush-2/70 p-6 h-fit">
@@ -111,6 +111,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </section>
 
       <section className="mt-16"><SectionTitle title="Questions about this bouquet" /><Faq items={faqs} /></section>
+
+      {!isAddOn(p) && (
+        <section className="mt-16">
+          <SectionTitle eyebrow="Make it extra special" title="Add a little extra" sub="Tap + to add these to your order list with this bouquet." />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{addOns().map((r) => <ProductCard key={r.slug} p={r} />)}</div>
+        </section>
+      )}
 
       <section className="mt-20">
         <SectionTitle eyebrow="You may also like" title="Related bouquets" />

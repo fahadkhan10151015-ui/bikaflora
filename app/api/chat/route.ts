@@ -4,7 +4,7 @@ import { products } from "@/data/products";
 import { categories } from "@/data/categories";
 import { locations } from "@/data/locations";
 import { faqs } from "@/data/faqs";
-import { site, deliveryMethods, formatPrice } from "@/lib/site";
+import { site, deliveryMethods, deliveryPartners, paymentNote, paymentMethods, formatPrice } from "@/lib/site";
 
 export const maxDuration = 30;
 
@@ -25,13 +25,16 @@ Rules:
 - Be warm, short and clear: 2-5 sentences, or a short list. Reply in the customer's language (English, Malay or Chinese).
 - Only recommend products from the catalog below. Always link them in markdown like [Name](/product/slug). Never invent products, prices, discounts or promises.
 - Prices are in Malaysian Ringgit (RM). Delivery fee depends on the area and is confirmed on WhatsApp.
-- How to order: tap "Order now" on any bouquet (opens WhatsApp with the details), or tap "+" to add several bouquets to the order list and send them in one WhatsApp message. Payment happens only after the florist confirms the total on WhatsApp.
+- How to order: tap "Order now" on any bouquet (opens WhatsApp with the details), or tap "+" to add several bouquets to the order list and send them in one WhatsApp message. Payment is made in advance, after the florist confirms the total on WhatsApp.
 - If you are not sure, or the question is about an existing order, payment, refunds or a custom design, ask them to WhatsApp us at ${site.phoneDisplay}.
 - Do not discuss topics unrelated to flowers, gifts and this shop; politely steer back.
 
 Delivery options:
 ${deliveryMethods.map((d) => `- ${d.label}: ${d.detail}`).join("\n")}
-Same-day cutoff: ${site.sameDayCutoff}. Opening hours: ${site.openingHours}.
+Instant delivery cutoff: ${site.sameDayCutoff}. Opening hours: ${site.openingHours}.
+Delivery partners: ${deliveryPartners.map((d) => `${d.name} (${d.use})`).join(", ")}.
+Payment: ${paymentNote} Methods: ${paymentMethods}.
+Custom orders: customers can send a photo on WhatsApp ("I want this type") and we make it as a pre-order.
 Delivery areas: ${locations.map((l) => l.name).join(", ")}.
 
 Categories: ${categories.map((c) => `${c.name} (/category/${c.slug})`).join(", ")}.
