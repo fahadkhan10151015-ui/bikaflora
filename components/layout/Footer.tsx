@@ -10,8 +10,8 @@ export default function Footer() {
     .map((s) => locations.find((l) => l.slug === s)!).filter(Boolean);
   return (
     <footer className="bg-deep text-white/80">
-      <div className="container-x py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-5">
-        <div className="lg:col-span-2">
+      <div className="container-x py-14 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-5">
+        <div className="col-span-2">
           <Logo light />
           <p className="mt-4 text-sm leading-relaxed max-w-sm">
             {site.name} is an online florist in Kuala Lumpur &amp; Selangor. Handmade, soap and fresh-style bouquets delivered with care. Order easily on WhatsApp.

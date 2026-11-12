@@ -2,8 +2,8 @@
 // put files in /public/images/products/ and use "/images/products/your-photo.jpg" instead.
 
 /** Build an Unsplash image URL from its photo id. */
-export const unsplash = (id: string, w = 1200) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+export const unsplash = (id: string, w = 1000) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
 
 /** Shared site images (not tied to a product). */
 /** Free florist video (Pexels) for the "Crafted by hand" section. */

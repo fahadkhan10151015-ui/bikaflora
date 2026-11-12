@@ -12,7 +12,7 @@ export default function Contact() {
     <PageShell title="Contact us" path="/contact" intro="The fastest way to reach us is WhatsApp. We usually reply within minutes during opening hours.">
       <div className="grid lg:grid-cols-5 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          <WhatsAppButton label={`WhatsApp ${site.phoneDisplay}`} className="w-full flex items-center gap-4 bg-wa text-white rounded-3xl p-6 text-xl font-semibold hover:brightness-95" iconClassName="w-10 h-10" />
+          <WhatsAppButton label={`WhatsApp ${site.phoneDisplay}`} className="w-full flex items-center gap-3 sm:gap-4 bg-wa text-white rounded-3xl p-5 sm:p-6 text-lg sm:text-xl font-semibold hover:brightness-95" iconClassName="w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
           {[{ i: Mail, t: "Email", v: site.email, h: `mailto:${site.email}` }, { i: Clock, t: "Opening hours", v: site.openingHours }, { i: MapPin, t: "Delivery coverage", v: site.addressRegion }].map(({ i: I, t, v, h }) => (
             <div key={t} className="flex items-center gap-4 bg-white rounded-3xl p-6 border border-blush-2/70">
               <div className="w-12 h-12 rounded-full bg-blush text-brand grid place-items-center"><I className="w-5 h-5" /></div>

@@ -10,6 +10,7 @@ import Photo from "@/components/ui/Photo";
 import HeroStage from "@/components/sections/HeroStage";
 import Petals from "@/components/sections/Petals";
 import VideoBand from "@/components/sections/VideoBand";
+import BouquetCraft from "@/components/sections/BouquetCraft";
 import SectionTitle from "@/components/sections/SectionTitle";
 import TrustBar from "@/components/sections/TrustBar";
 import Reviews from "@/components/sections/Reviews";
@@ -113,6 +114,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* HOW IT'S MADE (animated) */}
+      <BouquetCraft />
 
       {/* BESTSELLERS */}
       <section className="container-x mt-24">

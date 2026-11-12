@@ -24,7 +24,8 @@ export default function Header() {
       <div className="bg-brand text-white text-xs sm:text-sm">
         <div className="container-x flex items-center justify-center gap-2 py-2 text-center">
           <Truck className="w-4 h-4 shrink-0" />
-          <span>Same-day express in KL &amp; Selangor — order before {site.sameDayCutoff} · or schedule 1–2 days ahead</span>
+          <span className="sm:hidden">Same-day delivery · KL &amp; Selangor</span>
+          <span className="hidden sm:inline">Same-day express in KL &amp; Selangor — order before {site.sameDayCutoff} · or schedule 1–2 days ahead</span>
         </div>
       </div>
       <div className="bg-white/90 backdrop-blur border-b border-blush-2">

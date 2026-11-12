@@ -64,3 +64,35 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 @keyframes twinkle { 0%,100% { opacity: 0; transform: scale(.4) rotate(0deg) } 50% { opacity: 1; transform: scale(1) rotate(45deg) } }
 .sparkle { animation: twinkle 3.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .hero-float, .hero-shadow, .animate-spin-slow { animation: none } }
+
+/* ---------- "How it's made" animation (12s loop, plays only when visible) ---------- */
+.craft :is(.craft-turn, .craft-wrap, .craft-bloom, .craft-ribbon, .craft-flash, .craft-badge-photo, .craft-badge-van, .craft-step, .craft-step-icon) {
+  animation-duration: 12s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; animation-fill-mode: both; animation-play-state: paused;
+}
+.craft.is-playing :is(.craft-turn, .craft-wrap, .craft-bloom, .craft-ribbon, .craft-flash, .craft-badge-photo, .craft-badge-van, .craft-step, .craft-step-icon) { animation-play-state: running; }
+.craft-turn { animation-name: craft-turn; }
+.craft-wrap { animation-name: craft-wrap; transform-origin: 50% 100%; }
+.craft-bloom { animation-name: craft-bloom; }
+.craft-ribbon { animation-name: craft-ribbon; }
+.craft-flash { animation-name: craft-flash; opacity: 0; }
+.craft-badge-photo { animation-name: craft-badge-photo; }
+.craft-badge-van { animation-name: craft-badge-van; }
+@keyframes craft-turn { 0%,100% { transform: rotateY(-10deg) } 50% { transform: rotateY(10deg) } }
+@keyframes craft-bloom {
+  0% { transform: translate(-50%,-50%) translate(var(--x0),var(--y0)) rotate(var(--r)) scale(.4); opacity: 0 }
+  8% { opacity: 1; transform: translate(-50%,-50%) translate(var(--x0),var(--y0)) rotate(var(--r)) scale(.9) }
+  22% { transform: translate(-50%,-50%) translate(calc(var(--x0) * .95),calc(var(--y0) * .95 - 4%)) rotate(var(--r)) scale(.9) }
+  38%, 92% { transform: translate(-50%,-50%) translate(var(--x1),var(--y1)) rotate(var(--r)) scale(1); opacity: 1 }
+  100% { transform: translate(-50%,-50%) translate(var(--x1),var(--y1)) rotate(var(--r)) scale(1); opacity: 0 }
+}
+@keyframes craft-wrap { 0%,36% { transform: scaleY(0); opacity: 0 } 46%,92% { transform: scaleY(1); opacity: 1 } 100% { transform: scaleY(1); opacity: 0 } }
+@keyframes craft-ribbon { 0%,50% { transform: scale(0) rotate(-30deg); opacity: 0 } 56%,92% { transform: scale(1) rotate(0); opacity: 1 } 100% { transform: scale(1); opacity: 0 } }
+@keyframes craft-flash { 0%,62% { opacity: 0 } 64% { opacity: .85 } 70%,100% { opacity: 0 } }
+@keyframes craft-badge-photo { 0%,63% { opacity: 0; transform: translateY(-12px) } 67%,92% { opacity: 1; transform: none } 100% { opacity: 0 } }
+@keyframes craft-badge-van { 0%,76% { opacity: 0; transform: translateX(40px) } 81%,94% { opacity: 1; transform: none } 100% { opacity: 0; transform: translateX(-40px) } }
+.craft-step-1 { animation-name: craft-s1 } .craft-step-2 { animation-name: craft-s2 } .craft-step-3 { animation-name: craft-s3 } .craft-step-4 { animation-name: craft-s4 }
+@keyframes craft-s1 { 0%,32% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } 36%,100% { background: transparent; border-color: transparent; box-shadow: none } }
+@keyframes craft-s2 { 0%,34%,62%,100% { background: transparent; border-color: transparent; box-shadow: none } 38%,58% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } }
+@keyframes craft-s3 { 0%,60%,78%,100% { background: transparent; border-color: transparent; box-shadow: none } 63%,75% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } }
+@keyframes craft-s4 { 0%,76% { background: transparent; border-color: transparent; box-shadow: none } 80%,96% { background: #fff; border-color: var(--color-blush-2); box-shadow: 0 10px 30px -15px rgba(31,42,68,.25) } 100% { background: transparent; border-color: transparent } }
+@media (prefers-reduced-motion: reduce) { .craft * { animation: none !important } }
