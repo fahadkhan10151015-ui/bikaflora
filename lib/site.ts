@@ -6,7 +6,7 @@ export const site = {
   name: "BikaFlora",
   description:
     "BikaFlora is an online florist in Kuala Lumpur & Selangor. Rose bouquets, tulips, sunflowers, flower boxes and convocation flowers with same-day express or scheduled delivery. Order easily on WhatsApp.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora-one.vercel.app").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora.vercel.app").replace(/\/$/, ""),
 
   // WhatsApp number: country code + number, digits only (Malaysia example: 60123456789)
   whatsapp: "923350947538",
