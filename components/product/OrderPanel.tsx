@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Zap, CalendarClock, Check } from "lucide-react";
+import { Zap, CalendarClock, Check, Plus } from "lucide-react";
+import { useOrderList } from "@/components/order/OrderListProvider";
+import Stars from "./Stars";
 import type { Product } from "@/data/products";
 import { deliveryMethods, formatPrice, type DeliveryMethodId } from "@/lib/site";
 import { productMessages } from "@/lib/whatsapp";
@@ -13,6 +15,7 @@ const deliveryIcons = { express: Zap, scheduled: CalendarClock };
 export default function OrderPanel({ p }: { p: Product }) {
   const { user } = useAuth();
   const openChooser = useWhatsAppChooser();
+  const list = useOrderList();
   const [opt, setOpt] = useState(0);
   const [delivery, setDelivery] = useState<DeliveryMethodId>("express");
 
@@ -33,6 +36,7 @@ export default function OrderPanel({ p }: { p: Product }) {
 
   return (
     <div className="space-y-6">
+      <Stars rating={p.rating} reviews={p.reviews} className="!text-sm -mb-3" />
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-semibold text-brand">{formatPrice(price)}</span>
         {p.compareAt && opt === 0 && <span className="text-muted line-through">{formatPrice(p.compareAt)}</span>}
@@ -73,9 +77,12 @@ export default function OrderPanel({ p }: { p: Product }) {
 
       <div className="grid gap-3">
         <button type="button" onClick={openWhatsApp} className="btn btn-wa !py-4 text-base shadow-lg shadow-wa/25">
-          <WhatsAppIcon className="w-6 h-6" /> Order or ask on WhatsApp
+          <WhatsAppIcon className="w-6 h-6" /> Order on WhatsApp
         </button>
-        <p className="text-xs text-muted text-center">Pick a message — order, question, custom request or delivery check. We confirm the total before you pay.</p>
+        <button type="button" onClick={() => { list.add({ slug: p.slug, size: option?.label, price }); list.open(); }} className="btn btn-outline !py-3.5">
+          <Plus className="w-5 h-5" /> Add to order list
+        </button>
+        <p className="text-xs text-muted text-center">Ordering more than one bouquet? Add them to your order list and send everything in one WhatsApp message. We confirm the total before you pay.</p>
       </div>
     </div>
   );

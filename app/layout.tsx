@@ -12,6 +12,9 @@ import Footer from "@/components/layout/Footer";
 import FloatingWhatsApp from "@/components/whatsapp/FloatingWhatsApp";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { WhatsAppChooserProvider } from "@/components/whatsapp/WhatsAppChooser";
+import { OrderListProvider } from "@/components/order/OrderListProvider";
+import OrderListDrawer from "@/components/order/OrderListDrawer";
+import ChatBot from "@/components/chat/ChatBot";
 import JsonLd from "@/components/ui/JsonLd";
 import { orgSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -39,10 +42,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           <WhatsAppChooserProvider>
-            <Header />
-            <main className="pb-24">{children}</main>
-            <Footer />
-            <FloatingWhatsApp />
+            <OrderListProvider>
+              <Header />
+              <main className="pb-24">{children}</main>
+              <Footer />
+              <FloatingWhatsApp />
+              <OrderListDrawer />
+              <ChatBot />
+            </OrderListProvider>
           </WhatsAppChooserProvider>
         </AuthProvider>
       </body>

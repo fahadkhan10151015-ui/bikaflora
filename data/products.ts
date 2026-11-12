@@ -17,6 +17,9 @@ export type Product = {
   /** Optional soft backdrop behind transparent (cut-out) photos: blush | cream | sage | lavender | peach | white */
   tones?: string[];
   badge?: string;
+  /** Average star rating (1-5) and number of reviews. SAMPLE values — replace with your real ratings. */
+  rating?: number;
+  reviews?: number;
   short: string;
   description: string;
   includes: string[];
@@ -29,6 +32,8 @@ export const products: Product[] = [
   {
     slug: "classic-red-rose-bouquet",
     sku: "BF-001",
+    rating: 4.9,
+    reviews: 128,
     name: "Classic Red Rose Bouquet",
     price: 169,
     compareAt: 199,
@@ -49,6 +54,8 @@ export const products: Product[] = [
   {
     slug: "blush-pink-rose-bouquet",
     sku: "BF-002",
+    rating: 4.8,
+    reviews: 86,
     name: "Blush Pink Rose Bouquet",
     price: 149,
     options: [
@@ -67,6 +74,8 @@ export const products: Product[] = [
   {
     slug: "rosie-blush-soap-rose-bouquet",
     sku: "BF-003",
+    rating: 4.9,
+    reviews: 64,
     name: "Rosie Blush Soap Rose Bouquet",
     price: 129,
     categories: ["everlasting-bouquets", "anniversary-flowers"],
@@ -82,6 +91,8 @@ export const products: Product[] = [
   {
     slug: "tulip-dream-everlasting-bouquet",
     sku: "BF-004",
+    rating: 4.8,
+    reviews: 41,
     name: "Tulip Dream Everlasting Bouquet",
     price: 149,
     categories: ["everlasting-bouquets", "tulip-bouquets", "graduation-flowers"],
@@ -96,6 +107,8 @@ export const products: Product[] = [
   {
     slug: "pastel-tulip-bouquet",
     sku: "BF-005",
+    rating: 4.7,
+    reviews: 52,
     name: "Pastel Tulip Bouquet",
     price: 189,
     categories: ["tulip-bouquets", "birthday-flowers"],
@@ -109,6 +122,8 @@ export const products: Product[] = [
   {
     slug: "sunshine-sunflower-bouquet",
     sku: "BF-006",
+    rating: 4.9,
+    reviews: 97,
     name: "Sunshine Sunflower Bouquet",
     price: 119,
     options: [
@@ -127,6 +142,8 @@ export const products: Product[] = [
   {
     slug: "pink-rose-flower-box",
     sku: "BF-007",
+    rating: 4.8,
+    reviews: 73,
     name: "Pink Rose Flower Box",
     price: 219,
     categories: ["flower-boxes", "anniversary-flowers"],
@@ -141,6 +158,8 @@ export const products: Product[] = [
   {
     slug: "pink-lily-bouquet",
     sku: "BF-008",
+    rating: 4.7,
+    reviews: 38,
     name: "Pink Lily Bouquet",
     price: 179,
     categories: ["flower-boxes", "birthday-flowers"],
@@ -153,6 +172,8 @@ export const products: Product[] = [
   {
     slug: "purple-hydrangea-bouquet",
     sku: "BF-009",
+    rating: 4.8,
+    reviews: 29,
     name: "Purple Hydrangea Bouquet",
     price: 199,
     categories: ["flower-boxes", "anniversary-flowers"],
@@ -165,6 +186,8 @@ export const products: Product[] = [
   {
     slug: "garden-mix-bouquet",
     sku: "BF-010",
+    rating: 4.6,
+    reviews: 44,
     name: "Garden Mix Bouquet",
     price: 159,
     categories: ["birthday-flowers"],
@@ -177,6 +200,8 @@ export const products: Product[] = [
   {
     slug: "rose-and-babys-breath-bouquet",
     sku: "BF-011",
+    rating: 4.8,
+    reviews: 57,
     name: "Rose & Baby's Breath Bouquet",
     price: 139,
     categories: ["rose-bouquets", "graduation-flowers"],
@@ -189,6 +214,8 @@ export const products: Product[] = [
   {
     slug: "peony-romance-bouquet",
     sku: "BF-012",
+    rating: 5.0,
+    reviews: 31,
     name: "Peony Romance Bouquet",
     price: 289,
     categories: ["anniversary-flowers", "flower-boxes"],
@@ -203,6 +230,8 @@ export const products: Product[] = [
   {
     slug: "blue-and-white-bouquet",
     sku: "BF-013",
+    rating: 4.7,
+    reviews: 26,
     name: "Blue & White Bouquet",
     price: 169,
     categories: ["graduation-flowers"],
@@ -215,6 +244,8 @@ export const products: Product[] = [
   {
     slug: "lavender-dream-bouquet",
     sku: "BF-014",
+    rating: 4.8,
+    reviews: 33,
     name: "Lavender Dream Bouquet",
     price: 159,
     categories: ["birthday-flowers", "anniversary-flowers"],
@@ -227,6 +258,8 @@ export const products: Product[] = [
   {
     slug: "rainbow-tulip-bouquet",
     sku: "BF-015",
+    rating: 4.7,
+    reviews: 40,
     name: "Rainbow Tulip Bouquet",
     price: 209,
     categories: ["tulip-bouquets", "birthday-flowers"],
@@ -239,6 +272,8 @@ export const products: Product[] = [
   {
     slug: "sweetheart-pink-bouquet",
     sku: "BF-016",
+    rating: 4.6,
+    reviews: 61,
     name: "Sweetheart Pink Bouquet",
     price: 129,
     categories: ["birthday-flowers", "rose-bouquets"],

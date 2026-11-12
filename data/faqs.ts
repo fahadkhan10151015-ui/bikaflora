@@ -2,7 +2,7 @@ import { site } from "@/lib/site";
 
 export const faqs = [
   { q: "How do I order from BikaFlora?",
-    a: "Open any bouquet, choose the size and delivery method, then tap the WhatsApp button and pick “Order this bouquet”. The bouquet name, code, size, price and delivery choice are added to the message for you. We reply to confirm the total and payment details." },
+    a: "Tap “Order now” on any bouquet and WhatsApp opens with the bouquet name, code, size and price already typed. To order several bouquets, tap the + button on each one to add it to your order list, then tap “Send order on WhatsApp”. We reply to confirm the total, delivery and payment details." },
   { q: "What delivery options do you have?",
     a: `Two options: Same-day Express (order before ${site.sameDayCutoff} and it arrives today) or Scheduled Delivery (delivered in 1–2 days). Both cover Kuala Lumpur and most of Selangor.` },
   { q: "Which areas do you deliver to?",

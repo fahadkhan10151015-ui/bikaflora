@@ -78,3 +78,18 @@ export function generalMessages(c?: WaCustomer): MessageOption[] {
     },
   ];
 }
+
+export type ListItem = { name: string; sku: string; slug: string; price: number; qty: number; size?: string };
+
+/** One WhatsApp message for several bouquets at once. */
+export function multiOrderMessage(items: ListItem[], delivery: string, c?: WaCustomer) {
+  const lines = items.map((it, i) =>
+    join([
+      `${i + 1}. *${it.name}* (${it.sku})${it.size ? ` - ${it.size}` : ""}`,
+      `   ${it.qty} x ${formatPrice(it.price)} = ${formatPrice(it.qty * it.price)}`,
+      `   ${absoluteUrl(`/product/${it.slug}`)}`,
+    ]),
+  );
+  const total = items.reduce((n, it) => n + it.qty * it.price, 0);
+  return `Hi ${site.name}, I would like to order these items:\n\n${lines.join("\n\n")}\n\nSubtotal: ${formatPrice(total)}\nDelivery: ${delivery}\n\nPlease confirm availability and the total with delivery.${signOff(c)}`;
+}

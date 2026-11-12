@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, Zap, CalendarClock, MapPin } from "lucide-react";
-import { categories } from "@/data/categories";
-import { featuredProducts } from "@/data/products";
+import { featuredProducts, productsInCategory } from "@/data/products";
 import { selangor, kl } from "@/data/locations";
 import { faqs } from "@/data/faqs";
-import ProductCard from "@/components/product/ProductCard";
-import Photo from "@/components/ui/Photo";
+import ProductRow from "@/components/product/ProductRow";
 import HeroStage from "@/components/sections/HeroStage";
 import Petals from "@/components/sections/Petals";
 import VideoBand from "@/components/sections/VideoBand";
@@ -37,8 +35,8 @@ const occasions = [
 ];
 
 const steps = [
-  { icon: MousePointerClick, title: "Choose a bouquet", text: "Open the bouquet you like, pick the size and Same-day Express or Scheduled delivery." },
-  { icon: MessageCircle, title: "Pick a WhatsApp message", text: "Order, ask a question, request a custom version or check your area — the bouquet details are added for you." },
+  { icon: MousePointerClick, title: "Tap “Order now”", text: "Tap Order now on any bouquet. Want several? Tap + to add them to your order list." },
+  { icon: MessageCircle, title: "Send on WhatsApp", text: "WhatsApp opens with the bouquet name, code, size and price already typed. Just press send." },
   { icon: Truck, title: "Confirm & we deliver", text: "We confirm the total, send a photo of your bouquet and deliver it with care." },
 ];
 
@@ -98,36 +96,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-      <section className="container-x mt-20">
-        <SectionTitle eyebrow="Shop by category" title="Find the perfect bouquet" sub="From timeless roses to luxury flower boxes — every bouquet is hand-tied in the Klang Valley." />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {categories.map((c) => (
-            <Link key={c.slug} href={`/category/${c.slug}`} className="group tilt relative aspect-[4/5] rounded-3xl overflow-hidden">
-              <Photo src={c.image} tone={c.tone} alt={`${c.name} delivery KL Selangor`} sizes="(max-width:768px) 50vw, 25vw" imgClassName="group-hover:scale-110 transition duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-deep/85 via-deep/10 to-transparent" />
-              <div className="absolute bottom-0 p-4 md:p-5 text-white">
-                <h3 className="font-serif text-base md:text-xl font-semibold leading-tight">{c.name}</h3>
-                <p className="hidden sm:block text-xs md:text-sm text-white/80">{c.short}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* PRODUCTS BY CATEGORY (like a shop front) */}
+      <ProductRow eyebrow="Customer favourites" title="Popular bouquets" href="/shop" items={featuredProducts()} priority />
+      <ProductRow eyebrow="Timeless" title="Rose bouquets" href="/category/rose-bouquets" items={productsInCategory("rose-bouquets")} />
+      <ProductRow eyebrow="No vase needed" title="Luxury flower boxes" href="/category/flower-boxes" items={productsInCategory("flower-boxes")} />
 
       {/* HOW IT'S MADE (animated) */}
       <BouquetCraft />
 
-      {/* BESTSELLERS */}
-      <section className="container-x mt-24">
-        <div className="flex items-end justify-between gap-4">
-          <SectionTitle eyebrow="Customer favourites" title="Best-selling bouquets" center={false} />
-          <Link href="/shop" className="hidden md:flex items-center gap-1 text-brand font-semibold mb-10">View all <ArrowRight className="w-4 h-4" /></Link>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {featuredProducts().map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}
-        </div>
-      </section>
+      <ProductRow eyebrow="Congrats, graduate" title="Convocation flowers" href="/category/graduation-flowers" items={productsInCategory("graduation-flowers")} />
+      <ProductRow eyebrow="Make their day" title="Birthday flowers" href="/category/birthday-flowers" items={productsInCategory("birthday-flowers")} />
+      <ProductRow eyebrow="Lasts for months" title="Everlasting bouquets" href="/category/everlasting-bouquets" items={productsInCategory("everlasting-bouquets")} />
 
       {/* DELIVERY OPTIONS */}
       <section className="container-x mt-24 grid md:grid-cols-2 gap-6">
@@ -146,7 +125,7 @@ export default function Home() {
       {/* HOW TO ORDER */}
       <section className="mt-24 bg-white border-y border-blush-2 petal-bg">
         <div className="container-x py-20">
-          <SectionTitle eyebrow="Easy ordering" title="Order in 3 simple steps" sub="No cart, no long checkout. Choose a bouquet and chat with a real florist on WhatsApp." />
+          <SectionTitle eyebrow="Easy ordering" title="Order in 3 simple steps" sub="No checkout and no account needed. Choose your flowers and chat with a real florist on WhatsApp." />
           <div className="grid md:grid-cols-3 gap-6">
             {steps.map(({ icon: Icon, title, text }, i) => (
               <div key={title} className="tilt bg-cream rounded-3xl p-8 text-center border border-blush-2/70">
