@@ -33,7 +33,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
       <div className="container-x mt-10">
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">{items.map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{items.map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}</div>
         <div className="max-w-3xl mx-auto mt-16 prose-bf">
           {c.content.map((s) => (<div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>))}
         </div>

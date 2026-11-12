@@ -1,4 +1,5 @@
 import { generateText } from "ai";
+import { botReply } from "@/lib/bot";
 import { products } from "@/data/products";
 import { categories } from "@/data/categories";
 import { locations } from "@/data/locations";
@@ -43,39 +44,8 @@ ${faqs.map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n")}`;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const keywords: Record<string, string[]> = {
-  "birthday-flowers": ["birthday", "bday", "hari jadi", "生日"],
-  "anniversary-flowers": ["anniversary", "love", "wife", "husband", "girlfriend", "valentine", "ulang tahun"],
-  "graduation-flowers": ["convo", "convocation", "graduat", "konvo"],
-  "rose-bouquets": ["rose", "mawar", "玫瑰"],
-  "tulip-bouquets": ["tulip"],
-  "sunflower-bouquets": ["sunflower", "matahari"],
-  "flower-boxes": ["box", "kotak"],
-  "everlasting-bouquets": ["everlasting", "soap", "last", "preserved", "get well", "hospital"],
-};
-
-/** Simple product finder used when the AI service is unavailable. */
-function fallbackReply(q: string) {
-  const text = q.toLowerCase();
-  const budget = Number(text.match(/(?:rm|under|below|bawah)\s*(\d{2,4})/)?.[1] || text.match(/(\d{2,4})\s*(?:rm|ringgit)/)?.[1] || 0);
-  const cats = Object.entries(keywords).filter(([, words]) => words.some((w) => text.includes(w))).map(([c]) => c);
-  let list = products.filter((p) => !cats.length || p.categories.some((c) => cats.includes(c)));
-  if (budget) list = list.filter((p) => p.price <= budget);
-  list = [...list].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
-  const area = locations.find((l) => text.includes(l.name.toLowerCase()));
-  const lines: string[] = [];
-  if (area) lines.push(`Yes, we deliver to **${area.name}**. ${deliveryMethods[0].label}: ${deliveryMethods[0].detail}.`);
-  if (/order|how|beli|cara/.test(text) && !list.length) lines.push(`Tap **Order now** on any bouquet, or tap **+** to add several to your order list and send them in one WhatsApp message.`);
-  if (list.length) {
-    lines.push("Here are some bouquets you may like:");
-    list.forEach((p) => lines.push(`- [${p.name}](/product/${p.slug}) - ${formatPrice(p.price)}`));
-  }
-  lines.push(`For anything else, WhatsApp our florist at ${site.phoneDisplay}.`);
-  return lines.join("\n");
-}
-
 export async function POST(req: Request) {
-  let body: { messages?: Msg[] };
+  let body: { messages?: Msg[]; page?: string };
   try { body = await req.json(); } catch { return Response.json({ error: "Bad request" }, { status: 400 }); }
 
   const messages = (body.messages || [])
@@ -86,12 +56,17 @@ export async function POST(req: Request) {
     return Response.json({ error: "No question" }, { status: 400 });
   }
 
+  // Without AI Gateway credits (or if it is down), answer with the built-in assistant straight away.
+  if (process.env.CHAT_AI !== "on") {
+    return Response.json({ reply: botReply(messages, typeof body.page === "string" ? body.page : undefined), fallback: true });
+  }
   try {
-    const { text } = await generateText({ model: MODEL, instructions, messages, maxOutputTokens: 450 });
+    const pageNote = body.page?.startsWith("/product/") ? `\nThe customer is currently viewing: ${body.page}` : "";
+    const { text } = await generateText({ model: MODEL, instructions: instructions + pageNote, messages, maxOutputTokens: 450 });
     return Response.json({ reply: text });
   } catch (e) {
     console.error("chat error", e);
-    return Response.json({ reply: fallbackReply(messages[messages.length - 1].content), fallback: true });
+    return Response.json({ reply: botReply(messages, typeof body.page === "string" ? body.page : undefined), fallback: true });
   }
 }
 

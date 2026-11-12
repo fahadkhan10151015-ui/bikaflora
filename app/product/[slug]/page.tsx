@@ -114,7 +114,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <section className="mt-20">
         <SectionTitle eyebrow="You may also like" title="Related bouquets" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">{relatedProducts(p).map((r) => <ProductCard key={r.slug} p={r} />)}</div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{relatedProducts(p).map((r) => <ProductCard key={r.slug} p={r} />)}</div>
       </section>
     </div>
   );

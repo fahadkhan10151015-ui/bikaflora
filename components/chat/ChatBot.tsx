@@ -51,7 +51,7 @@ export default function ChatBot() {
     setInput("");
     setBusy(true);
     try {
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next }) });
+      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: next, page: path }) });
       const data = await res.json();
       setMsgs([...next, { role: "assistant", content: data.reply || `Sorry, please WhatsApp us at ${site.phoneDisplay}.` }]);
     } catch {

@@ -64,7 +64,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
       <div className="container-x mt-12">
         <SectionTitle eyebrow={`Popular in ${l.name}`} title={`Bouquets delivered to ${l.name}`} />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">{picks.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{picks.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
         <div className="text-center mt-8"><Link href="/shop" className="btn btn-outline">See all bouquets</Link></div>
 
         <div className="mt-16 grid lg:grid-cols-3 gap-8">

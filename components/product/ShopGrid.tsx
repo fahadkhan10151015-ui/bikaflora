@@ -31,7 +31,7 @@ export default function ShopGrid({ items, initialCat = "" }: { items: Product[];
         </div>
       </div>
       <p className="text-sm text-muted mb-4">{list.length} bouquets</p>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">{list.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{list.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
       {list.length === 0 && <p className="text-center text-muted py-16">No bouquets found. Try another category or message us on WhatsApp.</p>}
     </div>
   );
