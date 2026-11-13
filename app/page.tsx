@@ -16,6 +16,7 @@ import SectionTitle from "@/components/sections/SectionTitle";
 import TrustBar from "@/components/sections/TrustBar";
 import Reviews from "@/components/sections/Reviews";
 import Faq from "@/components/sections/Faq";
+import MomentsCarousel from "@/components/sections/MomentsCarousel";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import { site } from "@/lib/site";
 import { siteImages } from "@/lib/images";
@@ -170,6 +171,8 @@ export default function Home() {
         <SectionTitle eyebrow="FAQ" title="Frequently asked questions" />
         <Faq items={faqs.slice(0, 6)} />
       </section>
+
+      <MomentsCarousel />
 
       <VideoBand />
     </>
