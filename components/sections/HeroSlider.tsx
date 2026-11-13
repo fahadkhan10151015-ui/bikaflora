@@ -56,18 +56,15 @@ const slides: Slide[] = [
 ];
 
 const DURATION = 4000;
-/** Slide 5: a florist wrapping a bouquet, from start to the finished bouquet (Pexels 5756290, free licence, stored on our site). Plays once, then the slides start again. */
-const VIDEO_MS = 16500; // safety limit; normally the slide moves on when the video ends (15s)
-const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made with love,", "delivered today"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
+/** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
+const VIDEO_MS = 16500; // safety limit; normally the slide moves on when the video ends (~15s)
+const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made by hand,", "start to finish"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
   const total = slides.length + 1;
-  const isVideo = active === slides.length;
+  const isVideo = active === 0;
   const video = useRef<HTMLVideoElement>(null);
-  const [preload, setPreload] = useState<"none" | "auto">("none");
-  // Start downloading the video quietly after the page has loaded, so it is ready (and smooth) when its turn comes.
-  useEffect(() => { const t = setTimeout(() => setPreload("auto"), 2500); return () => clearTimeout(t); }, []);
   useEffect(() => {
     const v = video.current;
     if (!v) return;
@@ -89,7 +86,7 @@ export default function HeroSlider() {
   }, [active, paused, isVideo, total]);
 
   const go = (d: number) => setActive((a) => (a + d + total) % total);
-  const s = isVideo ? videoSlide : slides[active];
+  const s = isVideo ? videoSlide : slides[active - 1];
 
   return (
     <section className="relative overflow-hidden bg-deep text-white" aria-roledescription="carousel" aria-label="Featured bouquets"
@@ -102,16 +99,16 @@ export default function HeroSlider() {
       }}>
       {/* backgrounds: one per slide, cross-fading with a slow zoom */}
       {slides.map((sl, i) => (
-        <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-          <Image src={sl.bg} alt="" fill priority={i === 0} sizes="100vw" quality={70}
-            className={`object-cover object-center opacity-80 ${i === active ? "hero-bg-zoom" : ""}`} />
+        <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+          <Image src={sl.bg} alt="" fill sizes="100vw" quality={70}
+            className={`object-cover object-center opacity-80 ${i + 1 === active ? "hero-bg-zoom" : ""}`} />
         </div>
       ))}
-      {/* slide 5: video */}
+      {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[62%_center]" muted playsInline preload={preload} poster="/video/hero-florist-poster.webp" onEnded={() => setActive(0)}>
-          <source src="/video/hero-florist-720.mp4" type="video/mp4" media="(max-width: 1023px)" />
-          <source src="/video/hero-florist-1080.mp4" type="video/mp4" />
+        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[62%_center]" muted playsInline autoPlay preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
+          <source src="/video/hero-making-720.mp4" type="video/mp4" media="(max-width: 1023px)" />
+          <source src="/video/hero-making-1080.mp4" type="video/mp4" />
         </video>
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-md:opacity-0" : ""}`} />
@@ -146,7 +143,7 @@ export default function HeroSlider() {
         {/* slide controls */}
         <div className="mt-8 flex items-center gap-2 justify-center lg:justify-start" role="tablist" aria-label="Featured bouquets">
           <button onClick={() => go(-1)} aria-label="Previous slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center mr-1"><ChevronLeft className="w-4 h-4" /></button>
-          {[...slides.map((sl) => sl.alt), "Our bouquet video"].map((label, i) => (
+          {["How we make a bouquet", ...slides.map((sl) => sl.alt)].map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={`Show ${label}`} onClick={() => setActive(i)}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
               {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? VIDEO_MS : DURATION}ms` }} />}
@@ -155,7 +152,7 @@ export default function HeroSlider() {
           <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
         </div>
       </div>
-      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "opacity-0 pointer-events-none" : "opacity-100"}`}><HeroStage slides={slides} active={isVideo ? -1 : active} /></div>
+      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "opacity-0 pointer-events-none" : "opacity-100"}`}><HeroStage slides={slides} active={isVideo ? -1 : active - 1} /></div>
       </div>
     </section>
   );

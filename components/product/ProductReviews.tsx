@@ -6,7 +6,7 @@ import { getSupabase } from "@/lib/supabase";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useRatings } from "./RatingsProvider";
 
-type Review = { id: string; user_id: string; name: string; rating: number; comment: string; created_at: string };
+type Review = { id: string; user_id: string | null; name: string; rating: number; comment: string; created_at: string };
 
 function StarPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -22,7 +22,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (n: number) 
   );
 }
 
-/** Real customer reviews for one product, stored in Supabase. Signed-in customers can write one review per product. */
+/** Real customer reviews for one product, stored in Supabase. Anyone can write one; signed-in customers can also edit or delete theirs. */
 export default function ProductReviews({ slug, productName }: { slug: string; productName: string }) {
   const { user } = useAuth();
   const ratings = useRatings();
@@ -32,6 +32,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [writing, setWriting] = useState(false);
+  const [guestName, setGuestName] = useState("");
 
   const load = useCallback(async () => {
     const sb = getSupabase();
@@ -47,10 +48,12 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const sb = getSupabase();
-    if (!sb || !user) return;
+    if (!sb) return;
+    if (!user && guestName.trim().length < 2) return setMsg("Please enter your name.");
     if (comment.trim().length < 3) return setMsg("Please write a few words about your bouquet.");
     setBusy(true); setMsg("");
-    const row = { product_slug: slug, user_id: user.id, name: (displayName(user) || "Customer").slice(0, 60), rating, comment: comment.trim().slice(0, 1000) };
+    const name = (user ? displayName(user) || "Customer" : guestName.trim()).slice(0, 60);
+    const row = { product_slug: slug, user_id: user ? user.id : null, name, rating, comment: comment.trim().slice(0, 1000) };
     const { error } = mine
       ? await sb.from("reviews").update({ rating: row.rating, comment: row.comment, name: row.name }).eq("id", mine.id)
       : await sb.from("reviews").insert(row);
@@ -58,6 +61,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
     if (error) return setMsg("Sorry, your review could not be saved. Please try again.");
     setMsg(mine ? "Your review was updated. Thank you!" : "Thank you for your review!");
     setWriting(false);
+    if (!user) { setComment(""); setGuestName(""); setRating(5); }
     load();
     ratings.reload();
   }
@@ -86,21 +90,23 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
             </div>
           )}
         </div>
-        {user ? (
-          !writing && <button onClick={() => setWriting(true)} className="btn btn-primary !py-2.5"><PenLine className="w-4 h-4" /> {mine ? "Edit your review" : "Write a review"}</button>
-        ) : (
-          <Link href={`/login?next=/product/${slug}`} className="btn btn-outline !py-2.5"><PenLine className="w-4 h-4" /> Log in to write a review</Link>
-        )}
+        {!writing && <button onClick={() => { setWriting(true); setMsg(""); }} className="btn btn-primary !py-2.5"><PenLine className="w-4 h-4" /> {mine ? "Edit your review" : "Write a review"}</button>}
       </div>
 
       {msg && <p className="mb-4 text-sm font-medium text-brand">{msg}</p>}
 
-      {user && writing && (
+      {writing && (
         <form onSubmit={submit} className="bg-white rounded-3xl border border-blush-2 p-5 md:p-6 mb-6 space-y-4">
           <div>
             <div className="label">Your rating for {productName}</div>
             <StarPicker value={rating} onChange={setRating} />
           </div>
+          {!user && (
+            <div>
+              <label htmlFor="review-name" className="label">Your name</label>
+              <input id="review-name" value={guestName} onChange={(e) => setGuestName(e.target.value)} maxLength={60} placeholder="e.g. Aisyah" className="input" autoComplete="given-name" />
+            </div>
+          )}
           <div>
             <label htmlFor="review-text" className="label">Your review</label>
             <textarea id="review-text" value={comment} onChange={(e) => setComment(e.target.value)} maxLength={1000} rows={4}
@@ -112,7 +118,11 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
             <button type="button" onClick={() => setWriting(false)} className="btn btn-outline">Cancel</button>
             {mine && <button type="button" onClick={remove} className="ml-auto text-sm text-muted hover:text-red-600 flex items-center gap-1"><Trash2 className="w-4 h-4" /> Delete my review</button>}
           </div>
-          <p className="text-xs text-muted">Posted as <b>{displayName(user) || "Customer"}</b>. Your email is never shown.</p>
+          {user ? (
+            <p className="text-xs text-muted">Posted as <b>{displayName(user) || "Customer"}</b>. Your email is never shown.</p>
+          ) : (
+            <p className="text-xs text-muted">No account needed. <Link href={`/login?next=/product/${slug}`} className="underline">Log in</Link> if you want to edit your review later.</p>
+          )}
         </form>
       )}
 

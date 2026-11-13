@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Zap, CalendarClock, Check, Plus, Palette } from "lucide-react";
+import { Zap, CalendarClock, Check, Plus, Palette, Mail, ShoppingBag } from "lucide-react";
 import { useOrderList } from "@/components/order/OrderListProvider";
 import Stars from "./Stars";
 import { useVariant } from "./VariantProvider";
-import type { Product } from "@/data/products";
+import { isAddOn, type Product } from "@/data/products";
 import { deliveryMethods, formatPrice, paymentNote, type DeliveryMethodId } from "@/lib/site";
 import { productMessages } from "@/lib/whatsapp";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
@@ -13,6 +13,26 @@ import { useWhatsAppChooser } from "@/components/whatsapp/WhatsAppChooser";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 
 const deliveryIcons = { instant: Zap, preorder: CalendarClock };
+
+/** Extras offered with every bouquet. */
+const cardOptions = [
+  { id: "handwritten", label: "Handwritten card", note: "We write your message" },
+  { id: "blank", label: "Blank card", note: "Write it yourself" },
+  { id: "none", label: "No card", note: "" },
+] as const;
+const BAG_PRICE = 6;
+type CardId = (typeof cardOptions)[number]["id"];
+
+function Choice({ on, onClick, title, note, warn }: { on: boolean; onClick: () => void; title: string; note?: string; warn?: boolean }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={on}
+      className={`relative text-left rounded-2xl border-2 px-3.5 py-3 transition ${on ? "border-brand bg-blush/60" : "border-blush-2 bg-white hover:border-brand/50"}`}>
+      <span className={`block text-sm font-semibold ${warn ? "text-ink" : ""}`}>{title}</span>
+      {note && <span className={`block text-xs mt-0.5 ${warn ? "text-red-600" : "text-muted"}`}>{note}</span>}
+      {on && <Check className="absolute top-2.5 right-2.5 w-4 h-4 text-brand" />}
+    </button>
+  );
+}
 
 export default function OrderPanel({ p }: { p: Product }) {
   const { user } = useAuth();
@@ -24,7 +44,18 @@ export default function OrderPanel({ p }: { p: Product }) {
   const [delivery, setDelivery] = useState<DeliveryMethodId>(methods[0]?.id ?? "preorder");
   useEffect(() => { if (paper) setDelivery("preorder"); }, [paper]);
 
-  const price = p.price;
+  const extrasOn = !isAddOn(p);
+  const [card, setCard] = useState<CardId>("handwritten");
+  const [cardMsg, setCardMsg] = useState("");
+  const [bag, setBag] = useState(false);
+  const price = p.price + (extrasOn && bag ? BAG_PRICE : 0);
+  const cardLabel = cardOptions.find((c) => c.id === card)!.label;
+  const extras = extrasOn
+    ? [
+        `Card: ${cardLabel}${card === "handwritten" && cardMsg.trim() ? ` – "${cardMsg.trim()}"` : ""}`,
+        bag ? `Protection bag: Yes (+${formatPrice(BAG_PRICE)})` : "Protection bag: No",
+      ]
+    : [];
   const method = deliveryMethods.find((d) => d.id === delivery)!;
   const colour = variant?.label;
 
@@ -33,7 +64,7 @@ export default function OrderPanel({ p }: { p: Product }) {
       title: p.name,
       subtitle: `${colour ? `${colour} · ` : ""}${paper ? `${paper.label} paper · ` : ""}${formatPrice(price)} · ${method.label}`,
       options: productMessages(
-        { name: p.name, sku: p.sku, slug: p.slug, price, colour, paper: paper?.label },
+        { name: p.name, sku: p.sku, slug: p.slug, price, colour, paper: paper?.label, extras },
         `${method.label} (${method.detail})`,
         user ? { name: displayName(user), email: user.email } : undefined,
       ),
@@ -43,7 +74,7 @@ export default function OrderPanel({ p }: { p: Product }) {
     <div className="space-y-6">
       <Stars slug={p.slug} className="!text-sm" />
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-        <span className="text-3xl font-semibold text-brand">{formatPrice(price)}</span>
+        <span className="text-3xl font-semibold text-brand">{formatPrice(p.price)}</span>
         {p.compareAt && (
           <>
             <span className="text-muted line-through">{formatPrice(p.compareAt)}</span>
@@ -117,11 +148,40 @@ export default function OrderPanel({ p }: { p: Product }) {
         </div>
       </fieldset>
 
+      {extrasOn && (
+        <>
+          <fieldset>
+            <legend className="label"><span className="inline-flex items-center gap-1.5"><Mail className="w-4 h-4 text-gold" /> Gift card</span></legend>
+            <div className="grid grid-cols-3 gap-2">
+              {cardOptions.map((c) => <Choice key={c.id} on={card === c.id} onClick={() => setCard(c.id)} title={c.label} note={c.note} />)}
+            </div>
+            {card === "handwritten" && (
+              <textarea value={cardMsg} onChange={(e) => setCardMsg(e.target.value)} maxLength={200} rows={2} className="input mt-2.5 text-sm"
+                placeholder="Your card message, e.g. Happy birthday sayang! Love, Adam" aria-label="Card message" />
+            )}
+          </fieldset>
+          <fieldset>
+            <legend className="label"><span className="inline-flex items-center gap-1.5"><ShoppingBag className="w-4 h-4 text-gold" /> Bouquet protection bag</span></legend>
+            <div className="grid grid-cols-2 gap-2">
+              <Choice on={bag} onClick={() => setBag(true)} title={`Add bag (+${formatPrice(BAG_PRICE)})`} note="Clear bag with handles, keeps it safe" />
+              <Choice on={!bag} onClick={() => setBag(false)} title="No bag" note="Risky: bouquet may get damaged" warn />
+            </div>
+          </fieldset>
+        </>
+      )}
+
+      {price !== p.price && (
+        <div className="flex items-center justify-between rounded-2xl bg-white border border-blush-2 px-4 py-3">
+          <span className="text-sm text-muted">Total with bag</span>
+          <span className="text-xl font-semibold text-brand">{formatPrice(price)}</span>
+        </div>
+      )}
+
       <div className="grid gap-3">
         <button type="button" onClick={openWhatsApp} className="btn btn-wa !py-4 text-base shadow-lg shadow-wa/25">
           <WhatsAppIcon className="w-6 h-6" /> Order on WhatsApp
         </button>
-        <button type="button" onClick={() => { list.add({ slug: p.slug, size: [colour, paper && `${paper.label} paper (pre-order)`].filter(Boolean).join(", ") || undefined, price }); list.open(); }} className="btn btn-outline !py-3.5">
+        <button type="button" onClick={() => { list.add({ slug: p.slug, size: [colour, paper && `${paper.label} paper (pre-order)`, ...extras].filter(Boolean).join(", ") || undefined, price }); list.open(); }} className="btn btn-outline !py-3.5">
           <Plus className="w-5 h-5" /> Add to order list
         </button>
         <p className="text-xs text-muted text-center">Ordering more than one bouquet? Add them to your order list and send everything in one WhatsApp message. {paymentNote}</p>
