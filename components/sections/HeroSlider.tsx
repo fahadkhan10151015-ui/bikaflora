@@ -57,7 +57,7 @@ const slides: Slide[] = [
 
 const DURATION = 4000;
 /** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
-const VIDEO_MS = 16500; // safety limit; normally the slide moves on when the video ends (~15s)
+const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~15.6s)
 const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made by hand,", "start to finish"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
 
 export default function HeroSlider() {
@@ -68,7 +68,12 @@ export default function HeroSlider() {
   useEffect(() => {
     const v = video.current;
     if (!v) return;
-    if (isVideo) { v.currentTime = 0; v.play().catch(() => {}); } else v.pause();
+    if (!isVideo) { v.pause(); return; }
+    v.currentTime = 0;
+    // Start only once enough is downloaded to play to the end without stopping (smooth on slow connections).
+    const start = () => v.play().catch(() => {});
+    if (v.readyState >= 4) start();
+    else { v.addEventListener("canplaythrough", start, { once: true }); return () => v.removeEventListener("canplaythrough", start); }
   }, [isVideo]);
   const [paused, setPaused] = useState(false);
   // Pause only while the visitor is on another browser tab.
@@ -106,12 +111,14 @@ export default function HeroSlider() {
       ))}
       {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[62%_center]" muted playsInline autoPlay preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
+        {/* Phones & tablets: soft blurred backdrop, the full 16:9 video sits in a frame on top (nothing cropped). */}
+        <div className="lg:hidden absolute inset-0 bg-cover bg-center blur-2xl scale-110 opacity-40" style={{ backgroundImage: "url(/video/hero-making-poster.webp)" }} />
+        <video ref={video} className="absolute max-lg:z-[1] max-lg:left-4 max-lg:right-4 max-lg:top-8 max-lg:aspect-video max-lg:max-w-[720px] max-lg:mx-auto max-lg:rounded-2xl max-lg:ring-2 max-lg:ring-gold/70 max-lg:shadow-2xl max-lg:shadow-black/50 lg:inset-0 w-[calc(100%-2rem)] lg:w-full lg:h-full object-cover object-center bg-deep" muted playsInline preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
           <source src="/video/hero-making-720.mp4" type="video/mp4" media="(max-width: 1023px)" />
           <source src="/video/hero-making-1080.mp4" type="video/mp4" />
         </video>
       </div>
-      <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-md:opacity-0" : ""}`} />
+      <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0" : ""}`} />
       <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "bg-[linear-gradient(to_top,rgba(16,23,42,.95)_0%,rgba(16,23,42,.75)_40%,rgba(16,23,42,0)_65%)] md:bg-gradient-to-t md:from-deep/80 md:via-transparent md:to-deep/30" : "bg-gradient-to-t from-deep/80 via-transparent to-deep/30"}`} />
       <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
       <Petals />
@@ -146,7 +153,7 @@ export default function HeroSlider() {
           {["How we make a bouquet", ...slides.map((sl) => sl.alt)].map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={`Show ${label}`} onClick={() => setActive(i)}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
-              {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? VIDEO_MS : DURATION}ms` }} />}
+              {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? 15600 : DURATION}ms` }} />}
             </button>
           ))}
           <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
