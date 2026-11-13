@@ -1,26 +1,19 @@
 #!/usr/bin/env bash
 # Runs on GitHub's servers (see .github/workflows/fetch-assets.yml).
-# Reads the Grab product list (saved to the database from the browser) and downloads every product photo.
+# Makes preview sheets of candidate florist videos (clips from the same shoot have nearby ids).
 set -u
-OUT=_incoming/grab; mkdir -p $OUT
-KEY=sb_publishable_ssLuTnisZZylfUF_usPuLQ_mbryrJrX
-curl -s "https://nmbyvevxdrlgxjepxtuh.supabase.co/rest/v1/tmp_grab_import?select=data&order=id.desc&limit=1" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -o $OUT/raw.json
-python3 - <<'PY'
-import json, urllib.request, os
-d = json.load(open('_incoming/grab/raw.json'))[0]['data']
-for it in d['items']:
-    it['files'] = []
-    for n, u in enumerate(it.get('images') or []):
-        for c in [u.replace('/compressed_webp/', '/'), u]:
-            try:
-                data = urllib.request.urlopen(urllib.request.Request(c, headers={'Accept': 'image/*'}), timeout=40).read()
-                if len(data) < 2000: continue
-                ext = '.webp' if data[:4] == b'RIFF' else ('.png' if data[:4] == b'\x89PNG' else '.jpg')
-                fn = f"{it['id']}_{n}{ext}"
-                open('_incoming/grab/' + fn, 'wb').write(data); it['files'].append(fn); break
-            except Exception as e:
-                print('fail', c[:80], e)
-json.dump(d, open('_incoming/grab/items.json', 'w'), ensure_ascii=False, indent=1)
-print(sum(len(i['files']) for i in d['items']), 'photos')
-PY
-rm -f $OUT/raw.json
+OUT=_incoming/videos; mkdir -p $OUT
+probe() {
+  id=$1
+  for q in hd_1280_720_25fps hd_1280_720_24fps hd_1280_720_30fps hd_1366_720_25fps hd_1366_720_24fps sd_960_540_25fps sd_960_540_24fps; do
+    url="https://videos.pexels.com/video-files/$id/$id-$q.mp4"
+    if curl -sfL --max-time 60 "$url" -o /tmp/$id.mp4; then
+      dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/$id.mp4)
+      ffmpeg -loglevel error -y -i /tmp/$id.mp4 -vf "fps=6/$dur,scale=320:-2,tile=6x1" -frames:v 1 "$OUT/$id.jpg" && echo "$id $q $dur" >> $OUT/list.txt
+      rm -f /tmp/$id.mp4; return
+    fi
+  done
+}
+export -f probe; export OUT
+{ seq 5756270 5756310; seq 4621340 4621380; seq 5564520 5564575; seq 7626700 7626730; seq 8279140 8279165; } | xargs -P 12 -I{} bash -c 'probe {}'
+sort -o $OUT/list.txt $OUT/list.txt; wc -l $OUT/list.txt
