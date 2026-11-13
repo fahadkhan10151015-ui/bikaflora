@@ -81,9 +81,9 @@ export default function OrderPanel({ p }: { p: Product }) {
               const name = c.image ? c.label : "Original";
               return (
                 <button key={c.id} type="button" onClick={() => setPaper(c.image ? c.id : undefined)} aria-pressed={on} title={c.label}
-                  className="group flex flex-col items-center gap-1.5 w-14">
+                  className="group flex flex-col items-center gap-1.5 w-[60px]">
                   <span className={`relative w-12 h-12 rounded-full transition ring-offset-2 ring-offset-cream ${on ? "ring-2 ring-brand scale-105" : "ring-1 ring-black/10 group-hover:scale-105"}`} style={{ background: c.swatch }}>
-                    {on && <Check className={`absolute inset-0 m-auto w-5 h-5 ${["white", "pink", "original"].includes(c.id) && c.swatch !== "#1d1d22" && c.swatch !== "#2a56b8" ? "text-ink" : "text-white"}`} />}
+                    {on && <Check className={`absolute inset-0 m-auto w-5 h-5 ${["#26262c", "#1d1d22", "#2a56b8"].includes(c.swatch) ? "text-white" : "text-ink"}`} />}
                   </span>
                   <span className={`text-xs ${on ? "font-semibold text-ink" : "text-muted"}`}>{name}</span>
                 </button>

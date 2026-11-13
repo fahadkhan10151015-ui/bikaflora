@@ -16,8 +16,8 @@ const steps = [
   { icon: Ribbon, title: "Tie the satin ribbon", text: "A burgundy bow to finish the look." },
   { icon: Gift, title: "Ready to deliver", text: "Photographed, then delivered the same day." },
 ];
-const STEP_MS = 2200;
-const HOLD_MS = 3200; // the finished bouquet stays on screen a little longer
+const STEP_MS = 1100;
+const HOLD_MS = 2600; // the finished bouquet stays on screen a little longer
 
 export default function BouquetCraft() {
   const ref = useRef<HTMLElement>(null);
@@ -27,14 +27,14 @@ export default function BouquetCraft() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.2 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   useEffect(() => {
     if (!visible) return;
-    const t = setTimeout(() => setStep((s) => (s >= steps.length - 1 ? -1 : s + 1)), step === steps.length - 1 ? HOLD_MS : step === -1 ? 700 : STEP_MS);
+    const t = setTimeout(() => setStep((s) => (s >= steps.length - 1 ? -1 : s + 1)), step === steps.length - 1 ? HOLD_MS : step === -1 ? 350 : STEP_MS);
     return () => clearTimeout(t);
   }, [step, visible]);
 
@@ -88,7 +88,7 @@ export default function BouquetCraft() {
             <Layer src="/images/build/paper.webp" show={on(0)} from="rotateX(75deg) scale(.55) translateY(30%)" />
             <Layer src="/images/build/roses-1.webp" show={on(1)} from="translateY(-55%) scale(1.25)" />
             <Layer src="/images/build/roses-2.webp" show={on(2)} from="translateY(-60%) scale(1.25)" />
-            <Layer src="/images/build/roses-3.webp" show={on(2)} from="translateY(-65%) scale(1.25)" delay={250} />
+            <Layer src="/images/build/roses-3.webp" show={on(2)} from="translateY(-65%) scale(1.25)" delay={150} />
             <Layer src="/images/build/ribbon.webp" show={on(3)} from="scale(0) rotate(-20deg)" />
             <div className={`absolute inset-0 pointer-events-none overflow-hidden ${done ? "" : "hidden"}`}
               style={{ WebkitMaskImage: "url(/images/build/full.webp)", maskImage: "url(/images/build/full.webp)", WebkitMaskSize: "100% 100%", maskSize: "100% 100%" }}>
@@ -113,7 +113,7 @@ export default function BouquetCraft() {
 
 function Layer({ src, show, from, delay = 0 }: { src: string; show: boolean; from: string; delay?: number }) {
   return (
-    <div className="absolute inset-0 transition-all duration-[900ms] ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform"
+    <div className="absolute inset-0 transition-all duration-[600ms] ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform"
       style={{ opacity: show ? 1 : 0, transform: show ? "none" : from, transitionDelay: show ? `${delay}ms` : "0ms" }}>
       <Image src={src} alt="" fill sizes="(max-width:1024px) 70vw, 360px" quality={90} className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.4)]" />
     </div>

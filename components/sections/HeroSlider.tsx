@@ -55,11 +55,17 @@ const slides: Slide[] = [
   },
 ];
 
-const DURATION = 5000;
+const DURATION = 4000;
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Pause only while the visitor is on another browser tab.
+  useEffect(() => {
+    const v = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", v);
+    return () => document.removeEventListener("visibilitychange", v);
+  }, []);
   const touchX = useRef<number | null>(null);
 
   useEffect(() => {
@@ -73,7 +79,6 @@ export default function HeroSlider() {
 
   return (
     <section className="relative overflow-hidden bg-deep text-white" aria-roledescription="carousel" aria-label="Featured bouquets"
-      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
         if (touchX.current === null) return;

@@ -136,5 +136,5 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 @keyframes craft-sway { 0%,100% { transform: translateX(-50%) rotateY(-9deg) } 50% { transform: translateX(-50%) rotateY(9deg) } }
 .craft-sway { animation: craft-sway 3.2s ease-in-out infinite }
 @keyframes craft-shine { from { left: -40% } to { left: 120% } }
-.craft-shine { animation: craft-shine 1.6s ease-in-out .3s forwards }
+.craft-shine { animation: craft-shine 1.1s ease-in-out .15s forwards }
 @media (prefers-reduced-motion: reduce) { .craft-sway, .craft-shine { animation: none } }
