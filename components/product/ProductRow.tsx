@@ -5,7 +5,7 @@ import ProductCard from "./ProductCard";
 
 /** A titled row of products. 2 per row on phones and tablets, 4 on desktop. */
 export default function ProductRow({ title, eyebrow, href, items, priority = false }: { title: string; eyebrow?: string; href: string; items: Product[]; priority?: boolean }) {
-  if (!items.length) return null;
+  if (items.length < 2) return null;
   return (
     <section className="container-x mt-14 md:mt-20">
       <div className="flex items-end justify-between gap-4 mb-5 md:mb-7">

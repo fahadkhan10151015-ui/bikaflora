@@ -10,14 +10,14 @@ import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 export default function CardActions({ p }: { p: Product }) {
   const { user } = useAuth();
   const list = useOrderList();
-  const option = p.options?.[0];
-  const price = option?.price ?? p.price;
+  const colour = p.variants?.[0]?.label;
+  const price = p.price;
   const added = list.has(p.slug);
 
   const orderNow = waLink(
     productMessages(
-      { name: p.name, sku: p.sku, slug: p.slug, price, size: option?.label },
-      p.categories.includes("pre-order") ? "Pre-order (I will share my date)" : "Instant Delivery or Pre-order (please advise)",
+      { name: p.name, sku: p.sku, slug: p.slug, price, colour: p.variants ? p.variants.map((v) => v.label).join(" or ") + " (please confirm)" : undefined },
+      p.instant ? "Same-day Instant Delivery or Pre-order (please advise)" : "Pre-order (I will share my date)",
       user ? { name: displayName(user), email: user.email } : undefined,
     )[0].text,
   );
@@ -28,7 +28,7 @@ export default function CardActions({ p }: { p: Product }) {
         className="flex-1 min-w-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-full bg-wa text-white text-xs sm:text-sm font-semibold py-2 sm:py-2.5 whitespace-nowrap hover:brightness-95 transition">
         <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> Order now
       </a>
-      <button type="button" onClick={() => { list.add({ slug: p.slug, size: option?.label, price }); list.open(); }}
+      <button type="button" onClick={() => { list.add({ slug: p.slug, size: colour, price }); list.open(); }}
         title={added ? "Added to your order list — tap to add one more" : "Add to order list"}
         aria-label={added ? `Add one more ${p.name} to your order list` : `Add ${p.name} to your order list`}
         className={`w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-full grid place-items-center border transition ${added ? "bg-brand text-white border-brand" : "border-brand/30 text-brand hover:bg-blush"}`}>

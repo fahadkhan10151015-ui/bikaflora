@@ -5,7 +5,7 @@
 export const site = {
   name: "BikaFlora",
   description:
-    "BikaFlora is an online florist in Kuala Lumpur & Selangor. Fresh flowers, premium bouquets, flower gift boxes, crochet and chocolate bouquets with instant delivery or pre-order. Order easily on WhatsApp.",
+    "BikaFlora is an online florist in Kuala Lumpur & Selangor. Long-lasting soap rose bouquets, Ferrero Rocher bouquets, heart bouquets and graduation bouquets with same-day delivery or pre-order. Order easily on WhatsApp.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://bikaflora.vercel.app").replace(/\/$/, ""),
 
   // WhatsApp number: country code + number, digits only (Malaysia example: 60123456789)

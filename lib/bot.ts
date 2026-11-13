@@ -4,7 +4,6 @@
 //  copes with spelling mistakes, and answers from the site data.
 // ============================================================
 import { products, type Product } from "@/data/products";
-import { categories } from "@/data/categories";
 import { locations, type Location } from "@/data/locations";
 import { site, deliveryMethods, deliveryPartners, paymentMethods, formatPrice } from "@/lib/site";
 
@@ -84,21 +83,28 @@ const INTENTS: Record<string, string[]> = {
   list: ["order list", "multiple", "many", "several", "more than one", "bulk", "banyak"],
 };
 
-const OCCASIONS: Record<string, string[]> = {
-  "best-seller": ["best seller", "bestseller", "popular", "most popular", "favourite", "best"],
-  "fresh-flowers": ["fresh", "fresh flower", "real flower", "rose", "roses", "mawar", "lily", "tulip", "sunflower", "hydrangea", "bunga segar", "玫瑰"],
-  "premium-bouquets": ["premium", "luxury", "mewah", "expensive", "grand", "propose", "proposal", "anniversary", "vip"],
-  "flower-gift-box": ["flower box", "gift box", "box", "kotak"],
-  "below-100": ["below 100", "under 100", "bawah 100", "cheap", "murah", "affordable"],
-  "crochet-bouquets": ["crochet", "knit", "knitted", "yarn", "kait", "forever", "never wilt", "last forever"],
-  "chocolate-flower-bouquets": ["chocolate", "coklat", "ferrero", "strawberry"],
-  "mini-bouquets": ["mini", "small", "kecil", "cute", "classmate", "convocation", "convo", "konvo", "graduation"],
-  "pre-order": ["pre order", "preorder", "advance booking", "tempah awal"],
-  "add-ons": ["add on", "addon", "teddy", "bear", "balloon", "balloons", "extra gift"],
+/** Gift topics: words the customer may type -> words to look for in a product's text. */
+const TOPICS: Record<string, { label: string; words: string[]; match: string[] }> = {
+  birthday: { label: "Birthday bouquets", words: ["birthday", "bday", "b day", "hari jadi", "harijadi", "生日"], match: ["birthday"] },
+  romantic: { label: "Romantic bouquets", words: ["anniversary", "love", "wife", "girlfriend", "valentine", "romantic", "propose", "proposal", "sayang", "wedding", "ulang tahun"], match: ["anniversar", "romantic", "valentine", "heart"] },
+  graduation: { label: "Graduation bouquets", words: ["convocation", "convo", "graduation", "graduate", "konvo", "grad", "student", "exam"], match: ["graduat", "convocation"] },
+  him: { label: "Bouquets for him", words: ["him", "men", "man", "boyfriend", "husband", "father", "dad", "guy", "male", "lelaki", "suami"], match: ["for him", " men "] },
+  friend: { label: "Gifts for friends", words: ["friend", "bestie", "bff", "kawan", "colleague", "thank", "thanks", "appreciation"], match: ["friend", "thank", "appreciation"] },
+  mother: { label: "Gifts for Mum", words: ["mother", "mom", "mum", "ibu", "mama", "mummy"], match: ["mother"] },
+  chocolate: { label: "Chocolate & flower bouquets", words: ["chocolate", "coklat", "ferrero", "rocher"], match: ["ferrero", "chocolate"] },
+  heart: { label: "Heart bouquets", words: ["heart", "hati"], match: ["heart"] },
+  blue: { label: "Blue bouquets", words: ["blue", "biru", "navy"], match: ["blue"] },
+  pink: { label: "Pink bouquets", words: ["pink", "merah jambu"], match: ["pink"] },
+  red: { label: "Red bouquets", words: ["red", "merah"], match: ["red "] },
+  orchid: { label: "Orchid bouquets", words: ["orchid", "orkid"], match: ["orchid"] },
+  sunflower: { label: "Sunflower bouquets", words: ["sunflower", "matahari"], match: ["sunflower"] },
+  soap: { label: "Soap flower bouquets", words: ["soap", "sabun", "long lasting", "forever", "never wilt", "artificial", "everlasting"], match: ["soap"] },
 };
+const haystack = (p: Product) =>
+  ` ${[p.name, p.design, p.description, p.occasions, p.short, ...(p.tags ?? []), ...(p.variants?.flatMap((v) => [v.label, v.design ?? ""]) ?? [])].join(" ").toLowerCase()} `;
 
 // ---------- data matching ----------
-const GENERIC = new Set(["bouquet", "flower", "flowers", "box", "and", "the", "dream", "s", "pre", "order", "set", "add", "on", "gift", "custom"]);
+const GENERIC = new Set(["bouquet", "flower", "flowers", "box", "and", "the", "for", "s", "pre", "order", "set", "add", "on", "gift", "custom", "soap", "rose", "roses", "large", "heart", "white", "blue", "red", "pink", "orchid"]);
 const tokenCount: Record<string, number> = {};
 products.forEach((p) => new Set(norm(p.name).split(" ")).forEach((t) => (tokenCount[t] = (tokenCount[t] || 0) + 1)));
 
@@ -136,9 +142,9 @@ function budgetOf(text: string) {
 }
 
 const priceText = (p: Product) =>
-  p.options ? p.options.map((o) => `${o.label}: **${formatPrice(o.price)}**`).join(", ") : `**${formatPrice(p.price)}**`;
+  `**${formatPrice(p.price)}**${p.compareAt ? ` (was ${formatPrice(p.compareAt)})` : ""}${p.variants ? `\nColours: ${p.variants.map((v) => v.label).join(", ")}` : ""}${p.size ? `\nSize: ${p.size}` : ""}`;
 
-const productLine = (p: Product) => `- [${p.name}](/product/${p.slug}) · ${p.options ? "from " : ""}${formatPrice(p.price)}${p.rating ? ` · ★ ${p.rating}` : ""}`;
+const productLine = (p: Product) => `- [${p.name}](/product/${p.slug}) · ${formatPrice(p.price)}${p.variants ? ` · ${p.variants.map((v) => v.label).join(" / ")}` : ""}`;
 
 const HOW_TO_ORDER = `Tap **Order now** on the bouquet and WhatsApp opens with everything typed. Just press send. Ordering several? Tap **+** on each one, then **Send order on WhatsApp**.`;
 
@@ -168,7 +174,7 @@ export function botReply(history: BotMsg[], page?: string): string {
   }
 
   const area = findArea(tokens);
-  const occasion = Object.entries(OCCASIONS).filter(([, w]) => any(tokens, w)).map(([c]) => c);
+  const occasion = Object.entries(TOPICS).filter(([, t]) => any(tokens, t.words)).map(([k]) => k);
   const budget = budgetOf(last);
   const out: string[] = [];
 
@@ -185,7 +191,7 @@ export function botReply(history: BotMsg[], page?: string): string {
     if (is("order") || !is("price")) out.push(HOW_TO_ORDER);
   }
   const feeQ = is("fee") || (is("area") && is("price") && !product);
-  const knownWords = (t: string[]) => Object.values(INTENTS).some((l) => any(t, l)) || Object.values(OCCASIONS).some((l) => any(t, l));
+  const knownWords = (t: string[]) => Object.values(INTENTS).some((l) => any(t, l)) || Object.values(TOPICS).some((x) => any(t, x.words));
 
   // 2. Delivery area
   if (area) {
@@ -210,11 +216,11 @@ export function botReply(history: BotMsg[], page?: string): string {
   if (is("partner") || /j\s*&\s*t|j\s*n\s*t/i.test(last)) out.push(`Our delivery partners:\n${deliveryPartners.map((d) => `- **${d.name}**: ${d.use}`).join("\n")}`);
   if (is("payment") || any(tokens, ["advance", "deposit", "pay first"])) out.push(`**Payment is made in advance.** We first confirm your order and total on WhatsApp, then you pay by ${paymentMethods}. We start preparing once payment is received.`);
   if (is("photo") && !is("custom")) out.push(`Yes! We send you a **photo of your actual bouquet** on WhatsApp before it goes out.`);
-  if (is("custom") || occasion.includes("pre-order")) out.push(`Yes! Send us a **photo** on WhatsApp (${site.phoneDisplay}) and say "I want this type", with your colours, budget and date. We confirm the design and price, you pay in advance, and we prepare it as a **pre-order**. [Pre-order & custom](/category/pre-order)`);
+  if (is("custom") || any(tokens, ["pre order", "preorder"])) out.push(`Yes! Send us a **photo** on WhatsApp (${site.phoneDisplay}) and say "I want this type", with your colours, budget and date. We confirm the design and price, you pay in advance, and we prepare it as a **pre-order**.`);
   if (is("card")) out.push(`A **free message card** is included. Write your message in the WhatsApp chat and we'll handwrite it for you.`);
   if (is("account")) out.push(`No account is needed to order. An account just adds your name and email to WhatsApp messages automatically. [Sign up](/signup) · [Login](/login)`);
   if (is("hours")) out.push(`We're open **${site.openingHours}**. WhatsApp messages outside these hours are answered the next morning.`);
-  if (is("care") && !is("today")) out.push(`All our flowers are sourced fresh every morning. Fresh bouquets last about 5-7 days: trim the stems and change the water every 2 days. Soap and everlasting bouquets last for months. [Everlasting bouquets](/category/everlasting-bouquets)`);
+  if (is("care") && !is("today")) out.push(`Our bouquets are made with **soap flowers**, so they last for months without water. Keep them in a cool, dry place away from direct sunlight, water and humidity, and gently remove dust when needed.`);
   if (is("refund")) out.push(`For cancellations, changes or any problem with an order, please WhatsApp us at **${site.phoneDisplay}** with your order details and we'll sort it out quickly. [Refund policy](/refund-policy)`);
   if (is("pickup")) out.push(`We're an online florist delivering across KL & Selangor. For self-collection, WhatsApp us at ${site.phoneDisplay} and we'll arrange it.`);
   if (is("discount")) out.push(`Discounted bouquets show a **-%** tag and the old price crossed out. For bulk or corporate orders, WhatsApp us at ${site.phoneDisplay} for a special price.`);
@@ -225,19 +231,21 @@ export function botReply(history: BotMsg[], page?: string): string {
   // 5. Suggestions by occasion / flower type / budget
   const wantsList = occasion.length || budget || is("recommend") || (is("price") && !product && !feeQ);
   if (wantsList && !product) {
-    let list = products.filter((p) => (occasion.length ? p.categories.some((c) => occasion.includes(c)) : true) && (occasion.includes("add-ons") || !p.categories.includes("add-ons")));
+    let list = bouquets.filter((p) => !occasion.length || occasion.every((k) => TOPICS[k].match.some((m) => haystack(p).includes(m))));
+    if (!list.length && occasion.length) list = bouquets.filter((p) => occasion.some((k) => TOPICS[k].match.some((m) => haystack(p).includes(m))));
     if (budget) list = list.filter((p) => p.price <= budget);
     const cheap = any(tokens, ["cheap", "cheapest", "murah", "lowest", "affordable"]);
-    list = [...list].sort((a, b) => (cheap ? a.price - b.price : (b.rating || 0) - (a.rating || 0))).slice(0, 4);
-    const label = occasion.map((c) => categories.find((x) => x.slug === c)?.name).filter(Boolean).join(" / ");
+    const score = (p: Product) => occasion.reduce((n, k) => n + (TOPICS[k].match.some((m) => ` ${p.name} ${(p.tags ?? []).join(" ")} `.toLowerCase().includes(m)) ? 2 : 0), 0) + (p.categories.includes("best-seller") ? 1 : 0);
+    list = [...list].sort((a, b) => (cheap ? a.price - b.price : score(b) - score(a))).slice(0, 4);
+    const label = occasion.map((k) => TOPICS[k].label).join(" / ");
     if (list.length) {
       out.push(`${label ? `**${label}**` : cheap ? "Most affordable bouquets" : "Popular bouquets"}${budget ? ` under ${formatPrice(budget)}` : ""}:\n${list.map(productLine).join("\n")}`);
-      if (occasion.length === 1) out.push(`[See all ${label}](/category/${occasion[0]})`);
+      if (!occasion.length) out.push(`[See all bouquets](/shop)`);
     } else if (budget) {
       const cheapest = [...bouquets].sort((a, b) => a.price - b.price).slice(0, 3);
       out.push(`Our bouquets start from **${formatPrice(cheapest[0].price)}**, so nothing is under ${formatPrice(budget)} yet. The most affordable ones:\n${cheapest.map(productLine).join("\n")}\nFor a smaller budget, WhatsApp us and we'll make a custom bouquet.`);
     }
-    if (is("price") && !budget && !occasion.length) out.unshift(`Our bouquets range from **${formatPrice(Math.min(...bouquets.map((p) => p.price)))}** to **${formatPrice(Math.max(...bouquets.flatMap((p) => p.options?.map((o) => o.price) || [p.price])))}**.${is("custom") ? " Custom pre-orders start from **RM 150**." : ""} Tell me your budget and I'll find the best options.`);
+    if (is("price") && !budget && !occasion.length) out.unshift(`Our bouquets range from **${formatPrice(Math.min(...bouquets.map((p) => p.price)))}** to **${formatPrice(Math.max(...bouquets.map((p) => p.price)))}**.${is("custom") ? " Custom pre-orders start from **RM 150**." : ""} Tell me your budget and I'll find the best options.`);
   }
 
   if (out.length) return out.join("\n\n");

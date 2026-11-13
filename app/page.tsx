@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin } from "lucide-react";
 import { featuredProducts, productsInCategory } from "@/data/products";
 import CategoryCircles from "@/components/sections/CategoryCircles";
+import { getCategory } from "@/data/categories";
 import DeliveryWays from "@/components/sections/DeliveryWays";
 import { selangor, kl } from "@/data/locations";
 import { faqs } from "@/data/faqs";
@@ -23,7 +24,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({
   title: `${site.name} | Florist & Flower Delivery in KL & Selangor`,
   description:
-    "Fresh flowers, premium bouquets, flower gift boxes, crochet and chocolate bouquets. Instant delivery or pre-order across Kuala Lumpur & Selangor. Order on WhatsApp in 1 minute.",
+    "Long-lasting soap rose bouquets, Ferrero Rocher bouquets, heart bouquets and graduation bouquets. Same-day delivery or pre-order across Kuala Lumpur & Selangor. Order on WhatsApp in 1 minute.",
   path: "/",
 });
 
@@ -35,12 +36,14 @@ const steps = [
 
 const reasons = [
   { icon: Heart, title: "Hand-tied with care", text: "Every bouquet is arranged by hand, never mass-produced." },
-  { icon: Leaf, title: "Fresh every morning", text: "Flowers sourced daily from trusted growers." },
+  { icon: Leaf, title: "Lasts for months", text: "Soap flowers keep their colour and shape without water." },
   { icon: ShieldCheck, title: "Confirmed before you pay", text: "We confirm your order and total on WhatsApp, then you pay in advance." },
   { icon: Truck, title: "KL & Selangor wide", text: "32 delivery areas, instant delivery or pre-order." },
 ];
 
 export default function Home() {
+  const popular = featuredProducts().slice(0, 4);
+  const popularSlugs = new Set(popular.map((p) => p.slug));
   return (
     <>
       {/* HERO */}
@@ -60,7 +63,7 @@ export default function Home() {
               Flowers that say it <span className="italic text-petal">beautifully</span>
             </h1>
             <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Fresh bouquets, flower gift boxes, crochet and chocolate bouquets. Instant delivery today or pre-order for your date, ordered in one tap on WhatsApp.
+              Handmade soap rose bouquets that last for months. Same-day delivery today or pre-order for your date, ordered in one tap on WhatsApp.
             </p>
             <div className="mt-9 flex flex-wrap gap-3 justify-center lg:justify-start">
               <Link href="/shop" className="btn bg-white text-brand hover:bg-blush !px-7 !py-4">Shop Bouquets <ArrowRight className="w-4 h-4" /></Link>
@@ -80,21 +83,18 @@ export default function Home() {
 
       <CategoryCircles />
 
-      {/* PRODUCTS BY CATEGORY (like a shop front) */}
-      <ProductRow eyebrow="Customer favourites" title="Best Seller" href="/category/best-seller" items={featuredProducts()} priority />
-      <ProductRow eyebrow="Hand-tied today" title="Fresh Flowers" href="/category/fresh-flowers" items={productsInCategory("fresh-flowers")} />
-      <ProductRow eyebrow="No vase needed" title="Flower Gift Box" href="/category/flower-gift-box" items={productsInCategory("flower-gift-box")} />
+      {/* PRODUCTS (like a shop front). Rows with fewer than 2 products hide themselves. */}
+      <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/shop" items={popular} priority />
 
       {/* HOW IT'S MADE (animated) */}
       <BouquetCraft />
 
-      <ProductRow eyebrow="Big moments" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
-      <ProductRow eyebrow="Great value" title="Below RM100 Bouquet" href="/category/below-100" items={productsInCategory("below-100")} />
-      <ProductRow eyebrow="Handmade, forever" title="Crochet Bouquet" href="/category/crochet-bouquets" items={productsInCategory("crochet-bouquets")} />
-      <ProductRow eyebrow="Sweet gifts" title="Chocolate & Flower Bouquets" href="/category/chocolate-flower-bouquets" items={productsInCategory("chocolate-flower-bouquets")} />
-      <ProductRow eyebrow="Small & cute" title="Mini Bouquet Series" href="/category/mini-bouquets" items={productsInCategory("mini-bouquets")} />
-      <ProductRow eyebrow="Made to your idea" title="Pre-Order" href="/category/pre-order" items={productsInCategory("pre-order")} />
-      <ProductRow eyebrow="Make it extra special" title="Add On" href="/category/add-ons" items={productsInCategory("add-ons")} />
+      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets").filter((p) => !popularSlugs.has(p.slug))} />
+      {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
+        const c = getCategory(slug);
+        const items = productsInCategory(slug).filter((p) => !popularSlugs.has(p.slug));
+        return c && <ProductRow key={slug} eyebrow={c.short} title={c.name} href={`/category/${slug}`} items={items} />;
+      })}
 
       {/* INSTANT / PRE-ORDER / CUSTOM + PARTNERS + PAYMENT */}
       <DeliveryWays />
@@ -179,10 +179,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto prose-bf">
           <h2 className="text-3xl font-semibold text-center">Online florist in Kuala Lumpur & Selangor</h2>
           <p>
-            Looking for a florist near you in the Klang Valley? {site.name} delivers fresh flowers, premium bouquets and flower gift boxes to homes, offices, hospitals and campuses across Kuala Lumpur and Selangor, from Shah Alam, Petaling Jaya and Subang Jaya to Cheras, Bangsar and Mont Kiara.
+            Looking for a florist near you in the Klang Valley? {site.name} delivers premium soap flower bouquets to homes, offices, hospitals and campuses across Kuala Lumpur and Selangor, from Shah Alam, Petaling Jaya and Subang Jaya to Cheras, Bangsar and Mont Kiara.
           </p>
           <p>
-            Shop our best sellers, fresh flower bouquets, handmade crochet bouquets that last forever, chocolate and flower bouquets with Ferrero Rocher, cute mini bouquets and beautiful bouquets below RM100. Add a teddy bear, balloons or chocolates to make it extra special.
+            Shop our best-selling Soap Rose Heart bouquet, Ferrero Rocher soap rose bouquets in pink or red, Blue Noir for him, Bestie Blossoms for your best friend and The Graduation Signature for convocation day. Soap flowers look real, smell lovely and last for months without water.
           </p>
           <h2>Instant delivery or pre-order</h2>
           <p>

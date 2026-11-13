@@ -13,7 +13,7 @@ const MODEL = "anthropic/claude-haiku-5.5";
 
 const catalog = products
   .map((p) =>
-    `- ${p.name} (${p.sku}) | ${p.options ? p.options.map((o) => `${o.label} ${formatPrice(o.price)}`).join(", ") : formatPrice(p.price)} | ${p.categories.join(", ")} | link: /product/${p.slug} | ${p.short}`,
+    `- ${p.name} (${p.sku}) | ${formatPrice(p.price)}${p.compareAt ? ` (was ${formatPrice(p.compareAt)})` : ""}${p.variants ? ` | colours: ${p.variants.map((v) => v.label).join(", ")}` : ""}${p.size ? ` | size ${p.size}` : ""} | ${p.categories.join(", ")} | link: /product/${p.slug} | ${p.short}`,
   )
   .join("\n");
 

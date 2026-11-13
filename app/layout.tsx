@@ -14,6 +14,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { WhatsAppChooserProvider } from "@/components/whatsapp/WhatsAppChooser";
 import { OrderListProvider } from "@/components/order/OrderListProvider";
 import { FavouritesProvider } from "@/components/favourites/FavouritesProvider";
+import { RatingsProvider } from "@/components/product/RatingsProvider";
 import OrderListDrawer from "@/components/order/OrderListDrawer";
 import ChatBot from "@/components/chat/ChatBot";
 import JsonLd from "@/components/ui/JsonLd";
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           <WhatsAppChooserProvider>
+            <RatingsProvider>
             <FavouritesProvider>
             <OrderListProvider>
               <Header />
@@ -53,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ChatBot />
             </OrderListProvider>
             </FavouritesProvider>
+            </RatingsProvider>
           </WhatsAppChooserProvider>
         </AuthProvider>
       </body>

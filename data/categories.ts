@@ -3,6 +3,7 @@
 //  The order here is the order on the website (menu, home slider).
 // ============================================================
 import { unsplash } from "@/lib/images";
+import { hasProducts } from "@/data/products";
 
 export type Category = {
   slug: string;
@@ -16,14 +17,15 @@ export type Category = {
   content: { heading: string; body: string }[];
 };
 
-export const categories: Category[] = [
+/** Every category the shop can have. Only the ones with products are shown (see `categories` below). */
+export const allCategories: Category[] = [
   {
     slug: "best-seller",
     name: "Best Seller",
     short: "Our most-loved bouquets",
-    image: unsplash("1561729098-cbab0f7a9f7c", 600),
+    image: "/products/soap-rose-heart-large/red/02.jpg",
     seoTitle: "Best Seller Bouquets KL & Selangor | BikaFlora",
-    seoDescription: "Our most-ordered bouquets in Kuala Lumpur & Selangor. Fresh roses, flower boxes and soap flower bouquets with instant delivery or pre-order on WhatsApp.",
+    seoDescription: "Our most-ordered bouquets in Kuala Lumpur & Selangor, led by the Soap Rose Heart. Same-day instant delivery or pre-order on WhatsApp.",
     intro: "The bouquets our customers order again and again. A safe, beautiful choice for any occasion.",
     content: [{ heading: "Why customers love these", body: "Every best seller is hand-tied by our florists, photographed before delivery and sent with a free message card." }],
   },
@@ -42,12 +44,12 @@ export const categories: Category[] = [
   {
     slug: "premium-bouquets",
     name: "Premium Flower's Bouquet",
-    short: "Luxury blooms for big moments",
-    image: unsplash("1780498802979-3d75e2b87ff2", 600),
-    seoTitle: "Premium & Luxury Flower Bouquets KL & Selangor | BikaFlora",
-    seoDescription: "Luxury peony, tulip and rose bouquets for anniversaries, proposals and VIP gifts. Delivered in Kuala Lumpur & Selangor.",
-    intro: "Our most luxurious bouquets: premium stems, generous sizes and elegant wrapping for the moments that matter most.",
-    content: [{ heading: "Made for big moments", body: "Anniversaries, proposals, grand openings and VIP gifts. Pre-order premium bouquets to make sure your favourite flowers are in stock." }],
+    short: "Long-lasting soap flower bouquets",
+    image: "/products/white-blue-soap-rose-heart/02.jpg",
+    seoTitle: "Premium Soap Flower Bouquets KL & Selangor | BikaFlora",
+    seoDescription: "Premium soap rose and orchid bouquets that last for months: heart bouquets, Ferrero Rocher bouquets, graduation and bouquets for him. Same-day delivery in Kuala Lumpur & Selangor.",
+    intro: "Handmade premium bouquets with soap roses, orchids and elegant wrapping. They look real, smell lovely and never wilt.",
+    content: [{ heading: "Why soap flower bouquets?", body: "Soap flowers keep their colour and shape for months without water. They are perfect keepsakes for anniversaries, birthdays, graduations and thank-you gifts." }],
   },
   {
     slug: "flower-gift-box",
@@ -83,11 +85,11 @@ export const categories: Category[] = [
     slug: "chocolate-flower-bouquets",
     name: "Chocolate & Flower Bouquets",
     short: "Flowers with sweet treats",
-    image: unsplash("1739538032906-aa14a22027a2", 600),
+    image: "/products/ferrero-soap-rose-bouquet/pink/03.jpg",
     seoTitle: "Chocolate & Flower Bouquet Delivery KL & Selangor | BikaFlora",
-    seoDescription: "Ferrero Rocher bouquets, chocolate and rose gift boxes, and chocolate strawberries. Delivered in Kuala Lumpur & Selangor.",
+    seoDescription: "Ferrero Rocher soap rose bouquets in pink or red. A sweet, long-lasting gift delivered same-day in Kuala Lumpur & Selangor.",
     intro: "Flowers and chocolate together: the sweetest way to say I love you, thank you or congratulations.",
-    content: [{ heading: "Sweet and beautiful", body: "Ferrero Rocher, chocolate boxes and chocolate strawberries paired with fresh roses and wrapped as one gift." }],
+    content: [{ heading: "Sweet and beautiful", body: "Ferrero Rocher chocolates, each in a protective case, paired with long-lasting soap roses and wrapped as one gift." }],
   },
   {
     slug: "mini-bouquets",
@@ -123,4 +125,6 @@ export const categories: Category[] = [
   },
 ];
 
+/** Categories that currently have products. Empty ones are hidden until you add a product to them. */
+export const categories = allCategories.filter((c) => hasProducts(c.slug));
 export const getCategory = (slug: string) => categories.find((c) => c.slug === slug);

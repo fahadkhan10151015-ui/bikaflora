@@ -60,7 +60,7 @@ export default function OrderListDrawer() {
               {list.lines.map((l, i) => (
                 <li key={`${l.slug}-${l.size}`} className="flex gap-3 bg-white rounded-2xl p-3 border border-blush-2/70">
                   <Link href={`/product/${l.slug}`} onClick={list.close} className="relative w-20 h-24 rounded-xl overflow-hidden shrink-0">
-                    <Photo src={l.product.images[0]} tone={l.product.tones?.[0]} alt={l.product.name} sizes="80px" />
+                    <Photo src={(l.product.variants?.find((v) => v.label === l.size)?.images ?? l.product.images)[0]} alt={l.product.name} sizes="80px" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium leading-snug line-clamp-2">{l.product.name}</div>

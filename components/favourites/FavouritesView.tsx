@@ -26,7 +26,7 @@ export default function FavouritesView() {
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <p className="text-muted">{items.length} saved item{items.length > 1 ? "s" : ""}</p>
-        <button className="btn btn-outline !py-2.5" onClick={() => { items.forEach((p) => list.add({ slug: p.slug, size: p.options?.[0]?.label, price: p.options?.[0]?.price ?? p.price })); list.open(); }}>
+        <button className="btn btn-outline !py-2.5" onClick={() => { items.forEach((p) => list.add({ slug: p.slug, size: p.variants?.[0]?.label, price: p.price })); list.open(); }}>
           Add all to order list
         </button>
       </div>

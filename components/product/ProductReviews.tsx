@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Star, Loader2, Trash2, PenLine } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
+import { useRatings } from "./RatingsProvider";
 
 type Review = { id: string; user_id: string; name: string; rating: number; comment: string; created_at: string };
 
@@ -24,6 +25,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (n: number) 
 /** Real customer reviews for one product, stored in Supabase. Signed-in customers can write one review per product. */
 export default function ProductReviews({ slug, productName }: { slug: string; productName: string }) {
   const { user } = useAuth();
+  const ratings = useRatings();
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -57,6 +59,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
     setMsg(mine ? "Your review was updated. Thank you!" : "Thank you for your review!");
     setWriting(false);
     load();
+    ratings.reload();
   }
 
   async function remove() {
@@ -65,6 +68,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
     await sb.from("reviews").delete().eq("id", mine.id);
     setComment(""); setRating(5); setMsg("Your review was removed.");
     load();
+    ratings.reload();
   }
 
   const avg = reviews?.length ? reviews.reduce((n, r) => n + r.rating, 0) / reviews.length : 0;

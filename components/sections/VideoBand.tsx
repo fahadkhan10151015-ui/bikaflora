@@ -3,7 +3,7 @@ import { flowerVideo, siteImages } from "@/lib/images";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import Link from "next/link";
 
-const points = ["Fresh flowers sourced every morning", "Hand-tied by our florists in Kuala Lumpur", "Photo sent to you before delivery"];
+const points = ["Soap flowers that last for months", "Hand-tied by our florists in Kuala Lumpur", "Photo sent to you before delivery"];
 
 /** Video on the left, story on the right. */
 export default function VideoBand() {
@@ -26,7 +26,7 @@ export default function VideoBand() {
           <div className="eyebrow mb-3">Crafted by hand</div>
           <h2 className="text-4xl md:text-5xl leading-tight">Every bouquet is made to make someone smile</h2>
           <p className="mt-4 text-muted leading-relaxed">
-            From choosing the freshest stems to the final ribbon, our florists put care into every detail. Tell us the occasion and budget — we&apos;ll recommend the perfect flowers and deliver them today or on your chosen date.
+            From choosing every bloom to the final ribbon, our florists put care into every detail. Tell us the occasion and budget — we&apos;ll recommend the perfect flowers and deliver them today or on your chosen date.
           </p>
           <ul className="mt-6 space-y-3">
             {points.map((p) => (

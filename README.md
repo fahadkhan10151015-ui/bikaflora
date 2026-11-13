@@ -83,3 +83,12 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 - Submit `https://YOUR-DOMAIN/sitemap.xml` in Google Search Console.
 - Create a Google Business Profile and link it in `lib/site.ts → social`.
 - Replace the sample products, photos and reviews with your own.
+
+
+## Adding or changing products
+
+1. Put the photos in `public/products/<product-name>/` named `01.jpg`, `02.jpg`, …
+   Order: person holding the bouquet first, then the bouquet alone, other angles, and the details card last.
+   For colours, use one folder per colour (e.g. `…/pink/`, `…/red/`).
+2. Open `data/products.ts`, copy one product block and change the text, price, `compareAt` (crossed-out price), size and category.
+3. Categories with no products are hidden automatically. Add a product with that category slug and the category appears in the menu, home page and shop.

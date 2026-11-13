@@ -16,7 +16,7 @@ const blooms = [
 ];
 
 const steps = [
-  { icon: Flower2, title: "Fresh blooms selected", text: "We pick the freshest stems every morning." },
+  { icon: Flower2, title: "Premium blooms selected", text: "We pick the best soap roses, orchids and fillers for every design." },
   { icon: Gift, title: "Hand-tied & wrapped", text: "Arranged by hand, wrapped and finished with a ribbon." },
   { icon: Camera, title: "Photo sent to you", text: "You see your actual bouquet on WhatsApp first." },
   { icon: Truck, title: "Delivered with care", text: "Instant delivery today or on your pre-order date." },
@@ -82,7 +82,7 @@ export default function BouquetCraft() {
         {/* Steps */}
         <div>
           <div className="eyebrow mb-3">How it&apos;s made</div>
-          <h2 className="text-4xl md:text-5xl leading-tight">From fresh stems to your doorstep</h2>
+          <h2 className="text-4xl md:text-5xl leading-tight">From our hands to your doorstep</h2>
           <p className="mt-4 text-muted leading-relaxed">Every BikaFlora bouquet goes through the same careful steps, so it arrives looking exactly as beautiful as you imagined.</p>
           <ol className="mt-8 space-y-3">
             {steps.map(({ icon: Icon, title, text }, i) => (

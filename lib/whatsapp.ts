@@ -3,7 +3,7 @@ import { site, absoluteUrl, formatPrice } from "./site";
 /** Opens a WhatsApp chat with a message already typed in. */
 export const waLink = (text: string) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 
-export type WaProduct = { name: string; sku: string; slug: string; price: number; size?: string };
+export type WaProduct = { name: string; sku: string; slug: string; price: number; size?: string; colour?: string };
 export type WaCustomer = { name?: string; email?: string };
 
 export type MessageOption = { id: string; title: string; hint: string; text: string };
@@ -16,6 +16,7 @@ export function productMessages(p: WaProduct, delivery: string, c?: WaCustomer):
   const header = join([
     `*${p.name}*`,
     `Code: ${p.sku}`,
+    p.colour && `Colour: ${p.colour}`,
     p.size && `Size: ${p.size}`,
     `Price: ${formatPrice(p.price)}`,
     absoluteUrl(`/product/${p.slug}`),

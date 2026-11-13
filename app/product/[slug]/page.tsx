@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Check, Zap, CalendarClock, Camera, ShieldCheck } from "lucide-react";
+import { Zap, CalendarClock, Camera, ShieldCheck } from "lucide-react";
 import { products, getProduct, relatedProducts, isAddOn, addOns } from "@/data/products";
 import { getCategory } from "@/data/categories";
 import Gallery from "@/components/product/Gallery";
+import { VariantProvider } from "@/components/product/VariantProvider";
+import ProductDetails from "@/components/product/ProductDetails";
 import OrderPanel from "@/components/product/OrderPanel";
 import HeartButton from "@/components/favourites/HeartButton";
 import ProductReviews from "@/components/product/ProductReviews";
@@ -32,8 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const perks = [
-  { icon: Zap, text: "Instant delivery" },
-  { icon: CalendarClock, text: "Pre-order & custom" },
+  { icon: Zap, text: "Same-day delivery" },
+  { icon: CalendarClock, text: "Pre-order for any date" },
   { icon: Camera, text: "Photo before delivery" },
   { icon: ShieldCheck, text: "Confirmed on WhatsApp" },
 ];
@@ -42,14 +44,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const p = getProduct((await params).slug);
   if (!p) notFound();
   const cat = getCategory(p.categories[0]);
-  const prices = [p.price, ...(p.options?.map((o) => o.price) ?? [])];
+  const prices = [p.price];
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: p.name,
     sku: p.sku,
-    image: p.images.map((i) => (i.startsWith("http") ? i : absoluteUrl(i))),
+    image: [...new Set([...p.images, ...(p.variants?.flatMap((v) => v.images) ?? [])])].map((i) => (i.startsWith("http") ? i : absoluteUrl(i))),
     description: p.description,
     brand: { "@type": "Brand", name: site.name },
     offers: {
@@ -63,7 +65,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   };
 
   const faqs = [
-    { q: `Can ${p.name} be delivered today?`, a: p.categories.includes("pre-order") ? `This item is made to order, so please pre-order and tell us your date on WhatsApp.` : `Yes. Choose Instant Delivery and order before ${site.sameDayCutoff}. We deliver by Grab Express or Lalamove within Kuala Lumpur and Selangor.` },
+    { q: `Can ${p.name} be delivered today?`, a: !p.instant ? `This item is made to order, so please pre-order and tell us your date on WhatsApp.` : `Yes. Choose Instant Delivery and order before ${site.sameDayCutoff}. We deliver by Grab Express or Lalamove within Kuala Lumpur and Selangor.` },
+    { q: "Can I order it for a future date?", a: "Yes. Choose Pre-order and tell us the date and time in your WhatsApp message. We prepare it for you and deliver on the day." },
     { q: "Will it look exactly like the photo?", a: "We follow the design closely. Flowers and wrapping may vary slightly with the season, and we always send you a photo of your actual bouquet before delivery." },
     { q: "How do I pay?", a: `Payment is made in advance. After you message us on WhatsApp we confirm the total including delivery, then share payment details: ${paymentMethods}. We start preparing once payment is received.` },
   ];
@@ -71,15 +74,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="container-x pb-24 lg:pb-0">
       <JsonLd data={schema} />
+      <VariantProvider p={p}>
       <MobileOrderBar p={p} />
       <Breadcrumbs items={[...(cat ? [{ name: cat.name, path: `/category/${cat.slug}` }] : []), { name: p.name, path: `/product/${p.slug}` }]} />
 
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-14">
-        <Gallery images={p.images} tones={p.tones} alt={`${p.name} by ${site.name}`} />
+        <Gallery alt={`${p.name} by ${site.name}`} />
         <div>
           {p.badge && <span className="inline-block bg-blush text-brand text-xs font-semibold px-3 py-1 rounded-full">{p.badge}</span>}
           <div className="mt-3 flex items-start justify-between gap-3">
-            <h1 className="text-3xl md:text-4xl font-semibold leading-tight">{p.name}</h1>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-semibold leading-tight">{p.name}</h1>
+              {p.nameZh && <p className="mt-1 text-lg text-muted">{p.nameZh}</p>}
+            </div>
             <HeartButton slug={p.slug} name={p.name} className="w-11 h-11 shrink-0 border border-blush-2" />
           </div>
           <p className="mt-1 text-sm text-muted">Product code: {p.sku}</p>
@@ -93,33 +100,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
-      <section className="mt-16 grid lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 prose-bf">
-          <h2 className="!mt-0">About this bouquet</h2>
-          <p>{p.description}</p>
+      <ProductDetails p={p}>
+        <div className="mt-6 prose-bf">
           <h2>Delivery in Kuala Lumpur & Selangor</h2>
           <p>
-            Choose <strong>Instant Delivery</strong> (order before {site.sameDayCutoff}, sent by Grab Express or Lalamove) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor — see all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
+            Choose <strong>Instant Delivery</strong> (order before {site.sameDayCutoff}, sent by Grab Express or Lalamove) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor. See all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
           </p>
         </div>
-        <aside className="bg-white rounded-3xl border border-blush-2/70 p-6 h-fit">
-          <h3 className="font-sans font-semibold mb-3">What&apos;s included</h3>
-          <ul className="space-y-2 text-sm">{p.includes.map((x) => <li key={x} className="flex gap-2"><Check className="w-4 h-4 text-sage mt-0.5" /> {x}</li>)}</ul>
-          <h3 className="font-sans font-semibold mt-6 mb-2">Categories</h3>
-          <div className="flex flex-wrap gap-2">
-            {p.categories.map((slug) => {
-              const c = getCategory(slug);
-              return c && <Link key={slug} href={`/category/${slug}`} className="text-xs px-3 py-1 rounded-full bg-blush text-brand">{c.name}</Link>;
-            })}
-          </div>
-        </aside>
-      </section>
+      </ProductDetails>
+      </VariantProvider>
 
       <ProductReviews slug={p.slug} productName={p.name} />
 
       <section className="mt-16"><SectionTitle title="Questions about this bouquet" /><Faq items={faqs} /></section>
 
-      {!isAddOn(p) && (
+      {!isAddOn(p) && addOns().length > 0 && (
         <section className="mt-16">
           <SectionTitle eyebrow="Make it extra special" title="Add a little extra" sub="Tap + to add these to your order list with this bouquet." />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{addOns().map((r) => <ProductCard key={r.slug} p={r} />)}</div>
