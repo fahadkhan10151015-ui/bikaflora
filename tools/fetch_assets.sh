@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 # Runs on GitHub's servers (see .github/workflows/fetch-assets.yml).
-# Makes preview sheets of candidate florist videos (clips from the same shoot have nearby ids).
+# Downloads the full-HD clips used for the hero "how it's made" video.
 set -u
-OUT=_incoming/videos; mkdir -p $OUT
-probe() {
-  id=$1
-  for q in hd_1280_720_25fps hd_1280_720_24fps hd_1280_720_30fps hd_1366_720_25fps hd_1366_720_24fps sd_960_540_25fps sd_960_540_24fps; do
+OUT=_incoming/clips; mkdir -p $OUT
+for id in 4621364 4621365 4621368 4621366 4621360 4621356 4621370 4621362; do
+  for q in hd_1920_1080_25fps hd_1920_1080_24fps hd_1920_1080_30fps uhd_2560_1440_25fps hd_1280_720_25fps; do
     url="https://videos.pexels.com/video-files/$id/$id-$q.mp4"
-    if curl -sfL --max-time 60 "$url" -o /tmp/$id.mp4; then
-      dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/$id.mp4)
-      ffmpeg -loglevel error -y -i /tmp/$id.mp4 -vf "fps=6/$dur,scale=320:-2,tile=6x1" -frames:v 1 "$OUT/$id.jpg" && echo "$id $q $dur" >> $OUT/list.txt
-      rm -f /tmp/$id.mp4; return
+    if curl -sfL --max-time 120 "$url" -o /tmp/v.mp4; then
+      ffmpeg -loglevel error -y -i /tmp/v.mp4 -an -vf "scale=1920:-2" -c:v libx264 -preset veryfast -crf 18 "$OUT/$id.mp4"
+      echo "$id $q" >> $OUT/list.txt; break
     fi
   done
-}
-export -f probe; export OUT
-{ seq 5756270 5756310; seq 4621340 4621380; seq 5564520 5564575; seq 7626700 7626730; seq 8279140 8279165; } | xargs -P 12 -I{} bash -c 'probe {}'
-sort -o $OUT/list.txt $OUT/list.txt; wc -l $OUT/list.txt
+done
+cat $OUT/list.txt; du -sh $OUT
