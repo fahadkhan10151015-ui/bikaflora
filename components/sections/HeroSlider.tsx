@@ -56,9 +56,9 @@ const slides: Slide[] = [
 ];
 
 const DURATION = 4000;
-/** Slide 5: our bouquet video (public/video). It plays once in full, then the slides start again. */
-const VIDEO_MS = 16000;
-const videoSlide = { eyebrow: "Handmade in Kuala Lumpur", title: ["Made with love,", "delivered today"] as [string, string], text: "Every BikaFlora bouquet is hand-tied by our florists and delivered across KL & Selangor, any time." };
+/** Slide 5: florist at work (Pexels video 3805783, free licence). It plays once in full, then the slides start again. */
+const VIDEO_MS = 13000; // the clip is 13 seconds
+const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made with love,", "delivered today"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
@@ -109,9 +109,10 @@ export default function HeroSlider() {
       ))}
       {/* slide 5: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        <video ref={video} className="absolute inset-0 w-full h-full object-cover" muted playsInline preload={preload} poster="/video/hero-desktop-poster.webp">
-          <source src="/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 767px)" />
-          <source src="/video/hero-desktop.mp4" type="video/mp4" />
+        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[70%_center]" muted playsInline preload={preload} poster="/video/florist-poster.webp">
+          <source src="https://videos.pexels.com/video-files/3805783/3805783-hd_1280_720_25fps.mp4" type="video/mp4" media="(max-width: 767px)" />
+          <source src="https://videos.pexels.com/video-files/3805783/3805783-hd_1920_1080_25fps.mp4" type="video/mp4" />
+          <source src="/video/florist-360.mp4" type="video/mp4" />
         </video>
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-md:opacity-0" : ""}`} />
