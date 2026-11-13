@@ -7,7 +7,7 @@ export const unsplash = (id: string, w = 1000) =>
 
 /** Shared site images (not tied to a product). */
 /** Free florist video (Pexels) for the "Crafted by hand" section. */
-export const flowerVideo = "https://videos.pexels.com/video-files/9737875/9737875-hd_1280_720_24fps.mp4";
+export const flowerVideo = "https://videos.pexels.com/video-files/3805783/3805783-hd_1280_720_25fps.mp4";
 
 export const siteImages = {
   cover: unsplash("1561729098-cbab0f7a9f7c", 1600),

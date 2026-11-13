@@ -56,8 +56,8 @@ const slides: Slide[] = [
 ];
 
 const DURATION = 4000;
-/** Slide 5: florist at work (Pexels video 3805783, free licence). It plays once in full, then the slides start again. */
-const VIDEO_MS = 13000; // the clip is 13 seconds
+/** Slide 5: a florist making a bouquet from start to finish (Pexels video 9737877, free licence). Plays once in full, then the slides start again. */
+const VIDEO_MS = 26000; // safety limit; normally the slide moves on when the video ends (about 24s)
 const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made with love,", "delivered today"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
 
 export default function HeroSlider() {
@@ -109,9 +109,9 @@ export default function HeroSlider() {
       ))}
       {/* slide 5: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[70%_center]" muted playsInline preload={preload} poster="/video/florist-poster.webp">
-          <source src="https://videos.pexels.com/video-files/3805783/3805783-hd_1280_720_25fps.mp4" type="video/mp4" media="(max-width: 767px)" />
-          <source src="https://videos.pexels.com/video-files/3805783/3805783-hd_1920_1080_25fps.mp4" type="video/mp4" />
+        <video ref={video} className="absolute inset-0 w-full h-full object-cover object-[65%_center]" muted playsInline preload={preload} onEnded={() => setActive(0)}>
+          <source src="https://videos.pexels.com/video-files/9737877/9737877-hd_1280_720_24fps.mp4" type="video/mp4" media="(max-width: 767px)" />
+          <source src="https://videos.pexels.com/video-files/9737877/9737877-hd_1920_1080_24fps.mp4" type="video/mp4" />
           <source src="/video/florist-360.mp4" type="video/mp4" />
         </video>
       </div>
