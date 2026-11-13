@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Zap, CalendarClock, Check, Plus } from "lucide-react";
+import { useEffect } from "react";
+import Image from "next/image";
+import { Zap, CalendarClock, Check, Plus, Palette } from "lucide-react";
 import { useOrderList } from "@/components/order/OrderListProvider";
 import Stars from "./Stars";
 import { useVariant } from "./VariantProvider";
@@ -17,9 +19,11 @@ export default function OrderPanel({ p }: { p: Product }) {
   const { user } = useAuth();
   const openChooser = useWhatsAppChooser();
   const list = useOrderList();
-  const { variant, setVariant } = useVariant();
-  const methods = deliveryMethods.filter((d) => (d.id === "instant" ? p.instant : p.preorder));
+  const { variant, setVariant, paper, setPaper } = useVariant();
+  // A custom wrapping colour is made to order, so it is pre-order only.
+  const methods = deliveryMethods.filter((d) => (d.id === "instant" ? p.instant && !paper : p.preorder));
   const [delivery, setDelivery] = useState<DeliveryMethodId>(methods[0]?.id ?? "preorder");
+  useEffect(() => { if (paper) setDelivery("preorder"); }, [paper]);
 
   const price = p.price;
   const method = deliveryMethods.find((d) => d.id === delivery)!;
@@ -28,9 +32,9 @@ export default function OrderPanel({ p }: { p: Product }) {
   const openWhatsApp = () =>
     openChooser({
       title: p.name,
-      subtitle: `${colour ? `${colour} · ` : ""}${formatPrice(price)} · ${method.label}`,
+      subtitle: `${colour ? `${colour} · ` : ""}${paper ? `${paper.label} paper · ` : ""}${formatPrice(price)} · ${method.label}`,
       options: productMessages(
-        { name: p.name, sku: p.sku, slug: p.slug, price, colour },
+        { name: p.name, sku: p.sku, slug: p.slug, price, colour, paper: paper?.label },
         `${method.label} (${method.detail})`,
         user ? { name: displayName(user), email: user.email } : undefined,
       ),
@@ -69,6 +73,33 @@ export default function OrderPanel({ p }: { p: Product }) {
         </fieldset>
       )}
 
+      {p.paperColours && (
+        <fieldset className="rounded-2xl border border-dashed border-gold/60 bg-white/70 p-4">
+          <legend className="px-1 text-sm font-semibold flex items-center gap-1.5"><Palette className="w-4 h-4 text-gold" /> Customise wrapping paper <span className="font-normal text-muted">(pre-order only)</span></legend>
+          <div className="flex flex-wrap gap-2.5 mt-1">
+            {p.paperColours.map((c) => {
+              const on = c.image ? paper?.id === c.id : !paper;
+              return (
+                <button key={c.id} type="button" onClick={() => setPaper(c.image ? c.id : undefined)} aria-pressed={on} title={c.label}
+                  className="flex flex-col items-center gap-1 w-16 text-[11px] leading-tight text-center">
+                  <span className={`w-10 h-10 rounded-full ring-2 ring-offset-2 transition ${on ? "ring-brand" : "ring-transparent hover:ring-blush-2"}`} style={{ background: c.swatch, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.12)" }} />
+                  <span className={on ? "font-semibold text-ink" : "text-muted"}>{c.label.replace(" (original)", "")}</span>
+                </button>
+              );
+            })}
+          </div>
+          {paper?.image && (
+            <div className="mt-3 flex items-center gap-3 rounded-xl bg-blush/50 p-2 gallery-in" key={paper.id}>
+              <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0"><Image src={paper.image} alt={`${paper.label} wrapping preview`} fill sizes="80px" className="object-cover" /></div>
+              <div className="text-sm"><b>{paper.label}</b> wrapping<br /><span className="text-xs text-muted">Preview also shown in the main photo</span></div>
+            </div>
+          )}
+          <p className="mt-3 text-xs text-muted">
+            {paper ? <>Showing a <b>{paper.label}</b> wrapping preview. Custom colours are made to order, so delivery is <b>Pre-order</b>. Final shade may vary slightly.</> : "Pick a colour to preview your bouquet in a different wrapping paper."}
+          </p>
+        </fieldset>
+      )}
+
       <fieldset>
         <legend className="label">How would you like it?</legend>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -92,7 +123,7 @@ export default function OrderPanel({ p }: { p: Product }) {
         <button type="button" onClick={openWhatsApp} className="btn btn-wa !py-4 text-base shadow-lg shadow-wa/25">
           <WhatsAppIcon className="w-6 h-6" /> Order on WhatsApp
         </button>
-        <button type="button" onClick={() => { list.add({ slug: p.slug, size: colour, price }); list.open(); }} className="btn btn-outline !py-3.5">
+        <button type="button" onClick={() => { list.add({ slug: p.slug, size: [colour, paper && `${paper.label} paper (pre-order)`].filter(Boolean).join(", ") || undefined, price }); list.open(); }} className="btn btn-outline !py-3.5">
           <Plus className="w-5 h-5" /> Add to order list
         </button>
         <p className="text-xs text-muted text-center">Ordering more than one bouquet? Add them to your order list and send everything in one WhatsApp message. {paymentNote}</p>

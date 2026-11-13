@@ -8,7 +8,7 @@ import DeliveryWays from "@/components/sections/DeliveryWays";
 import { selangor, kl } from "@/data/locations";
 import { faqs } from "@/data/faqs";
 import ProductRow from "@/components/product/ProductRow";
-import HeroStage from "@/components/sections/HeroStage";
+import HeroSlider from "@/components/sections/HeroSlider";
 import Petals from "@/components/sections/Petals";
 import VideoBand from "@/components/sections/VideoBand";
 import BouquetCraft from "@/components/sections/BouquetCraft";
@@ -54,29 +54,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-deep via-deep/75 to-deep/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-deep/40" />
         <Petals />
-        <div className="relative container-x pt-10 pb-16 lg:py-20 grid lg:grid-cols-2 gap-8 items-center">
-          <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
-              <Sparkles className="w-4 h-4 text-gold" /> Florist in Kuala Lumpur & Selangor, Malaysia
-            </div>
-            <h1 className="mt-6 text-4xl sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
-              Flowers that say it <span className="italic text-petal">beautifully</span>
-            </h1>
-            <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Handmade soap rose bouquets that last for months. Same-day delivery today or pre-order for your date, ordered in one tap on WhatsApp.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3 justify-center lg:justify-start">
-              <Link href="/shop" className="btn bg-white text-brand hover:bg-blush !px-7 !py-4">Shop Bouquets <ArrowRight className="w-4 h-4" /></Link>
-              <WhatsAppButton label="Order on WhatsApp" className="btn btn-wa !px-7 !py-4 shadow-xl shadow-wa/30" />
-            </div>
-            <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0">
-              {[["32", "delivery areas"], ["Instant", "or pre-order"], ["100%", "handmade"]].map(([value, label]) => (
-                <div key={label}><dt className="font-serif text-2xl sm:text-3xl font-semibold text-gold whitespace-nowrap">{value}</dt><dd className="text-xs text-white/70">{label}</dd></div>
-              ))}
-            </dl>
-          </div>
-          <div className="order-1 lg:order-2"><HeroStage /></div>
-        </div>
+        <HeroSlider />
       </section>
 
       <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>

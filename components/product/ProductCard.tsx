@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import { Zap, Palette } from "lucide-react";
 import type { Product } from "@/data/products";
 import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
@@ -30,7 +30,8 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
           <h3 className="font-serif text-[15px] sm:text-lg leading-snug hover:text-brand line-clamp-2">{p.name}</h3>
         </Link>
         <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-xs text-muted">
-          {p.instant && <span className="inline-flex items-center gap-1 text-brand font-medium"><Zap className="w-3 h-3" /> Same-day</span>}
+          {p.instant && <span className="inline-flex items-center gap-1 text-brand font-medium"><Zap className="w-3 h-3" /> Same-day delivery</span>}
+          {p.paperColours && <span className="inline-flex items-center gap-1" title="Custom wrapping colours (pre-order)"><Palette className="w-3 h-3 text-gold" /><span className="hidden sm:inline">Custom paper</span></span>}
           {p.variants && (
             <span className="inline-flex items-center gap-1" title={p.variants.map((v) => v.label).join(" / ")}>
               {p.variants.map((v) => <span key={v.id} className="w-3 h-3 rounded-full ring-1 ring-black/10" style={{ background: v.swatch }} />)}

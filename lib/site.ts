@@ -23,9 +23,6 @@ export const site = {
     facebook: "https://facebook.com/",
     tiktok: "https://tiktok.com/",
   },
-
-  // Set to false once data/reviews.ts holds your REAL customer reviews.
-  reviewsAreSamples: true,
 };
 
 /** The two ways a customer can order. */

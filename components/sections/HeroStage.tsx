@@ -1,15 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { Rose, Blossom, Leaf, Sparkle, Hibiscus, Orchid } from "./Flowers";
+import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import { Sparkle } from "./Flowers";
 
-/** Bouquets that take turns in the centre of the stage (transparent cut-outs). */
-const bouquets = ["/images/hero/bouquet-a.webp", "/images/hero/bouquet-b.webp"];
-/** Flowers that orbit the bouquet (drawn in SVG). */
-const orbiters = [
-  <Hibiscus key="h1" />, <Rose key="r1" tint="pink" />, <Orchid key="o1" />, <Leaf key="l1" />, <Blossom key="b1" tint="blush" />,
-  <Hibiscus key="h2" />, <Rose key="r2" tint="peach" />, <Orchid key="o2" />, <Leaf key="l2" />, <Blossom key="b2" tint="white" />,
-];
+export type StageSlide = { image: string; alt: string; orbiters: ReactNode[] };
 
 /** Twinkles placed around the halo. */
 const sparkles = [
@@ -17,18 +12,13 @@ const sparkles = [
   { top: "82%", left: "70%", delay: 0.6 }, { top: "45%", left: "92%", delay: 1.7 }, { top: "38%", left: "4%", delay: 2.6 },
 ];
 
-const RING_TEXT = "BIKAFLORA · BUNGA SEGAR · KUALA LUMPUR · SELANGOR · MALAYSIA · ";
+const RING_TEXT = "BIKAFLORA · SOAP FLOWER BOUQUETS · KUALA LUMPUR · SELANGOR · MALAYSIA · ";
 
 /** Animated 3D hero: floating bouquet, orbiting flower medallions and a rotating text ring. */
-export default function HeroStage() {
+export default function HeroStage({ slides, active }: { slides: StageSlide[]; active: number }) {
   const stage = useRef<HTMLDivElement>(null);
   const orbit = useRef<(HTMLDivElement | null)[]>([]);
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setActive((a) => (a + 1) % bouquets.length), 6000);
-    return () => clearInterval(t);
-  }, []);
+  const slots = Math.max(...slides.map((s) => s.orbiters.length));
 
   useEffect(() => {
     const el = stage.current;
@@ -73,7 +63,7 @@ export default function HeroStage() {
   }, []);
 
   return (
-    <div ref={stage} className="relative w-full max-w-[560px] aspect-square mx-auto" style={{ containerType: "inline-size" }} aria-hidden="true">
+    <div ref={stage} className="relative w-full max-w-[560px] aspect-square mx-auto" style={{ containerType: "inline-size" }}>
       {/* glowing halo */}
       <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle_at_40%_35%,#fff8f5_0%,#f6cdd8_38%,#2b3b62_72%,transparent_74%)] opacity-90" />
       <div className="absolute inset-[9%] rounded-full border border-gold/40" />
@@ -92,19 +82,23 @@ export default function HeroStage() {
         <span key={i} className="absolute w-[4%] sparkle" style={{ top: s.top, left: s.left, animationDelay: `${s.delay}s` }}><Sparkle className="w-full h-full" /></span>
       ))}
 
-      {/* orbiting flowers */}
-      {orbiters.map((flower, i) => (
+      {/* orbiting flowers: the same kinds of flowers as in the bouquet on show */}
+      {Array.from({ length: slots }, (_, i) => (
         <div key={i} ref={(n) => { orbit.current[i] = n; }}
-          className="absolute left-1/2 top-[55%] w-[14%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)] [&>svg]:w-full [&>svg]:h-full">
-          {flower}
+          className="absolute left-1/2 top-[55%] w-[14%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)]">
+          {slides.map((sl, si) => (
+            <div key={si} className={`absolute inset-0 transition-opacity duration-700 [&>svg]:w-full [&>svg]:h-full ${si === active ? "opacity-100" : "opacity-0"}`}>
+              {sl.orbiters[i % sl.orbiters.length]}
+            </div>
+          ))}
         </div>
       ))}
 
       {/* bouquet in 3D */}
       <div className="absolute inset-0 z-20 [perspective:1200px] pointer-events-none">
         <div className="absolute inset-[10%] hero-float" style={{ transform: "rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg))", transformStyle: "preserve-3d" }}>
-          {bouquets.map((src, i) => (
-            <Image key={src} src={src} alt="" fill priority={i === 0} sizes="(max-width:1024px) 80vw, 500px"
+          {slides.map((sl, i) => (
+            <Image key={sl.image} src={sl.image} alt={sl.alt} fill priority={i === 0} quality={90} sizes="(max-width:1024px) 80vw, 520px"
               className={`object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)] transition-all duration-1000 ${i === active ? "opacity-100 [transform:rotateY(0deg)_scale(1)]" : "opacity-0 [transform:rotateY(90deg)_scale(.9)]"}`} />
           ))}
         </div>

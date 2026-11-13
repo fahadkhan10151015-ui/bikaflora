@@ -2,7 +2,9 @@
 //  PRODUCTS — BikaFlora's real catalogue.
 //
 //  Photos live in /public/products/<slug>/ (01.jpg, 02.jpg …).
-//  Photo order: 1) person holding the bouquet  2) bouquet only  3) other angles  4) details card.
+//  Photo order: put the most attractive photo first. Mix it: some products open with the
+//  bouquet-only photo, others with the person holding it. Never drop photos, only reorder.
+//  Details card (size/what's inside) goes last.
 //  Products with colours keep each colour's photos in its own folder (…/pink/, …/red/).
 //
 //  To add a product: copy one block below, change the text, put the photos in a new
@@ -19,6 +21,9 @@ export type Variant = {
   includes?: string[];
   size?: string;
 };
+
+/** Custom wrapping-paper colour (pre-order only). The image is a preview of the bouquet in that paper. */
+export type PaperColour = { id: string; label: string; swatch: string; image?: string };
 
 export type Product = {
   slug: string;
@@ -50,99 +55,117 @@ export type Product = {
   instant: boolean;
   /** Can be pre-ordered for a future date */
   preorder: boolean;
+  /** Optional custom wrapping colours (pre-order only). First item = the original paper. */
+  paperColours?: PaperColour[];
   /** Extra words that help search and the chat assistant */
   tags?: string[];
 };
 
 const pics = (folder: string, n: number) => Array.from({ length: n }, (_, i) => `/products/${folder}/${String(i + 1).padStart(2, "0")}.jpg`);
 
-const SOAP_CARE = ["Keep away from direct sunlight and excessive heat.", "Avoid contact with water and moisture.", "Keep in a cool, dry place.", "Gently remove dust when needed."];
-
 export const products: Product[] = [
   {
-    slug: "ferrero-rocher-soap-rose-bouquet",
+    slug: "ferrero-rocher-pink-roses",
     sku: "BF-001",
-    name: "Ferrero Rocher Soap Rose Bouquet",
+    name: "Ferrero Rocher Pink Roses (Soap)",
     price: 145,
     compareAt: 170,
     categories: ["premium-bouquets", "chocolate-flower-bouquets"],
-    images: pics("ferrero-soap-rose-bouquet/pink", 4),
-    variants: [
-      {
-        id: "pink",
-        label: "Pink",
-        swatch: "#f4b6c2",
-        images: pics("ferrero-soap-rose-bouquet/pink", 4),
-        design: "A luxurious bouquet featuring 10 premium pink soap roses, 7 Ferrero Rocher chocolates in protective cases, preserved baby's breath, elegant premium wrapping and a beautiful satin ribbon.",
-        includes: ["10 premium pink soap roses", "7 Ferrero Rocher chocolates (each in a protective case)", "Preserved baby's breath", "Premium peach wrapping", "Pink satin ribbon"],
-      },
-      {
-        id: "red",
-        label: "Red",
-        swatch: "#c8102e",
-        images: pics("ferrero-soap-rose-bouquet/red", 4),
-        design: "An elegant arrangement featuring 10 premium red soap roses, 7 Ferrero Rocher chocolates in protective round covers, preserved pink baby's breath, luxurious black wrapping and a beautiful red satin ribbon.",
-        includes: ["10 premium red soap roses", "7 Ferrero Rocher chocolates (each in a protective cover)", "Preserved pink baby's breath", "Black premium wrapping", "Red satin ribbon"],
-      },
-    ],
+    images: pics("ferrero-rocher-pink-roses", 4),
     badge: "Sweet & Long-lasting",
-    short: "10 soap roses and 7 Ferrero Rocher chocolates in one luxurious bouquet. Choose pink or red.",
-    description: "Flowers and chocolate in one gift. Ten premium soap roses surround seven Ferrero Rocher chocolates, finished with preserved baby's breath, premium wrapping and a satin ribbon.",
-    design: "10 premium soap roses, 7 Ferrero Rocher chocolates in protective cases, preserved baby's breath, premium wrapping and a satin ribbon.",
-    durability: "Long-lasting soap roses and preserved fillers make this a beautiful keepsake. Chocolates are individually protected to keep them fresh.",
-    occasions: "Birthdays, anniversaries, Valentine's Day, Mother's Day, graduations, proposals, surprises and all special occasions.",
-    care: [...SOAP_CARE, "Store chocolates in a cool, dry place."],
-    includes: ["10 premium soap roses", "7 Ferrero Rocher chocolates", "Preserved baby's breath", "Premium wrapping", "Satin ribbon"],
+    short: "10 pink soap roses and 7 Ferrero Rocher chocolates in soft peach wrapping.",
+    description: "A luxurious bouquet featuring 10 premium pink soap roses, 7 Ferrero Rocher chocolates in protective cases, preserved baby's breath, elegant premium wrapping and a beautiful satin ribbon.",
+    design: "10 premium pink soap roses, 7 Ferrero Rocher chocolates in protective cases, preserved baby's breath, elegant premium wrapping and a beautiful satin ribbon.",
+    durability: "Long-lasting soap roses and preserved fillers make this a beautiful keepsake. Chocolates are individually protected to maintain freshness.",
+    occasions: "Birthdays, anniversaries, Valentine's Day, Mother's Day, graduations, surprises and all special occasions.",
+    care: ["Keep away from direct sunlight and excessive heat.", "Avoid contact with water and moisture.", "Gently remove dust when needed.", "Store chocolates in a cool, dry place.", "Handle carefully to maintain the bouquet's beauty."],
+    includes: ["10 premium pink soap roses", "7 Ferrero Rocher chocolates (each in a protective case)", "Preserved baby's breath", "Premium peach wrapping", "Pink satin ribbon"],
     size: "35 cm wide × 45 cm long",
     instant: true,
     preorder: true,
-    tags: ["chocolate", "ferrero", "soap rose", "romantic"],
+    tags: ["chocolate", "ferrero", "soap rose", "pink", "romantic"],
   },
   {
-    slug: "soap-rose-heart-large",
+    slug: "ferrero-rocher-red-roses",
     sku: "BF-002",
-    name: "Soap Rose Heart Large",
+    name: "Ferrero Rocher Red Roses (Soap)",
+    price: 145,
+    compareAt: 170,
+    categories: ["premium-bouquets", "chocolate-flower-bouquets"],
+    images: pics("ferrero-rocher-red-roses", 4),
+    badge: "Sweet & Romantic",
+    short: "10 red soap roses and 7 Ferrero Rocher chocolates in luxurious black wrapping.",
+    description: "An elegant arrangement featuring 10 premium red soap roses, 7 Ferrero Rocher chocolates in protective round covers, preserved pink baby's breath, luxurious black wrapping and a beautiful red satin ribbon.",
+    design: "10 premium red soap roses, 7 Ferrero Rocher chocolates in protective round covers, preserved pink baby's breath, luxurious black wrapping and a red satin ribbon.",
+    durability: "Long-lasting soap roses and preserved fillers make this a beautiful keepsake. Chocolates are individually protected for a delightful sweet surprise.",
+    occasions: "Birthdays, anniversaries, Valentine's Day, Mother's Day, proposals and other special celebrations.",
+    care: ["Keep away from water, direct sunlight and excessive heat.", "Store in a cool, dry place to keep the flowers beautiful and the chocolates in good condition."],
+    includes: ["10 premium red soap roses", "7 Ferrero Rocher chocolates (each in a protective cover)", "Preserved pink baby's breath", "Black premium wrapping", "Red satin ribbon"],
+    size: "35 cm wide × 45 cm long",
+    paperColours: [
+      { id: "original", label: "Black (original)", swatch: "#1d1d22" },
+      { id: "navy", label: "Navy", swatch: "#1f2f5c", image: "/products/ferrero-rocher-red-roses/paper/paper-navy.jpg" },
+      { id: "burgundy", label: "Burgundy", swatch: "#5e1424", image: "/products/ferrero-rocher-red-roses/paper/paper-burgundy.jpg" },
+      { id: "green", label: "Emerald", swatch: "#1c4632", image: "/products/ferrero-rocher-red-roses/paper/paper-green.jpg" },
+      { id: "purple", label: "Purple", swatch: "#3d2259", image: "/products/ferrero-rocher-red-roses/paper/paper-purple.jpg" },
+    ],
+    instant: true,
+    preorder: true,
+    tags: ["chocolate", "ferrero", "soap rose", "red", "romantic", "valentine"],
+  },
+  {
+    slug: "pink-soap-rose-heart-large",
+    sku: "BF-003",
+    name: "Pink Soap Rose Heart Large",
     nameZh: "深愛不渝",
     price: 140,
     compareAt: 165,
     categories: ["premium-bouquets", "best-seller"],
-    images: pics("soap-rose-heart-large/pink", 3),
-    variants: [
-      {
-        id: "pink",
-        label: "Pink",
-        swatch: "#f4b6c2",
-        images: pics("soap-rose-heart-large/pink", 3),
-        design: "Heart-shaped bouquet of 25 pink and ivory soap roses (5 layers) with preserved baby's breath, wrapped in layered pink paper with an organza ribbon.",
-        includes: ["25 pink & ivory soap roses in a heart shape", "Preserved baby's breath", "Layered pink wrapping", "Pink organza ribbon"],
-        size: "40 cm wide × 45 cm long",
-      },
-      {
-        id: "red",
-        label: "Red",
-        swatch: "#c8102e",
-        images: pics("soap-rose-heart-large/red", 4),
-        design: "Heart-shaped bouquet of 25 red soap roses (7 layers) and preserved caspia, wrapped in layered blush paper with a burgundy satin ribbon.",
-        includes: ["25 red soap roses in a heart shape", "Preserved caspia filler", "Layered blush-pink wrapping", "Burgundy satin ribbon"],
-        size: "45 cm wide × 50 cm long",
-      },
-    ],
+    images: pics("pink-soap-rose-heart-large", 5),
     badge: "Top Seller",
-    short: "25 soap roses arranged in a heart. Our top-selling bouquet, in pink or red.",
-    description: "Our top-selling bouquet. Twenty-five soap roses are layered into a perfect heart and wrapped in soft layered paper: a romantic keepsake that never wilts.",
-    design: "Heart-shaped bouquet of 25 soap roses and preserved filler, wrapped in layered premium paper.",
+    short: "25 pink and ivory soap roses layered into a heart. Our top-selling bouquet.",
+    description: "Our top-selling bouquet. A heart-shaped bouquet of 25 soap roses in 5 layers with preserved baby's breath, wrapped in layered pink paper: an everlasting keepsake that stays beautiful without wilting.",
+    design: "Heart-shaped bouquet of 25 pink and ivory soap roses (5 layers) and preserved baby's breath in layered pink wrapping.",
     durability: "An everlasting keepsake that stays fresh and fragrant without wilting.",
     occasions: "Anniversaries, weddings, Valentine's Day, birthdays and Mother's Day.",
     care: ["Keep in a cool, dry place.", "Keep away from sunlight and water."],
-    includes: ["25 soap roses in a heart shape", "Preserved filler", "Layered premium wrapping", "Satin or organza ribbon"],
-    size: "About 45 cm wide × 50 cm long",
+    includes: ["25 pink & ivory soap roses in a heart shape", "Preserved baby's breath", "Layered pink wrapping", "Pink organza ribbon"],
+    size: "40 cm wide × 45 cm long",
     instant: true,
     preorder: true,
-    tags: ["heart", "romantic", "anniversary", "valentine", "soap rose", "top selling"],
+    tags: ["heart", "romantic", "anniversary", "valentine", "soap rose", "pink", "top selling"],
+  },
+  {
+    slug: "red-soap-rose-heart-large",
+    sku: "BF-004",
+    name: "Red Soap Rose Heart Large",
+    price: 140,
+    compareAt: 165,
+    categories: ["premium-bouquets", "best-seller"],
+    images: pics("red-soap-rose-heart-large", 4),
+    badge: "Top Seller",
+    short: "25 red soap roses layered into a heart with caspia. Our top-selling bouquet.",
+    description: "Our top-selling bouquet in classic red. A heart-shaped bouquet of 25 red soap roses in 7 layers with preserved caspia, wrapped in layered blush paper and tied with a burgundy ribbon.",
+    design: "Heart-shaped bouquet of 25 red soap roses (7 layers) and preserved caspia in layered blush wrapping.",
+    durability: "An everlasting keepsake that stays fresh and fragrant without wilting.",
+    occasions: "Anniversaries, weddings, Valentine's Day, birthdays and Mother's Day.",
+    care: ["Keep in a cool, dry place.", "Keep away from sunlight and water."],
+    includes: ["25 red soap roses in a heart shape", "Preserved caspia filler", "Layered blush-pink wrapping", "Burgundy satin ribbon"],
+    size: "45 cm wide × 50 cm long",
+    paperColours: [
+      { id: "original", label: "Blush (original)", swatch: "#f6dcd6" },
+      { id: "black", label: "Black", swatch: "#26262c", image: "/products/red-soap-rose-heart-large/paper/paper-black.jpg" },
+      { id: "navy", label: "Navy", swatch: "#243566", image: "/products/red-soap-rose-heart-large/paper/paper-navy.jpg" },
+      { id: "lilac", label: "Lilac", swatch: "#c9b3e3", image: "/products/red-soap-rose-heart-large/paper/paper-lilac.jpg" },
+      { id: "champagne", label: "Champagne", swatch: "#efe2c8", image: "/products/red-soap-rose-heart-large/paper/paper-champagne.jpg" },
+    ],
+    instant: true,
+    preorder: true,
+    tags: ["heart", "romantic", "anniversary", "valentine", "soap rose", "red", "top selling"],
   },
   {
     slug: "white-blue-soap-rose-heart",
-    sku: "BF-003",
+    sku: "BF-005",
     name: "White & Blue Soap Rose Heart",
     price: 140,
     compareAt: 165,
@@ -163,12 +186,12 @@ export const products: Product[] = [
   },
   {
     slug: "blue-noir-for-him",
-    sku: "BF-004",
-    name: "Blue Noir For Him",
+    sku: "BF-006",
+    name: "Blue Noir For Him (Soap)",
     price: 150,
     compareAt: 175,
     categories: ["premium-bouquets"],
-    images: pics("blue-noir-for-him", 5),
+    images: pics("blue-noir-for-him", 6),
     badge: "For Him",
     short: "25 blue and black soap roses in sleek black wrapping. A bold gift for him.",
     description: "Bold, elegant and made for him. Twenty-five blue and black soap roses wrapped in premium black paper and tied with a white \"Love is eternal\" ribbon.",
@@ -183,8 +206,8 @@ export const products: Product[] = [
   },
   {
     slug: "graduation-signature",
-    sku: "BF-005",
-    name: "The Graduation Signature",
+    sku: "BF-007",
+    name: "The Graduation Signature (Soap)",
     price: 150,
     compareAt: 175,
     categories: ["premium-bouquets"],
@@ -198,14 +221,21 @@ export const products: Product[] = [
     care: ["Store in a cool, dry place.", "Keep away from direct sunlight.", "Gently remove dust when needed."],
     includes: ["3 sunflowers", "Blue & white soap roses", "Daisies & gerbera", "Graduation teddy bear (cap & gown)", "Wheat stalks & eucalyptus", "Royal-blue premium wrapping", "White organza ribbon"],
     size: "50 cm wide × 60 cm long",
+    paperColours: [
+      { id: "original", label: "Royal blue (original)", swatch: "#2a56b8" },
+      { id: "maroon", label: "Maroon", swatch: "#7a1f2b", image: "/products/graduation-signature/paper/paper-maroon.jpg" },
+      { id: "black", label: "Black", swatch: "#26262c", image: "/products/graduation-signature/paper/paper-black.jpg" },
+      { id: "green", label: "Green", swatch: "#1f5a3d", image: "/products/graduation-signature/paper/paper-green.jpg" },
+      { id: "purple", label: "Purple", swatch: "#4b2a6e", image: "/products/graduation-signature/paper/paper-purple.jpg" },
+    ],
     instant: true,
     preorder: true,
     tags: ["graduation", "convocation", "convo", "konvo", "student", "sunflower", "teddy"],
   },
   {
     slug: "ocean-whisper",
-    sku: "BF-006",
-    name: "Ocean Whisper",
+    sku: "BF-008",
+    name: "Ocean Whisper (Soap)",
     nameZh: "真诚之美",
     price: 135,
     compareAt: 160,
@@ -225,8 +255,8 @@ export const products: Product[] = [
   },
   {
     slug: "bestie-blossoms",
-    sku: "BF-007",
-    name: "Bestie Blossoms",
+    sku: "BF-009",
+    name: "Bestie Blossoms (Soap)",
     nameZh: "永恆友誼",
     price: 130,
     compareAt: 150,
@@ -247,8 +277,8 @@ export const products: Product[] = [
   },
   {
     slug: "orchid-elegance",
-    sku: "BF-008",
-    name: "Orchid Elegance",
+    sku: "BF-010",
+    name: "Orchid Elegance (Soap)",
     nameZh: "兰花雅韵",
     price: 120,
     compareAt: 140,
