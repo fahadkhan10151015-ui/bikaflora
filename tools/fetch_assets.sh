@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # Runs on GitHub's servers (see .github/workflows/fetch-assets.yml).
-# Downloads candidate "moments" photos (free Pexels licence).
+# Downloads the full-HD clips used for the hero "how it's made" video.
 set -u
-OUT=_incoming/moments; mkdir -p $OUT
-for id in 5070334 5331258 18612640 236287 15457219 13978471 19363508 20002701 6532845 5332157 1589830 20253665 6720589 72634 10792771 6578940 5331263; do
-  curl -sfL --max-time 60 "https://images.pexels.com/photos/$id/pexels-photo-$id.jpeg?auto=compress&cs=tinysrgb&w=1400" -o $OUT/$id.jpg && echo "$id ok" >> $OUT/list.txt || echo "$id fail" >> $OUT/list.txt
+OUT=_incoming/clips; mkdir -p $OUT
+for id in 4621364 4621365 4621368 4621366 4621360 4621356 4621370 4621362; do
+  for q in hd_1920_1080_25fps hd_1920_1080_24fps hd_1920_1080_30fps uhd_2560_1440_25fps hd_1280_720_25fps; do
+    url="https://videos.pexels.com/video-files/$id/$id-$q.mp4"
+    if curl -sfL --max-time 120 "$url" -o /tmp/v.mp4; then
+      ffmpeg -loglevel error -y -i /tmp/v.mp4 -an -vf "scale=1920:-2" -c:v libx264 -preset veryfast -crf 14 "$OUT/$id.mp4"
+      echo "$id $q" >> $OUT/list.txt; break
+    fi
+  done
 done
-cat $OUT/list.txt
+cat $OUT/list.txt; du -sh $OUT
