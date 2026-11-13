@@ -2,7 +2,7 @@ import { Zap, CalendarClock, Camera, MessageCircle } from "lucide-react";
 import { site } from "@/lib/site";
 
 const items = [
-  { icon: Zap, title: "Instant Delivery", text: `Order before ${site.sameDayCutoff}` },
+  { icon: Zap, title: "Instant Delivery", text: "Delivered today, any time" },
   { icon: CalendarClock, title: "Pre-order & Custom", text: "Made to your idea and date" },
   { icon: Camera, title: "Photo Before Delivery", text: "See your actual bouquet" },
   { icon: MessageCircle, title: "Order on WhatsApp", text: "Quick, personal replies" },

@@ -1,7 +1,7 @@
 // ============================================================
 //  PRODUCTS — BikaFlora's real catalogue.
 //
-//  Photos live in /public/products/<slug>/ (01.jpg, 02.jpg …).
+//  Photos live in /public/products/<slug>/ (01.webp, 02.webp …).
 //  Photo order: put the most attractive photo first. Mix it: some products open with the
 //  bouquet-only photo, others with the person holding it. Never drop photos, only reorder.
 //  Details card (size/what's inside) goes last.
@@ -61,7 +61,7 @@ export type Product = {
   tags?: string[];
 };
 
-const pics = (folder: string, n: number) => Array.from({ length: n }, (_, i) => `/products/${folder}/${String(i + 1).padStart(2, "0")}.jpg`);
+const pics = (folder: string, n: number) => Array.from({ length: n }, (_, i) => `/products/${folder}/${String(i + 1).padStart(2, "0")}.webp`);
 
 export const products: Product[] = [
   {
@@ -103,11 +103,10 @@ export const products: Product[] = [
     includes: ["10 premium red soap roses", "7 Ferrero Rocher chocolates (each in a protective cover)", "Preserved pink baby's breath", "Black premium wrapping", "Red satin ribbon"],
     size: "35 cm wide × 45 cm long",
     paperColours: [
-      { id: "original", label: "Black (original)", swatch: "#1d1d22" },
-      { id: "navy", label: "Navy", swatch: "#1f2f5c", image: "/products/ferrero-rocher-red-roses/paper/paper-navy.jpg" },
-      { id: "burgundy", label: "Burgundy", swatch: "#5e1424", image: "/products/ferrero-rocher-red-roses/paper/paper-burgundy.jpg" },
-      { id: "green", label: "Emerald", swatch: "#1c4632", image: "/products/ferrero-rocher-red-roses/paper/paper-green.jpg" },
-      { id: "purple", label: "Purple", swatch: "#3d2259", image: "/products/ferrero-rocher-red-roses/paper/paper-purple.jpg" },
+      { id: "original", label: "Original (Black)", swatch: "#1d1d22" },
+      { id: "pink", label: "Pink", swatch: "#f0a6bb", image: "/products/ferrero-rocher-red-roses/paper/paper-pink.webp" },
+      { id: "red", label: "Red", swatch: "#b3122a", image: "/products/ferrero-rocher-red-roses/paper/paper-red.webp" },
+      { id: "white", label: "White", swatch: "#f6f3ef", image: "/products/ferrero-rocher-red-roses/paper/paper-white.webp" },
     ],
     instant: true,
     preorder: true,
@@ -153,11 +152,11 @@ export const products: Product[] = [
     includes: ["25 red soap roses in a heart shape", "Preserved caspia filler", "Layered blush-pink wrapping", "Burgundy satin ribbon"],
     size: "45 cm wide × 50 cm long",
     paperColours: [
-      { id: "original", label: "Blush (original)", swatch: "#f6dcd6" },
-      { id: "black", label: "Black", swatch: "#26262c", image: "/products/red-soap-rose-heart-large/paper/paper-black.jpg" },
-      { id: "navy", label: "Navy", swatch: "#243566", image: "/products/red-soap-rose-heart-large/paper/paper-navy.jpg" },
-      { id: "lilac", label: "Lilac", swatch: "#c9b3e3", image: "/products/red-soap-rose-heart-large/paper/paper-lilac.jpg" },
-      { id: "champagne", label: "Champagne", swatch: "#efe2c8", image: "/products/red-soap-rose-heart-large/paper/paper-champagne.jpg" },
+      { id: "original", label: "Original (Blush)", swatch: "#f6dcd6" },
+      { id: "pink", label: "Pink", swatch: "#f0a6bb", image: "/products/red-soap-rose-heart-large/paper/paper-pink.webp" },
+      { id: "black", label: "Black", swatch: "#26262c", image: "/products/red-soap-rose-heart-large/paper/paper-black.webp" },
+      { id: "red", label: "Red", swatch: "#b3122a", image: "/products/red-soap-rose-heart-large/paper/paper-red.webp" },
+      { id: "white", label: "White", swatch: "#f6f3ef", image: "/products/red-soap-rose-heart-large/paper/paper-white.webp" },
     ],
     instant: true,
     preorder: true,
@@ -222,11 +221,11 @@ export const products: Product[] = [
     includes: ["3 sunflowers", "Blue & white soap roses", "Daisies & gerbera", "Graduation teddy bear (cap & gown)", "Wheat stalks & eucalyptus", "Royal-blue premium wrapping", "White organza ribbon"],
     size: "50 cm wide × 60 cm long",
     paperColours: [
-      { id: "original", label: "Royal blue (original)", swatch: "#2a56b8" },
-      { id: "maroon", label: "Maroon", swatch: "#7a1f2b", image: "/products/graduation-signature/paper/paper-maroon.jpg" },
-      { id: "black", label: "Black", swatch: "#26262c", image: "/products/graduation-signature/paper/paper-black.jpg" },
-      { id: "green", label: "Green", swatch: "#1f5a3d", image: "/products/graduation-signature/paper/paper-green.jpg" },
-      { id: "purple", label: "Purple", swatch: "#4b2a6e", image: "/products/graduation-signature/paper/paper-purple.jpg" },
+      { id: "original", label: "Original (Royal blue)", swatch: "#2a56b8" },
+      { id: "pink", label: "Pink", swatch: "#f0a6bb", image: "/products/graduation-signature/paper/paper-pink.webp" },
+      { id: "black", label: "Black", swatch: "#26262c", image: "/products/graduation-signature/paper/paper-black.webp" },
+      { id: "red", label: "Red", swatch: "#b3122a", image: "/products/graduation-signature/paper/paper-red.webp" },
+      { id: "white", label: "White", swatch: "#f6f3ef", image: "/products/graduation-signature/paper/paper-white.webp" },
     ],
     instant: true,
     preorder: true,

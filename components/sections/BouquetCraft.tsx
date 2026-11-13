@@ -1,102 +1,121 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, Flower2, Sparkles, Layers, Ribbon, Gift, Sun } from "lucide-react";
-import Petals from "./Petals";
+import { Layers, Flower2, Heart, Ribbon, Gift, Check, ArrowRight } from "lucide-react";
+import { Sparkle } from "./Flowers";
 
-/** Close-ups from our own bouquets, played like a short film. */
-const scenes = [
-  { img: "/images/craft/1-rose.jpg", icon: Flower2, title: "Choosing every rose", text: "Soft, long-lasting soap roses picked one by one." },
-  { img: "/images/craft/2-gerbera.jpg", icon: Sparkles, title: "Adding colour", text: "Gerberas and fillers for a cheerful, full look." },
-  { img: "/images/craft/3-orchid.jpg", icon: Flower2, title: "Elegant orchids", text: "Cymbidium orchids for a touch of luxury." },
-  { img: "/images/craft/3b-sunflower.jpg", icon: Sun, title: "Bright sunflowers", text: "Sunshine for graduations and new beginnings." },
-  { img: "/images/craft/4-paper.jpg", icon: Layers, title: "Layering the paper", text: "Premium textured papers, folded by hand." },
-  { img: "/images/craft/5-ribbon.jpg", icon: Ribbon, title: "Tying the ribbon", text: "Satin and organza, finished with a neat bow." },
-  { img: "/products/bestie-blossoms/02.jpg", icon: Gift, title: "Ready to make them smile", text: "Photographed, then delivered to their door." },
+/**
+ * "How your bouquet is made": our real Red Soap Rose Heart, split into layers,
+ * builds itself in 3D: paper, roses row by row, ribbon, then the finished bouquet.
+ */
+const steps = [
+  { icon: Layers, title: "Layer the premium paper", text: "Soft blush paper and caspia, folded by hand into shape." },
+  { icon: Flower2, title: "Place the first roses", text: "Long-lasting soap roses, set one row at a time." },
+  { icon: Heart, title: "Shape the heart", text: "25 roses arranged into a perfect heart." },
+  { icon: Ribbon, title: "Tie the satin ribbon", text: "A burgundy bow to finish the look." },
+  { icon: Gift, title: "Ready to deliver", text: "Photographed, then delivered the same day." },
 ];
-const SCENE_MS = 3200;
-// Each scene drifts a little differently, like a camera move.
-const moves = ["kb-in-left", "kb-in-right", "kb-out", "kb-in-left", "kb-pan", "kb-in-right", "kb-out"];
+const STEP_MS = 2200;
+const HOLD_MS = 3200; // the finished bouquet stays on screen a little longer
 
 export default function BouquetCraft() {
   const ref = useRef<HTMLElement>(null);
-  const [i, setI] = useState(0);
+  const [step, setStep] = useState(-1); // -1 = empty stage
   const [visible, setVisible] = useState(false);
-  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.3 });
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.35 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!visible || !playing) return;
-    const t = setTimeout(() => setI((n) => (n + 1) % scenes.length), SCENE_MS);
+    if (!visible) return;
+    const t = setTimeout(() => setStep((s) => (s >= steps.length - 1 ? -1 : s + 1)), step === steps.length - 1 ? HOLD_MS : step === -1 ? 700 : STEP_MS);
     return () => clearTimeout(t);
-  }, [i, visible, playing]);
+  }, [step, visible]);
 
-  const s = scenes[i];
-  const Icon = s.icon;
+  const on = (n: number) => step >= n;
+  const done = step === steps.length - 1;
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-deep text-white mt-20 md:mt-24" aria-labelledby="craft-title">
-      <div className="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-petal/10 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 w-[380px] h-[380px] rounded-full bg-gold/10 blur-3xl" />
-      <div className="relative container-x py-16 md:py-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <section ref={ref} className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_30%,#24335a_0%,#141c33_55%,#0b1121_100%)] text-white mt-20 md:mt-24" aria-labelledby="craft-title">
+      <div className="relative container-x py-16 md:py-24 grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
         <div>
           <div className="eyebrow !text-gold mb-3">Handmade in Kuala Lumpur</div>
           <h2 id="craft-title" className="text-4xl md:text-5xl leading-tight">How your bouquet is made</h2>
-          <p className="mt-4 text-white/70 max-w-lg">Every BikaFlora bouquet is made by hand, one bloom at a time. Here is what goes into yours.</p>
-          <ol className="mt-8 space-y-1.5">
-            {scenes.map((sc, n) => (
-              <li key={sc.title}>
-                <button onClick={() => setI(n)} className={`w-full text-left flex items-center gap-3 rounded-2xl px-3 py-2 transition ${n === i ? "bg-white/10" : "hover:bg-white/5"}`}>
-                  <span className={`w-8 h-8 shrink-0 rounded-full grid place-items-center text-sm font-semibold transition ${n === i ? "bg-gold text-deep" : n < i ? "bg-white/20 text-white" : "bg-white/5 text-white/50"}`}>{n + 1}</span>
-                  <span className={n === i ? "font-semibold" : "text-white/60"}>{sc.title}</span>
-                </button>
-              </li>
-            ))}
+          <p className="mt-4 text-white/70 max-w-lg">Watch our best-selling Red Soap Rose Heart come together, from the first sheet of paper to the finished bouquet.</p>
+
+          <ol className="mt-8 relative">
+            <span className="absolute left-[19px] top-3 bottom-3 w-px bg-white/15" aria-hidden />
+            <span className="absolute left-[19px] top-3 w-px bg-gold transition-all duration-700" style={{ height: `${Math.max(0, step) * 22}%` }} aria-hidden />
+            {steps.map((s, n) => {
+              const Icon = s.icon;
+              const active = n === step;
+              const past = n < step;
+              return (
+                <li key={s.title} className="relative flex gap-4 py-2.5">
+                  <span className={`relative z-10 w-10 h-10 shrink-0 rounded-full grid place-items-center transition-all duration-500 ${active ? "bg-gold text-deep scale-110 shadow-lg shadow-gold/30" : past ? "bg-[#26345a] text-gold" : "bg-[#16203a] text-white/40 border border-white/10"}`}>
+                    {past ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+                  </span>
+                  <div className={`transition-opacity duration-500 ${active ? "opacity-100" : past ? "opacity-70" : "opacity-40"}`}>
+                    <div className="font-semibold">{s.title}</div>
+                    <div className={`text-sm text-white/65 overflow-hidden transition-all duration-500 ${active ? "max-h-12 mt-0.5" : "max-h-0"}`}>{s.text}</div>
+                  </div>
+                </li>
+              );
+            })}
           </ol>
+          <Link href="/product/red-soap-rose-heart-large" className="mt-8 inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all">
+            See this bouquet <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
-        {/* the "film" */}
-        <div className="relative mx-auto w-full max-w-[520px]">
-          <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden ring-1 ring-gold/30 shadow-2xl shadow-black/50 bg-black">
-            {scenes.map((sc, n) => (
-              <div key={sc.img} className={`absolute inset-0 transition-opacity duration-1000 ${n === i ? "opacity-100" : "opacity-0"}`}>
-                <Image src={sc.img} alt={sc.title} fill sizes="(max-width:1024px) 90vw, 520px" quality={90}
-                  className={`object-cover ${n === i && visible ? moves[n] : ""}`} style={{ animationDuration: `${SCENE_MS + 1000}ms`, animationPlayState: playing ? "running" : "paused" }} />
-              </div>
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-black/30" />
-            <Petals />
-
-            {/* story-style progress */}
-            <div className="absolute top-4 inset-x-4 flex gap-1.5">
-              {scenes.map((_, n) => (
-                <span key={n} className="h-1 flex-1 rounded-full bg-white/25 overflow-hidden">
-                  {n < i && <span className="block h-full w-full bg-white" />}
-                  {n === i && <span key={`${i}-${playing}-${visible}`} className={`block h-full bg-white ${playing && visible ? "hero-progress" : "w-0"}`} style={{ animationDuration: `${SCENE_MS}ms` }} />}
-                </span>
-              ))}
-            </div>
-
-            <div key={i} className="absolute bottom-0 inset-x-0 p-6 hero-text-in">
-              <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-[0.2em]"><Icon className="w-4 h-4" /> Step {i + 1} of {scenes.length}</div>
-              <div className="mt-2 font-serif text-3xl leading-tight">{s.title}</div>
-              <p className="mt-1 text-white/80">{s.text}</p>
-            </div>
-
-            <button onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause" : "Play"}
-              className="absolute top-8 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur grid place-items-center hover:bg-black/60">
-              {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            </button>
+        {/* 3D stage */}
+        <div className="relative mx-auto w-full max-w-[540px] aspect-square" style={{ perspective: "1400px" }}>
+          <div className="absolute inset-x-[8%] top-[2%] h-[72%] rounded-full bg-[radial-gradient(circle,rgba(255,236,214,.22)_0%,transparent_65%)]" />
+          {/* podium */}
+          <div className="absolute left-1/2 bottom-[5%] w-[78%] h-[13%]" style={{ transform: "translateX(-50%) rotateX(68deg)" }}>
+            <div className="absolute inset-0 rounded-[50%] bg-gradient-to-b from-[#2a3a63] to-[#121a30] ring-2 ring-gold/50 shadow-[0_30px_60px_rgba(0,0,0,.6)]" />
+            <div className={`absolute inset-[12%] rounded-[50%] bg-gold/25 blur-xl transition-opacity duration-1000 ${done ? "opacity-100" : "opacity-0"}`} />
           </div>
+
+          {/* bouquet built from layers of the real photo */}
+          <div className={`absolute left-1/2 bottom-[10%] w-[64%] ${done ? "craft-sway" : ""}`} style={{ aspectRatio: "1079 / 1206", transform: "translateX(-50%)", transformStyle: "preserve-3d" }}>
+            <Layer src="/images/build/paper.webp" show={on(0)} from="rotateX(75deg) scale(.55) translateY(30%)" />
+            <Layer src="/images/build/roses-1.webp" show={on(1)} from="translateY(-55%) scale(1.25)" />
+            <Layer src="/images/build/roses-2.webp" show={on(2)} from="translateY(-60%) scale(1.25)" />
+            <Layer src="/images/build/roses-3.webp" show={on(2)} from="translateY(-65%) scale(1.25)" delay={250} />
+            <Layer src="/images/build/ribbon.webp" show={on(3)} from="scale(0) rotate(-20deg)" />
+            <div className={`absolute inset-0 pointer-events-none overflow-hidden ${done ? "" : "hidden"}`}
+              style={{ WebkitMaskImage: "url(/images/build/full.webp)", maskImage: "url(/images/build/full.webp)", WebkitMaskSize: "100% 100%", maskSize: "100% 100%" }}>
+              <div className="craft-shine absolute -inset-y-10 w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            </div>
+          </div>
+
+          {[[14, 22], [82, 18], [88, 52], [10, 58], [50, 4]].map(([x, y], i) => (
+            <div key={i} className={`absolute w-6 h-6 text-gold transition-all duration-700 ${done ? "opacity-100 scale-100" : "opacity-0 scale-0"}`} style={{ left: `${x}%`, top: `${y}%`, transitionDelay: `${i * 120}ms` }}>
+              <Sparkle className="w-full h-full sparkle" />
+            </div>
+          ))}
+          <div className={`absolute top-[6%] right-[2%] bg-white/95 text-brand rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5 shadow-xl transition-all duration-700 ${done ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}`}>
+            <Check className="w-4 h-4 text-wa" /> Ready to deliver
+          </div>
+          <div className="absolute bottom-0 inset-x-0 text-center text-xs uppercase tracking-[0.25em] text-white/50">Step {Math.max(1, step + 1)} of {steps.length}</div>
         </div>
       </div>
     </section>
+  );
+}
+
+function Layer({ src, show, from, delay = 0 }: { src: string; show: boolean; from: string; delay?: number }) {
+  return (
+    <div className="absolute inset-0 transition-all duration-[900ms] ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform"
+      style={{ opacity: show ? 1 : 0, transform: show ? "none" : from, transitionDelay: show ? `${delay}ms` : "0ms" }}>
+      <Image src={src} alt="" fill sizes="(max-width:1024px) 70vw, 360px" quality={90} className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.4)]" />
+    </div>
   );
 }

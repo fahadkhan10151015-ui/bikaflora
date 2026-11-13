@@ -14,7 +14,6 @@ export const site = {
   email: "bikaflora01@gmail.com",
 
   currency: "RM",
-  sameDayCutoff: "2:00 PM",
   openingHours: "Daily, 9:00 AM – 9:00 PM",
   addressRegion: "Kuala Lumpur & Selangor, Malaysia",
 
@@ -27,7 +26,7 @@ export const site = {
 
 /** The two ways a customer can order. */
 export const deliveryMethods = [
-  { id: "instant", label: "Instant Delivery", detail: `Ready bouquets, delivered today (order before ${site.sameDayCutoff})` },
+  { id: "instant", label: "Instant Delivery", detail: "Ready bouquets, delivered today at any time" },
   { id: "preorder", label: "Pre-order", detail: "Tell us what you want and the date, we prepare it for you" },
 ] as const;
 

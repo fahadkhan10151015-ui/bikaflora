@@ -1,28 +1,31 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import Petals from "./Petals";
+import { siteImages } from "@/lib/images";
 import HeroStage, { type StageSlide } from "./HeroStage";
 import { Rose, Daisy, Sunflower, GoldBall, Sprig, Orchid, Leaf } from "./Flowers";
-import { getProduct } from "@/data/products";
-import { formatPrice } from "@/lib/site";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 
-type Slide = StageSlide & { slug: string; eyebrow: string; title: [string, string]; text: string };
+type Slide = StageSlide & { slug: string; bg: string; eyebrow: string; title: [string, string]; text: string };
 
 /** Each slide shows one of our bouquets, with the same flowers it is made of floating around it. */
 const slides: Slide[] = [
   {
     slug: "red-soap-rose-heart-large",
+    bg: siteImages.klNight,
     image: "/images/hero/red-soap-rose-heart-large.webp",
     alt: "Red Soap Rose Heart Large bouquet",
     eyebrow: "Top Seller",
     title: ["25 roses,", "one heart"],
-    text: "Our best-selling soap rose heart. It looks real, smells lovely and lasts for months. Same-day delivery across KL & Selangor.",
+    text: "Our best-selling soap rose heart. It looks real, smells lovely and lasts for months. Same-day delivery across KL & Selangor, any time.",
     orbiters: [<Rose key="1" tint="red" />, <Sprig key="2" color="#b98a96" />, <Rose key="3" tint="red" />, <Leaf key="4" />, <Rose key="5" tint="blush" />],
   },
   {
     slug: "ferrero-rocher-pink-roses",
+    bg: siteImages.klTowers,
     image: "/images/hero/ferrero-rocher-pink-roses.webp",
     alt: "Ferrero Rocher Pink Roses soap bouquet",
     eyebrow: "Sweet & long-lasting",
@@ -32,6 +35,7 @@ const slides: Slide[] = [
   },
   {
     slug: "graduation-signature",
+    bg: siteImages.klCity,
     image: "/images/hero/graduation-signature.webp",
     alt: "The Graduation Signature soap bouquet with sunflowers and teddy",
     eyebrow: "Convocation season",
@@ -41,6 +45,7 @@ const slides: Slide[] = [
   },
   {
     slug: "blue-noir-for-him",
+    bg: siteImages.cover,
     image: "/images/hero/blue-noir-for-him.webp",
     alt: "Blue Noir For Him soap rose bouquet",
     eyebrow: "For him",
@@ -65,10 +70,9 @@ export default function HeroSlider() {
 
   const go = (d: number) => setActive((a) => (a + d + slides.length) % slides.length);
   const s = slides[active];
-  const p = getProduct(s.slug);
 
   return (
-    <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center"
+    <section className="relative overflow-hidden bg-deep text-white" aria-roledescription="carousel" aria-label="Featured bouquets"
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
@@ -77,6 +81,23 @@ export default function HeroSlider() {
         if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
         touchX.current = null;
       }}>
+      {/* backgrounds: one per slide, cross-fading with a slow zoom */}
+      {slides.map((sl, i) => (
+        <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+          <Image src={sl.bg} alt="" fill priority={i === 0} sizes="100vw" quality={70}
+            className={`object-cover object-center opacity-80 ${i === active ? "hero-bg-zoom" : ""}`} />
+        </div>
+      ))}
+      <div className="absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-deep/30" />
+      <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
+      <Petals />
+
+      {/* arrows */}
+      <button onClick={() => go(-1)} aria-label="Previous slide" className="hidden md:grid absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur place-items-center hover:bg-white/20 transition"><ChevronLeft className="w-6 h-6" /></button>
+      <button onClick={() => go(1)} aria-label="Next slide" className="hidden md:grid absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur place-items-center hover:bg-white/20 transition"><ChevronRight className="w-6 h-6" /></button>
+
+      <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
       <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
         <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
           <Sparkles className="w-4 h-4 text-gold" /> Florist in Kuala Lumpur & Selangor, Malaysia
@@ -89,12 +110,6 @@ export default function HeroSlider() {
             {s.title[0]} <span className="italic text-petal">{s.title[1]}</span>
           </p>
           <p className="mt-5 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">{s.text}</p>
-          {p && (
-            <Link href={`/product/${p.slug}`} className="mt-5 inline-flex items-center gap-3 rounded-full bg-white/10 border border-white/20 pl-5 pr-2 py-2 hover:bg-white/15 transition">
-              <span className="text-sm text-left"><b className="line-clamp-1">{p.name}</b><span className="whitespace-nowrap">{formatPrice(p.price)}{p.compareAt && <s className="ml-1.5 text-white/50">{formatPrice(p.compareAt)}</s>}</span></span>
-              <span className="w-8 h-8 rounded-full bg-gold text-deep grid place-items-center"><ArrowRight className="w-4 h-4" /></span>
-            </Link>
-          )}
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
@@ -104,15 +119,18 @@ export default function HeroSlider() {
 
         {/* slide controls */}
         <div className="mt-8 flex items-center gap-2 justify-center lg:justify-start" role="tablist" aria-label="Featured bouquets">
+          <button onClick={() => go(-1)} aria-label="Previous slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center mr-1"><ChevronLeft className="w-4 h-4" /></button>
           {slides.map((sl, i) => (
             <button key={sl.slug} role="tab" aria-selected={i === active} aria-label={`Show ${sl.alt}`} onClick={() => setActive(i)}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
               {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${DURATION}ms` }} />}
             </button>
           ))}
+          <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
         </div>
       </div>
       <div className="order-1 lg:order-2"><HeroStage slides={slides} active={active} /></div>
-    </div>
+      </div>
+    </section>
   );
 }

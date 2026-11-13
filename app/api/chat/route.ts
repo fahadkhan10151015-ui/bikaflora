@@ -31,7 +31,7 @@ Rules:
 
 Delivery options:
 ${deliveryMethods.map((d) => `- ${d.label}: ${d.detail}`).join("\n")}
-Instant delivery cutoff: ${site.sameDayCutoff}. Opening hours: ${site.openingHours}.
+Instant delivery: same day, any time (no cut-off). Opening hours: ${site.openingHours}.
 Delivery partners: ${deliveryPartners.map((d) => `${d.name} (${d.use})`).join(", ")}.
 Payment: ${paymentNote} Methods: ${paymentMethods}.
 Custom orders: customers can send a photo on WhatsApp ("I want this type") and we make it as a pre-order.

@@ -8,7 +8,7 @@ export default function AnnouncementBar() {
   const items = [
     { icon: Wallet, text: "Full payment in advance" },
     { icon: Phone, text: `WhatsApp ${site.phoneDisplay}`, href: waLink },
-    { icon: Zap, text: `Instant Delivery: order before ${site.sameDayCutoff}` },
+    { icon: Zap, text: "Same-day delivery, any time" },
     { icon: CalendarClock, text: "Pre-order & custom bouquets: send us a photo" },
     { icon: Truck, text: "Grab Express · Lalamove · J&T Express" },
     { icon: MapPin, text: "Delivering across KL & Selangor" },

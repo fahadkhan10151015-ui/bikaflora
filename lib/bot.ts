@@ -196,7 +196,7 @@ export function botReply(history: BotMsg[], page?: string): string {
   // 2. Delivery area
   if (area) {
     const { loc, via } = area;
-    out.push(`Yes, we deliver to **${via ? `${via} (${loc.name} area)` : loc.name}**, ${loc.state}. **Instant Delivery** if you order before ${site.sameDayCutoff} (by Grab Express or Lalamove), or **Pre-order** for your chosen date. [Delivery to ${loc.name}](/flower-delivery/${loc.slug})`);
+    out.push(`Yes, we deliver to **${via ? `${via} (${loc.name} area)` : loc.name}**, ${loc.state}. **Instant Delivery** today at any time (by Grab Express or Lalamove), or **Pre-order** for your chosen date. [Delivery to ${loc.name}](/flower-delivery/${loc.slug})`);
   } else if (is("area") && !product) {
     const ask = last.match(/(?:to|ke|in|at|di)\s+([a-z][a-z ]{2,20})/i)?.[1]?.trim().replace(/\s+(today|tomorrow|now|please|pls|esok)$/i, "");
     const askTokens = ask ? norm(ask).split(" ") : [];
@@ -209,7 +209,7 @@ export function botReply(history: BotMsg[], page?: string): string {
 
   // 3. Delivery fee, timing
   if (feeQ) out.push(`The delivery fee depends on your area and the courier (Grab Express, Lalamove or J&T Express). Send your address on WhatsApp and we confirm the exact total first. Payment is made in advance.`);
-  if (is("today")) out.push(`**Instant Delivery:** order a ready bouquet before **${site.sameDayCutoff}** and it's delivered today by Grab Express or Lalamove. After ${site.sameDayCutoff}, WhatsApp us and we'll check if a slot is still free.`);
+  if (is("today")) out.push(`**Instant Delivery:** ready bouquets are delivered **the same day, any time** by Grab Express or Lalamove. Just WhatsApp us your address and preferred time.`);
   else if (is("when") && !is("hours") && !is("care")) out.push(`Two options:\n- **${deliveryMethods[0].label}**: ${deliveryMethods[0].detail}\n- **${deliveryMethods[1].label}**: ${deliveryMethods[1].detail}\nFor pre-orders, just tell us your date in the WhatsApp message.`);
 
   // 4. Other topics

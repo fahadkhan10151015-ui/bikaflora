@@ -36,7 +36,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const sameState = locations.filter((x) => x.state === l.state && x.slug !== l.slug).slice(0, 10);
 
   const faqs = [
-    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: `Yes. Orders confirmed before ${site.sameDayCutoff} can usually be delivered to ${l.name} on the same day by Grab Express or Lalamove, subject to stock and traffic.${l.slug === "kuala-selangor" || l.slug === "banting" ? " For this area we recommend ordering one day ahead." : ""}` },
+    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: `Yes. Ready bouquets are delivered to ${l.name} the same day, any time, by Grab Express or Lalamove.` },
     { q: `Can you deliver to ${l.landmarks[0]}?`, a: `Yes. Share the exact location, the recipient's name and phone number on WhatsApp, and we will coordinate the drop-off at ${l.landmarks[0]}.` },
     { q: `How much is delivery to ${l.name}?`, a: `The fee depends on the exact address in ${l.name} and the courier. We confirm the total on WhatsApp first, and payment is made in advance.` },
     { q: `Do you also deliver near ${l.name}?`, a: `Yes, we also cover ${l.nearby.join(", ")} and other areas in ${l.state}.` },

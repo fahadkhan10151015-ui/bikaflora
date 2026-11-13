@@ -2,6 +2,7 @@ import { Check, Sparkles } from "lucide-react";
 import { flowerVideo, siteImages } from "@/lib/images";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import Link from "next/link";
+import LazyVideo from "@/components/ui/LazyVideo";
 
 const points = ["Soap flowers that last for months", "Hand-tied by our florists in Kuala Lumpur", "Photo sent to you before delivery"];
 
@@ -12,9 +13,7 @@ export default function VideoBand() {
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div className="relative">
           <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl shadow-deep/25 ring-1 ring-gold/30">
-            <video className="absolute inset-0 w-full h-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={siteImages.florist}>
-              <source src={flowerVideo} type="video/mp4" />
-            </video>
+            <LazyVideo src={flowerVideo} poster={`/_next/image?url=${encodeURIComponent(siteImages.florist)}&w=828&q=75`} className="absolute inset-0 w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-6 -right-2 md:-right-6 glass rounded-2xl px-5 py-4 shadow-xl border border-white flex items-center gap-3">
             <span className="w-10 h-10 rounded-full bg-brand text-white grid place-items-center"><Sparkles className="w-5 h-5" /></span>

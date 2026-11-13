@@ -14,7 +14,16 @@ export default function Gallery({ alt }: { alt: string }) {
   // New colour picked: start again from its first photo.
   useEffect(() => setI(0), [images]);
   // New wrapping colour picked: show its preview (it is not one of the normal photos).
-  useEffect(() => setShowPaper(!!paper), [paper]);
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setShowPaper(!!paper);
+    // On phones the colour buttons sit below the photo: bring the photo into view so the change is seen.
+    const el = box.current;
+    if (paper && el) {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 120 || r.top > window.innerHeight - 120) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [paper]);
 
   const go = (d: number) => { setShowPaper(false); setI((n) => (n + d + images.length) % images.length); };
   const previewing = showPaper && paper?.image;
@@ -22,7 +31,7 @@ export default function Gallery({ alt }: { alt: string }) {
 
   return (
     <div>
-      <div className="relative aspect-square rounded-[1.75rem] overflow-hidden bg-blush group"
+      <div ref={box} className="relative aspect-square rounded-[1.75rem] overflow-hidden bg-blush group scroll-mt-28"
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
         onTouchEnd={(e) => {
           if (touchX.current === null) return;

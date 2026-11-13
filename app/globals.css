@@ -127,3 +127,14 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .kb-out { animation: kb-out ease-out forwards }
 .kb-pan { animation: kb-pan ease-in-out forwards }
 @media (prefers-reduced-motion: reduce) { .kb-in-left, .kb-in-right, .kb-out, .kb-pan { animation: none } }
+
+@keyframes hero-bg-zoom { from { transform: scale(1.04) } to { transform: scale(1.12) } }
+.hero-bg-zoom { animation: hero-bg-zoom 6s ease-out forwards }
+@media (prefers-reduced-motion: reduce) { .hero-bg-zoom { animation: none } }
+
+/* 3D bouquet build */
+@keyframes craft-sway { 0%,100% { transform: translateX(-50%) rotateY(-9deg) } 50% { transform: translateX(-50%) rotateY(9deg) } }
+.craft-sway { animation: craft-sway 3.2s ease-in-out infinite }
+@keyframes craft-shine { from { left: -40% } to { left: 120% } }
+.craft-shine { animation: craft-shine 1.6s ease-in-out .3s forwards }
+@media (prefers-reduced-motion: reduce) { .craft-sway, .craft-shine { animation: none } }

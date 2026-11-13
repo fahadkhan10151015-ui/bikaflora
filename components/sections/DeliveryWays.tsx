@@ -11,7 +11,7 @@ export default function DeliveryWays() {
     {
       icon: Zap,
       title: "Instant Delivery",
-      text: `Ready-made bouquets delivered today across KL & Selangor by Grab Express or Lalamove. Order before ${site.sameDayCutoff}.`,
+      text: `Ready-made bouquets delivered today across KL & Selangor by Grab Express or Lalamove, any time of the day.`,
       cta: { label: "Shop ready bouquets", href: "/shop" },
       dark: true,
     },

@@ -46,16 +46,8 @@ export default function Home() {
   const popularSlugs = new Set(popular.map((p) => p.slug));
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_70%_40%,#2b3b62_0%,#172036_50%,#0b1121_100%)] text-white">
-        <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
-        <div className="absolute bottom-0 right-1/3 w-[360px] h-[360px] rounded-full bg-gold/10 blur-3xl" />
-        <Image src={siteImages.klNight} alt="" fill priority sizes="100vw" className="object-cover object-center opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-deep via-deep/75 to-deep/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-deep/40" />
-        <Petals />
-        <HeroSlider />
-      </section>
+      {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
+      <HeroSlider />
 
       <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>
 
@@ -64,15 +56,15 @@ export default function Home() {
       {/* PRODUCTS (like a shop front). Rows with fewer than 2 products hide themselves. */}
       <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/shop" items={popular} priority />
 
-      {/* HOW IT'S MADE (animated) */}
-      <BouquetCraft />
-
       <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets").filter((p) => !popularSlugs.has(p.slug))} />
       {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
         const c = getCategory(slug);
         const items = productsInCategory(slug).filter((p) => !popularSlugs.has(p.slug));
         return c && <ProductRow key={slug} eyebrow={c.short} title={c.name} href={`/category/${slug}`} items={items} />;
       })}
+
+      {/* HOW IT'S MADE: 3D build of a real bouquet (after all the products) */}
+      <BouquetCraft />
 
       {/* INSTANT / PRE-ORDER / CUSTOM + PARTNERS + PAYMENT */}
       <DeliveryWays />
@@ -164,7 +156,7 @@ export default function Home() {
           </p>
           <h2>Instant delivery or pre-order</h2>
           <p>
-            Need flowers today? Choose Instant Delivery: order before {site.sameDayCutoff} and we send it by Grab Express or Lalamove. Planning ahead? Pre-order and tell us exactly what you want and the date. You can even send us a photo and we will make it for you. Payment is made in advance once we confirm your order on WhatsApp.
+            Need flowers today? Choose Instant Delivery and we send it the same day, any time by Grab Express or Lalamove. Planning ahead? Pre-order and tell us exactly what you want and the date. You can even send us a photo and we will make it for you. Payment is made in advance once we confirm your order on WhatsApp.
           </p>
           <h2>Flowers for every Malaysian celebration</h2>
           <p>

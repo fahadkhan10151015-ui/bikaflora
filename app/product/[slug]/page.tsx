@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   };
 
   const faqs = [
-    { q: `Can ${p.name} be delivered today?`, a: !p.instant ? `This item is made to order, so please pre-order and tell us your date on WhatsApp.` : `Yes. Choose Instant Delivery and order before ${site.sameDayCutoff}. We deliver by Grab Express or Lalamove within Kuala Lumpur and Selangor.` },
+    { q: `Can ${p.name} be delivered today?`, a: !p.instant ? `This item is made to order, so please pre-order and tell us your date on WhatsApp.` : `Yes. Choose Instant Delivery and we deliver it the same day, any time. We deliver by Grab Express or Lalamove within Kuala Lumpur and Selangor.` },
     { q: "Can I order it for a future date?", a: "Yes. Choose Pre-order and tell us the date and time in your WhatsApp message. We prepare it for you and deliver on the day." },
     { q: "Will it look exactly like the photo?", a: "We follow the design closely. Flowers and wrapping may vary slightly with the season, and we always send you a photo of your actual bouquet before delivery." },
     { q: "How do I pay?", a: `Payment is made in advance. After you message us on WhatsApp we confirm the total including delivery, then share payment details: ${paymentMethods}. We start preparing once payment is received.` },
@@ -104,7 +104,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="mt-6 prose-bf">
           <h2>Delivery in Kuala Lumpur & Selangor</h2>
           <p>
-            Choose <strong>Instant Delivery</strong> (order before {site.sameDayCutoff}, sent by Grab Express or Lalamove) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor. See all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
+            Choose <strong>Instant Delivery</strong> (delivered the same day at any time, by Grab Express or Lalamove) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor. See all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
           </p>
         </div>
       </ProductDetails>

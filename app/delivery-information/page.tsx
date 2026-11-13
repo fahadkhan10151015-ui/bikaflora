@@ -11,7 +11,7 @@ export default function Page() {
         <h2 className="!mt-0">Where we deliver</h2>
         <p>We deliver to 32 areas across Kuala Lumpur and Selangor. See the full list on our <a className="text-brand underline" href="/flower-delivery">Delivery Areas</a> page.</p>
         <h2>Instant Delivery</h2>
-        <p>Ready-made bouquets confirmed and paid before {site.sameDayCutoff} are delivered the same day by <strong>Grab Express</strong> or <strong>Lalamove</strong>. Orders after the cut-off go out the next day. During peak seasons (Valentine&apos;s Day, Mother&apos;s Day, convocation season) please order early.</p>
+        <p>Ready-made bouquets are delivered the same day, any time, by <strong>Grab Express</strong> or <strong>Lalamove</strong>. Orders after the cut-off go out the next day. During peak seasons (Valentine&apos;s Day, Mother&apos;s Day, convocation season) please order early.</p>
         <h2>Pre-order</h2>
         <p>Tell us what you want and the date you need it. We prepare your bouquet exactly to your requirement and deliver it on your date. Premium, crochet and custom designs are usually pre-order.</p>
         <h2>Customise with a photo</h2>
