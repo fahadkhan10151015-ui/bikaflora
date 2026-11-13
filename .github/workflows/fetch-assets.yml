@@ -1,0 +1,21 @@
+name: Fetch assets
+on:
+  push:
+    paths: [".github/workflows/fetch-assets.yml", "tools/fetch_assets.sh", "tools/parse_grab.py"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - run: bash tools/fetch_assets.sh
+      - name: Save to a separate branch
+        run: |
+          git config user.name "assets-bot"; git config user.email "assets-bot@users.noreply.github.com"
+          git checkout -b incoming-assets
+          git add -f _incoming
+          git commit -m "Downloaded assets" || echo nothing
+          git push -f origin incoming-assets
