@@ -7,7 +7,9 @@ export const unsplash = (id: string, w = 1000) =>
 
 /** Shared site images (not tied to a product). */
 /** Free florist video (Pexels) for the "Crafted by hand" section. */
-export const flowerVideo = "https://videos.pexels.com/video-files/3805783/3805783-hd_1280_720_25fps.mp4";
+/** "Woman arranging flowers in a beautifully decorated indoor studio" (Pexels 4621359, free licence, 10s, 1080p). */
+export const flowerVideo = "https://videos.pexels.com/video-files/4621359/4621359-hd_1920_1080_25fps.mp4";
+export const flowerVideoMobile = "https://videos.pexels.com/video-files/4621359/4621359-sd_960_540_25fps.mp4";
 
 export const siteImages = {
   cover: unsplash("1561729098-cbab0f7a9f7c", 1600),

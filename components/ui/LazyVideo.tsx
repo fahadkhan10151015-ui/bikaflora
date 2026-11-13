@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /** Video that only downloads when it scrolls near the screen, so the page opens fast. */
-export default function LazyVideo({ src, poster, className = "" }: { src: string; poster?: string; className?: string }) {
+export default function LazyVideo({ src, mobileSrc, poster, className = "" }: { src: string; mobileSrc?: string; poster?: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [load, setLoad] = useState(false);
   useEffect(() => {
@@ -15,6 +15,7 @@ export default function LazyVideo({ src, poster, className = "" }: { src: string
   useEffect(() => { if (load) ref.current?.play().catch(() => {}); }, [load]);
   return (
     <video ref={ref} className={className} muted loop playsInline preload="none" poster={poster} autoPlay={load}>
+      {load && mobileSrc && <source src={mobileSrc} type="video/mp4" media="(max-width: 767px)" />}
       {load && <source src={src} type="video/mp4" />}
     </video>
   );
