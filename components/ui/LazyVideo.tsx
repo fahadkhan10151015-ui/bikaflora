@@ -12,7 +12,13 @@ export default function LazyVideo({ src, mobileSrc, poster, className = "" }: { 
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  useEffect(() => { if (load) ref.current?.play().catch(() => {}); }, [load]);
+  // Sources are added only now, so tell the browser to pick them up, then play.
+  useEffect(() => {
+    const v = ref.current;
+    if (!load || !v) return;
+    v.load();
+    v.play().catch(() => {});
+  }, [load]);
   return (
     <video ref={ref} className={className} muted loop playsInline preload="none" poster={poster} autoPlay={load}>
       {load && mobileSrc && <source src={mobileSrc} type="video/mp4" media="(max-width: 767px)" />}
