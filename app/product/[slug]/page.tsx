@@ -27,14 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return pageMeta({
     title: `${p.name} – RM${p.price} | Delivery KL & Selangor`,
-    description: `${p.short} Order on WhatsApp with instant delivery or pre-order in Kuala Lumpur & Selangor. From RM${p.price}.`,
+    description: `${p.short} Order on WhatsApp with ${p.instant ? "same-day delivery or pre-order" : "pre-order delivery"} in Kuala Lumpur & Selangor. From RM${p.price}.`,
     path: `/product/${p.slug}`,
     image: p.images[0],
   });
 }
 
 const perks = [
-  { icon: Zap, text: "Same-day delivery" },
+  { icon: Zap, text: "Same-day delivery", instant: true },
   { icon: CalendarClock, text: "Pre-order for any date" },
   { icon: Camera, text: "Photo before delivery" },
   { icon: ShieldCheck, text: "Confirmed on WhatsApp" },
@@ -93,7 +93,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p className="mt-4 text-muted leading-relaxed">{p.short}</p>
           <div className="mt-6"><OrderPanel p={p} /></div>
           <ul className="mt-8 grid grid-cols-2 gap-3 text-sm">
-            {perks.map(({ icon: Icon, text }) => (
+            {perks.filter((k) => !("instant" in k) || p.instant).map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 border border-blush-2/70"><Icon className="w-4 h-4 text-brand" /> {text}</li>
             ))}
           </ul>

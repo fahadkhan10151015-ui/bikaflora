@@ -1,5 +1,5 @@
 import { Check, Sparkles } from "lucide-react";
-import { flowerVideo, flowerVideoMobile } from "@/lib/images";
+import { flowerVideo, flowerVideoMobile, flowerVideoPoster } from "@/lib/images";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import Link from "next/link";
 import LazyVideo from "@/components/ui/LazyVideo";
@@ -13,7 +13,7 @@ export default function VideoBand() {
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div className="relative">
           <div className="relative aspect-video rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-2xl shadow-deep/25 ring-1 ring-gold/30 bg-deep">
-            <LazyVideo src={flowerVideo} mobileSrc={flowerVideoMobile} className="absolute inset-0 w-full h-full object-cover" />
+            <LazyVideo src={flowerVideo} mobileSrc={flowerVideoMobile} poster={flowerVideoPoster} className="absolute inset-0 w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-6 -right-2 md:-right-6 glass rounded-2xl px-5 py-4 shadow-xl border border-white flex items-center gap-3">
             <span className="w-10 h-10 rounded-full bg-brand text-white grid place-items-center"><Sparkles className="w-5 h-5" /></span>
