@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
     formats: ["image/avif", "image/webp"],
     qualities: [60, 70, 75, 80], // 75 for photos: sharp and small (under 100 KB)
     minimumCacheTTL: 60 * 60 * 24 * 30, // keep optimised images for 30 days

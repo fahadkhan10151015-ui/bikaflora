@@ -2,7 +2,6 @@
 //  CATEGORIES — "slug" becomes the URL: /category/<slug>
 //  The order here is the order on the website (menu, home slider).
 // ============================================================
-import { unsplash } from "@/lib/images";
 import { hasProducts } from "@/data/products";
 
 export type Category = {
@@ -33,7 +32,7 @@ export const allCategories: Category[] = [
     slug: "fresh-flowers",
     name: "Fresh Flowers",
     short: "Fresh-cut blooms, hand-tied today",
-    image: unsplash("1572454591674-2739f30d8c40", 600),
+    image: "/images/site/roses-colours.webp",
     seoTitle: "Fresh Flower Bouquet Delivery KL & Selangor | BikaFlora",
     seoDescription: "Fresh roses, lilies, tulips, sunflowers and hydrangeas hand-tied daily and delivered across Kuala Lumpur & Selangor. Instant delivery or pre-order.",
     intro: "Fresh-cut flowers sourced every morning and hand-tied to order: roses, lilies, tulips, sunflowers, hydrangeas and more.",
@@ -95,7 +94,7 @@ export const allCategories: Category[] = [
     slug: "mini-bouquets",
     name: "Mini Bouquet Series",
     short: "Small, cute & affordable",
-    image: unsplash("1620346328449-f8fb90a40ad5", 600),
+    image: "/images/site/bouquet-alt.webp",
     seoTitle: "Mini Flower Bouquet KL & Selangor | Cute Small Bouquets",
     seoDescription: "Cute mini bouquets for classmates, colleagues and small surprises. Mini roses, sunflowers and baby's breath. Delivered in KL & Selangor.",
     intro: "Small bouquets with big charm. Great for convocations, classmates and little everyday surprises.",

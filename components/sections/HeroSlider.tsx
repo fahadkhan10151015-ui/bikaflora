@@ -153,7 +153,7 @@ export default function HeroSlider() {
         <picture>
           <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-making-poster.avif" />
           <source media="(min-width: 768px)" srcSet="/video/hero-making-poster.webp" width={1280} height={720} />
-          <source type="image/avif" srcSet="/video/hero-making-vertical-poster.avif" width={540} height={960} />
+          <source type="image/avif" srcSet="/video/hero-vertical-poster-v2.avif" width={540} height={960} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
