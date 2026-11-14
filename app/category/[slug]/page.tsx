@@ -7,6 +7,8 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import WaCta from "@/components/sections/WaCta";
 import JsonLd from "@/components/ui/JsonLd";
 import { pageMeta } from "@/lib/seo";
+import { collectionSeo } from "@/data/collection-seo";
+import Faq from "@/components/sections/Faq";
 import { absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() { return categories.map((c) => ({ slug: c.slug })); }
@@ -14,6 +16,8 @@ export function generateStaticParams() { return categories.map((c) => ({ slug: c
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const c = getCategory((await params).slug);
   if (!c) return {};
+  const seo = collectionSeo[c.slug];
+  if (seo) return pageMeta({ title: seo.title, description: seo.description, path: `/category/${c.slug}`, image: c.image, absoluteTitle: true });
   return pageMeta({ title: c.seoTitle, description: c.seoDescription, path: `/category/${c.slug}`, image: c.image });
 }
 
@@ -21,22 +25,35 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const c = getCategory((await params).slug);
   if (!c) notFound();
   const items = productsInCategory(c.slug);
+  const seo = collectionSeo[c.slug];
   return (
     <>
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: c.name, description: c.seoDescription, url: absoluteUrl(`/category/${c.slug}`),
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: seo?.h1 ?? c.name, description: seo?.description ?? c.seoDescription, url: absoluteUrl(`/category/${c.slug}`),
         mainEntity: { "@type": "ItemList", itemListElement: items.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(`/product/${p.slug}`), name: p.name })) } }} />
       <div className="bg-blush/60 border-b border-blush-2">
         <div className="container-x pb-10">
           <Breadcrumbs items={[{ name: "Shop", path: "/shop" }, { name: c.name, path: `/category/${c.slug}` }]} />
-          <h1 className="text-4xl md:text-5xl font-semibold">{c.name}</h1>
-          <p className="mt-3 text-muted max-w-2xl leading-relaxed">{c.intro}</p>
+          <h1 className="text-4xl md:text-5xl font-semibold">{seo?.h1 ?? c.name}</h1>
+          {seo ? <div className="mt-3 text-muted max-w-3xl leading-relaxed prose-intro" dangerouslySetInnerHTML={{ __html: seo.intro }} /> : <p className="mt-3 text-muted max-w-2xl leading-relaxed">{c.intro}</p>}
         </div>
       </div>
       <div className="container-x mt-10">
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{items.map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}</div>
-        <div className="max-w-3xl mx-auto mt-16 prose-bf">
-          {c.content.map((s) => (<div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>))}
-        </div>
+        {seo ? (
+          <>
+            <div className="max-w-3xl mx-auto mt-16 prose-bf prose-product" dangerouslySetInnerHTML={{ __html: seo.html }} />
+            {seo.faqs.length > 0 && (
+              <section className="mt-14">
+                <h2 className="text-2xl md:text-3xl font-semibold text-center max-w-3xl mx-auto mb-6">{seo.faqTitle}</h2>
+                <Faq items={seo.faqs} />
+              </section>
+            )}
+          </>
+        ) : (
+          <div className="max-w-3xl mx-auto mt-16 prose-bf">
+            {c.content.map((s) => (<div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>))}
+          </div>
+        )}
         <div className="mt-10 flex flex-wrap gap-2 justify-center">
           {categories.filter((x) => x.slug !== c.slug).map((x) => <Link key={x.slug} href={`/category/${x.slug}`} className="px-4 py-2 rounded-full bg-white border border-blush-2 text-sm hover:bg-blush">{x.name}</Link>)}
         </div>
