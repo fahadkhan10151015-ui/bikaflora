@@ -9,6 +9,7 @@ import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import OrderListButton from "@/components/order/OrderListButton";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import FavouritesLink from "@/components/favourites/FavouritesLink";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const nav = [
   { href: "/shop", label: "Shop All" },
@@ -47,6 +48,7 @@ export default function Header() {
             <Link href={user ? "/account" : "/login"} className="hidden sm:flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full hover:bg-blush">
               <User className="w-5 h-5" /> {user ? displayName(user) : "Login"}
             </Link>
+            <ThemeToggle />
             <FavouritesLink />
             <OrderListButton />
             <WhatsAppButton label="WhatsApp" className="btn btn-wa !py-2 !px-3 min-[400px]:!px-4 text-sm [&>span]:hidden sm:[&>span]:inline" iconClassName="w-4 h-4" />

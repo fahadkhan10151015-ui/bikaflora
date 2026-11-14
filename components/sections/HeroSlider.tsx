@@ -65,16 +65,32 @@ export default function HeroSlider() {
   const total = slides.length + 1;
   const isVideo = active === 0;
   const video = useRef<HTMLVideoElement>(null);
+  // Phones (portrait) get a vertical edit that fills the screen; tablets 720p; desktop 1080p.
+  const [src, setSrc] = useState<{ v: string; p: string } | null>(null);
+  useEffect(() => {
+    const pick = () => {
+      const w = window.innerWidth, portrait = window.innerHeight > w;
+      setSrc(w < 768 || (portrait && w < 1024)
+        ? { v: "/video/hero-making-vertical.mp4", p: "/video/hero-making-vertical-poster.webp" }
+        : w < 1280 ? { v: "/video/hero-making-720.mp4", p: "/video/hero-making-poster.webp" }
+        : { v: "/video/hero-making-1080.mp4", p: "/video/hero-making-poster.webp" });
+    };
+    pick();
+    const m = window.matchMedia("(orientation: portrait)");
+    m.addEventListener("change", pick);
+    return () => m.removeEventListener("change", pick);
+  }, []);
   useEffect(() => {
     const v = video.current;
-    if (!v) return;
+    if (!v || !src) return;
     if (!isVideo) { v.pause(); return; }
     v.currentTime = 0;
-    // Start only once enough is downloaded to play to the end without stopping (smooth on slow connections).
-    const start = () => v.play().catch(() => {});
-    if (v.readyState >= 4) start();
-    else { v.addEventListener("canplaythrough", start, { once: true }); return () => v.removeEventListener("canplaythrough", start); }
-  }, [isVideo]);
+    // Play straight away (iPhone only keeps loading once playback starts); retry when more data arrives.
+    const start = () => { if (v.paused) v.play().catch(() => {}); };
+    start();
+    v.addEventListener("canplay", start);
+    return () => v.removeEventListener("canplay", start);
+  }, [isVideo, src]);
   const [paused, setPaused] = useState(false);
   // Pause only while the visitor is on another browser tab.
   useEffect(() => {
@@ -111,12 +127,10 @@ export default function HeroSlider() {
       ))}
       {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        {/* Phones & tablets: full-width 16:9 video (nothing cropped), edges fade into the background. Desktop: fills the hero. */}
-        <video ref={video} className="hero-video-m lg:absolute lg:inset-0 lg:w-full lg:h-full object-cover object-center bg-deep" muted playsInline preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
-          <source src="/video/hero-making-720.mp4" type="video/mp4" media="(max-width: 1023px)" />
-          <source src="/video/hero-making-1080.mp4" type="video/mp4" />
-        </video>
-        <div className="hero-video-m lg:hidden z-[1] pointer-events-none scale-[1.02] bg-[linear-gradient(to_bottom,#10172a_0%,transparent_14%,transparent_78%,#10172a_97%)]" />
+        {src && (
+          <video key={src.v} ref={video} src={src.v} poster={src.p} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
+            className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%] bg-deep" />
+        )}
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0" : ""}`} />
       <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "bg-[linear-gradient(to_top,rgba(16,23,42,.95)_0%,rgba(16,23,42,.75)_40%,rgba(16,23,42,0)_65%)] md:bg-gradient-to-t md:from-deep/80 md:via-transparent md:to-deep/30" : "bg-gradient-to-t from-deep/80 via-transparent to-deep/30"}`} />

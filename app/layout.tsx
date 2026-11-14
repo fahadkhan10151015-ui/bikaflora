@@ -38,8 +38,10 @@ export const viewport: Viewport = { themeColor: "#1f2a44" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-MY">
+    <html lang="en-MY" suppressHydrationWarning>
       <head>
+        {/* Apply the saved theme before the page paints (no white flash in dark mode). */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("bf-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}` }} />
         <JsonLd data={orgSchema()} />
       </head>
       <body>
