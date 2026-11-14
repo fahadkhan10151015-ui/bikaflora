@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { site, absoluteUrl } from "./site";
 import { siteImages } from "./images";
 
-export function pageMeta({ title, description, path, image }: { title: string; description: string; path: string; image?: string }): Metadata {
+export function pageMeta({ title, description, path, image, absoluteTitle }: { title: string; description: string; path: string; image?: string; absoluteTitle?: boolean }): Metadata {
   const img = image || siteImages.cover;
   const imgUrl = img.startsWith("http") ? img : absoluteUrl(img);
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: absoluteUrl(path) },
     openGraph: { title, description, url: absoluteUrl(path), siteName: site.name, images: [{ url: imgUrl }], locale: "en_MY", type: "website" },

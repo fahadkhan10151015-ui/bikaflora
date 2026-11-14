@@ -1,3 +1,5 @@
+import imageRedirects from "./data/image-redirects.json" with { type: "json" };
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -21,6 +23,8 @@ const nextConfig = {
   // Old product links (before colours became separate products)
   async redirects() {
     return [
+      // Product photos were renamed to SEO-friendly file names
+      ...imageRedirects,
       // One address only: the old Vercel address sends everyone to bikaflora.my
       { source: "/:path*", has: [{ type: "host", value: "bikaflora.vercel.app" }], destination: "https://bikaflora.my/:path*", permanent: true },
       { source: "/product/ferrero-rocher-soap-rose-bouquet", destination: "/product/ferrero-rocher-pink-roses", permanent: true },

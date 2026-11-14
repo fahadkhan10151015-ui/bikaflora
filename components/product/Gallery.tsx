@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, Palette, X, ZoomIn } from "lucide-react";
 import { useVariant } from "./VariantProvider";
 
 /** Product photos: big image with a soft fade between photos, arrows, swipe on phones and thumbnails. */
-export default function Gallery({ alt }: { alt: string }) {
+export default function Gallery({ alt, alts }: { alt: string; alts?: Record<string, string> }) {
   const { images, paper, setPaper } = useVariant();
   const [i, setI] = useState(0);
   const [showPaper, setShowPaper] = useState(false);
@@ -74,7 +74,7 @@ export default function Gallery({ alt }: { alt: string }) {
         }}>
         {/* Every photo is in the page already (only the current one is visible), so swiping is instant. */}
         {images.map((im, idx) => (idx === 0 || rest || idx === i) && (
-          <FillImage key={im} src={im} alt={`${alt} – photo ${idx + 1}`} w={540} h={540} sizes="(max-width: 1024px) 92vw, 540px" priority={idx === 0} loading="eager"
+          <FillImage key={im} src={im} alt={alts?.[im] ?? `${alt} – photo ${idx + 1}`} w={540} h={540} sizes="(max-width: 1024px) 92vw, 540px" priority={idx === 0} loading="eager"
             className={`object-cover transition-opacity duration-300 ${!previewing && idx === Math.min(i, images.length - 1) ? "opacity-100" : "opacity-0"}`} />
         ))}
         {previewing && <FillImage key={src} src={src} alt={`${alt} – ${paper!.label} wrapping preview`} w={540} h={540} className="object-cover gallery-in" />}
@@ -115,7 +115,7 @@ export default function Gallery({ alt }: { alt: string }) {
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" role="dialog" aria-label="Zoomed photo"
           onClick={() => setZoom(false)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img key={sharp ? "hi" : "low"} src={sharp ? src : low.src} srcSet={sharp ? undefined : low.srcSet} sizes={sharp ? undefined : low.sizes} alt={alt} draggable={false} decoding="sync"
+          <img key={sharp ? "hi" : "low"} src={sharp ? src : low.src} srcSet={sharp ? undefined : low.srcSet} sizes={sharp ? undefined : low.sizes} alt={alts?.[src] ?? alt} draggable={false} decoding="sync"
             onClick={(e) => {
               e.stopPropagation();
               const r = e.currentTarget.getBoundingClientRect();

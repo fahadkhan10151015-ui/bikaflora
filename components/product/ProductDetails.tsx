@@ -4,7 +4,7 @@ import type { Product } from "@/data/products";
 import { useVariant } from "./VariantProvider";
 
 /** "About this bouquet": design, durability, occasions, care, what's included and size (follow the chosen colour). */
-export default function ProductDetails({ p, children }: { p: Product; children?: React.ReactNode }) {
+export default function ProductDetails({ p, html, children }: { p: Product; html?: string; children?: React.ReactNode }) {
   const { variant } = useVariant();
   const includes = variant?.includes ?? p.includes;
   const size = variant?.size ?? p.size;
@@ -16,6 +16,9 @@ export default function ProductDetails({ p, children }: { p: Product; children?:
   return (
     <section className="mt-14 md:mt-16 grid lg:grid-cols-3 gap-6 lg:gap-10">
       <div className="lg:col-span-2">
+        {html ? (
+          <div className="prose-bf prose-product" dangerouslySetInnerHTML={{ __html: html }} />
+        ) : (<>
         <h2 className="text-2xl md:text-3xl font-semibold">About this bouquet</h2>
         <p className="mt-3 text-muted leading-relaxed">{p.description}</p>
         <div className="mt-6 grid sm:grid-cols-3 gap-3">
@@ -27,7 +30,8 @@ export default function ProductDetails({ p, children }: { p: Product; children?:
             </div>
           ))}
         </div>
-        <div className="mt-3 bg-white rounded-2xl border border-blush-2/70 p-4">
+        </>)}
+        <div className="mt-6 bg-white rounded-2xl border border-blush-2/70 p-4">
           <h3 className="font-sans font-semibold text-sm flex items-center gap-2"><HeartHandshake className="w-5 h-5 text-gold" /> Care instructions</h3>
           <ul className="mt-2 grid sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-muted">
             {p.care.map((c) => <li key={c} className="flex gap-2"><span className="text-gold">•</span>{c}</li>)}

@@ -1,0 +1,547 @@
+[
+ {
+  "source": "/products/ferrero-rocher-pink-roses/01.webp",
+  "destination": "/products/ferrero-rocher-pink-roses/ferrero-rocher-pink-rose-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-pink-roses/02.webp",
+  "destination": "/products/ferrero-rocher-pink-roses/pink-soap-roses-ferrero-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-pink-roses/03.webp",
+  "destination": "/products/ferrero-rocher-pink-roses/ferrero-pink-roses-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-pink-roses/04.webp",
+  "destination": "/products/ferrero-rocher-pink-roses/ferrero-pink-roses-size-35x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-red-roses/01.webp",
+  "destination": "/products/ferrero-rocher-red-roses/ferrero-rocher-red-rose-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-red-roses/02.webp",
+  "destination": "/products/ferrero-rocher-red-roses/woman-holding-red-roses-ferrero-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-red-roses/03.webp",
+  "destination": "/products/ferrero-rocher-red-roses/ferrero-red-roses-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ferrero-rocher-red-roses/04.webp",
+  "destination": "/products/ferrero-rocher-red-roses/ferrero-red-roses-size-35x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-soap-rose-heart-large/01.webp",
+  "destination": "/products/pink-soap-rose-heart-large/pink-soap-rose-heart-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-soap-rose-heart-large/02.webp",
+  "destination": "/products/pink-soap-rose-heart-large/pink-rose-heart-bouquet-side-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-soap-rose-heart-large/03.webp",
+  "destination": "/products/pink-soap-rose-heart-large/pink-rose-heart-size-40x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-soap-rose-heart-large/04.webp",
+  "destination": "/products/pink-soap-rose-heart-large/pink-heart-bouquet-on-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-soap-rose-heart-large/05.webp",
+  "destination": "/products/pink-soap-rose-heart-large/pink-rose-heart-close-up-details.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-soap-rose-heart-large/01.webp",
+  "destination": "/products/red-soap-rose-heart-large/red-soap-rose-heart-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-soap-rose-heart-large/02.webp",
+  "destination": "/products/red-soap-rose-heart-large/woman-holding-red-rose-heart-45x50cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-soap-rose-heart-large/03.webp",
+  "destination": "/products/red-soap-rose-heart-large/red-rose-heart-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-soap-rose-heart-large/04.webp",
+  "destination": "/products/red-soap-rose-heart-large/red-rose-heart-product-details.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/white-blue-soap-rose-heart/01.webp",
+  "destination": "/products/white-blue-soap-rose-heart/blue-and-white-rose-heart-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/white-blue-soap-rose-heart/02.webp",
+  "destination": "/products/white-blue-soap-rose-heart/white-blue-rose-heart-on-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/white-blue-soap-rose-heart/03.webp",
+  "destination": "/products/white-blue-soap-rose-heart/white-blue-rose-heart-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/white-blue-soap-rose-heart/04.webp",
+  "destination": "/products/white-blue-soap-rose-heart/white-blue-rose-heart-size-35x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/01.webp",
+  "destination": "/products/blue-noir-for-him/blue-and-black-rose-bouquet-for-him.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/02.webp",
+  "destination": "/products/blue-noir-for-him/blue-noir-bouquet-front-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/03.webp",
+  "destination": "/products/blue-noir-for-him/blue-noir-roses-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/04.webp",
+  "destination": "/products/blue-noir-for-him/blue-noir-bouquet-wooden-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/05.webp",
+  "destination": "/products/blue-noir-for-him/blue-noir-bouquet-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/blue-noir-for-him/06.webp",
+  "destination": "/products/blue-noir-for-him/blue-noir-bouquet-studio.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduation-signature/01.webp",
+  "destination": "/products/graduation-signature/sunflower-graduation-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduation-signature/02.webp",
+  "destination": "/products/graduation-signature/graduation-signature-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduation-signature/03.webp",
+  "destination": "/products/graduation-signature/graduation-bouquet-sunflowers-teddy-front.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduation-signature/04.webp",
+  "destination": "/products/graduation-signature/graduation-bouquet-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduation-signature/05.webp",
+  "destination": "/products/graduation-signature/graduation-bouquet-size-50x60cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ocean-whisper/01.webp",
+  "destination": "/products/ocean-whisper/white-rose-and-orchid-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ocean-whisper/02.webp",
+  "destination": "/products/ocean-whisper/ocean-whisper-bouquet-size-35x55cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ocean-whisper/03.webp",
+  "destination": "/products/ocean-whisper/ocean-whisper-navy-bouquet-front.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/ocean-whisper/04.webp",
+  "destination": "/products/ocean-whisper/ocean-whisper-product-details.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bestie-blossoms/01.webp",
+  "destination": "/products/bestie-blossoms/best-friend-bouquet-malaysia.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bestie-blossoms/02.webp",
+  "destination": "/products/bestie-blossoms/bestie-blossoms-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bestie-blossoms/03.webp",
+  "destination": "/products/bestie-blossoms/bestie-blossoms-roses-orchids-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bestie-blossoms/04.webp",
+  "destination": "/products/bestie-blossoms/bestie-blossoms-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bestie-blossoms/05.webp",
+  "destination": "/products/bestie-blossoms/bestie-blossoms-size-40x56cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/orchid-elegance/01.webp",
+  "destination": "/products/orchid-elegance/orchid-and-gerbera-bouquet-kl.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/orchid-elegance/02.webp",
+  "destination": "/products/orchid-elegance/orchid-elegance-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/orchid-elegance/03.webp",
+  "destination": "/products/orchid-elegance/orchid-elegance-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/orchid-elegance/04.webp",
+  "destination": "/products/orchid-elegance/orchid-elegance-size-50x40cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-white-rose-heart-large/01.webp",
+  "destination": "/products/pink-white-rose-heart-large/pink-and-white-rose-heart-bouquet-top.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-white-rose-heart-large/02.webp",
+  "destination": "/products/pink-white-rose-heart-large/woman-holding-pink-white-rose-heart.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-white-rose-heart-large/03.webp",
+  "destination": "/products/pink-white-rose-heart-large/pink-white-heart-bouquet-organza-bow.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-white-rose-heart-large/04.webp",
+  "destination": "/products/pink-white-rose-heart-large/pink-white-rose-heart-size-40x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/dark-obsession/01.webp",
+  "destination": "/products/dark-obsession/black-soap-rose-bouquet-dark-obsession.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/dark-obsession/02.webp",
+  "destination": "/products/dark-obsession/woman-holding-black-rose-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/dark-obsession/03.webp",
+  "destination": "/products/dark-obsession/black-roses-caspia-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/dark-obsession/04.webp",
+  "destination": "/products/dark-obsession/dark-obsession-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pinky-promise/01.webp",
+  "destination": "/products/pinky-promise/pinky-promise-pink-rose-daisy-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pinky-promise/02.webp",
+  "destination": "/products/pinky-promise/pink-roses-daisies-caspia-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pinky-promise/03.webp",
+  "destination": "/products/pinky-promise/pinky-promise-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pinky-promise/04.webp",
+  "destination": "/products/pinky-promise/pinky-promise-size-30x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/365-days-of-love/01.webp",
+  "destination": "/products/365-days-of-love/12-red-roses-bouquet-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/365-days-of-love/02.webp",
+  "destination": "/products/365-days-of-love/365-days-of-love-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/365-days-of-love/03.webp",
+  "destination": "/products/365-days-of-love/365-days-of-love-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/kitkat-pink-roses/01.webp",
+  "destination": "/products/kitkat-pink-roses/kitkat-flower-bouquet-pink-roses.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/kitkat-pink-roses/02.webp",
+  "destination": "/products/kitkat-pink-roses/kitkat-bouquet-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/kitkat-pink-roses/03.webp",
+  "destination": "/products/kitkat-pink-roses/kitkat-pink-roses-product-details.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduates-sunshine/01.webp",
+  "destination": "/products/graduates-sunshine/graduation-teddy-bear-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduates-sunshine/02.webp",
+  "destination": "/products/graduates-sunshine/graduates-sunshine-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/graduates-sunshine/03.webp",
+  "destination": "/products/graduates-sunshine/graduates-sunshine-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/hearts-desire/01.webp",
+  "destination": "/products/hearts-desire/hearts-desire-6-red-roses-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/hearts-desire/02.webp",
+  "destination": "/products/hearts-desire/6-red-roses-pink-babys-breath-top.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/hearts-desire/03.webp",
+  "destination": "/products/hearts-desire/hearts-desire-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/hearts-desire/04.webp",
+  "destination": "/products/hearts-desire/hearts-desire-red-rose-close-ups.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/midnight-romance/01.webp",
+  "destination": "/products/midnight-romance/midnight-romance-18-white-roses.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/midnight-romance/02.webp",
+  "destination": "/products/midnight-romance/white-rose-bouquet-black-wrap-cafe.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/everlasting-stem/01.webp",
+  "destination": "/products/everlasting-stem/red-carnation-pink-rose-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/everlasting-stem/02.webp",
+  "destination": "/products/everlasting-stem/everlasting-stem-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/everlasting-stem/03.webp",
+  "destination": "/products/everlasting-stem/everlasting-stem-carnations-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-pearl-whisper/01.webp",
+  "destination": "/products/pink-pearl-whisper/pink-pearl-whisper-thank-you-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-pearl-whisper/02.webp",
+  "destination": "/products/pink-pearl-whisper/pink-pearl-whisper-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-pearl-whisper/03.webp",
+  "destination": "/products/pink-pearl-whisper/8-pink-white-roses-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-pearl-whisper/04.webp",
+  "destination": "/products/pink-pearl-whisper/pink-pearl-whisper-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/heavenly-blue/01.webp",
+  "destination": "/products/heavenly-blue/heavenly-blue-rose-daisy-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/heavenly-blue/02.webp",
+  "destination": "/products/heavenly-blue/heavenly-blue-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/heavenly-blue/03.webp",
+  "destination": "/products/heavenly-blue/blue-white-roses-daisies-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/heavenly-blue/04.webp",
+  "destination": "/products/heavenly-blue/heavenly-blue-size-30x45cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-charm/01.webp",
+  "destination": "/products/pink-charm/pink-charm-small-rose-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-charm/02.webp",
+  "destination": "/products/pink-charm/woman-holding-pink-charm-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-charm/03.webp",
+  "destination": "/products/pink-charm/pink-charm-front-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-charm/04.webp",
+  "destination": "/products/pink-charm/pink-charm-product-details.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/forever-yours/01.webp",
+  "destination": "/products/forever-yours/forever-yours-red-white-rose-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/forever-yours/02.webp",
+  "destination": "/products/forever-yours/woman-holding-forever-yours-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/forever-yours/03.webp",
+  "destination": "/products/forever-yours/forever-yours-black-lace-wrapping.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/forever-yours/04.webp",
+  "destination": "/products/forever-yours/forever-yours-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-rose-gift-box/01.webp",
+  "destination": "/products/red-rose-gift-box/red-rose-led-gift-box.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-rose-gift-box/02.webp",
+  "destination": "/products/red-rose-gift-box/red-rose-gift-box-lights-on.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-rose-gift-box/03.webp",
+  "destination": "/products/red-rose-gift-box/red-rose-gift-box-close-up.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/red-rose-gift-box/04.webp",
+  "destination": "/products/red-rose-gift-box/red-rose-gift-box-size-15x30cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-gift-box/01.webp",
+  "destination": "/products/pink-gift-box/pink-rose-gift-box.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-gift-box/02.webp",
+  "destination": "/products/pink-gift-box/woman-holding-pink-rose-gift-box.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/pink-gift-box/03.webp",
+  "destination": "/products/pink-gift-box/pink-gift-box-size-15x30cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/crochet-pink-paradise/01.webp",
+  "destination": "/products/crochet-pink-paradise/crochet-flower-bouquet-bunny-doll.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/crochet-pink-paradise/02.webp",
+  "destination": "/products/crochet-pink-paradise/crochet-pink-paradise-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/crochet-pink-paradise/03.webp",
+  "destination": "/products/crochet-pink-paradise/crochet-pink-paradise-detail-collage.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/crochet-pink-paradise/04.webp",
+  "destination": "/products/crochet-pink-paradise/crochet-pink-paradise-size-40x55cm.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/chenille-stem-flowers/01.webp",
+  "destination": "/products/chenille-stem-flowers/chenille-stem-flower-bouquet.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/chenille-stem-flowers/02.webp",
+  "destination": "/products/chenille-stem-flowers/orange-pipe-cleaner-bouquet-table.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/chenille-stem-flowers/03.webp",
+  "destination": "/products/chenille-stem-flowers/chenille-flowers-top-view.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/52-roses-heart/01.webp",
+  "destination": "/products/52-roses-heart/52-roses-heart-pink-orchids.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/52-roses-heart/02.webp",
+  "destination": "/products/52-roses-heart/52-roses-heart-doll-toppers.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/99-roses-heart/01.webp",
+  "destination": "/products/99-roses-heart/99-roses-heart-soap-roses.webp",
+  "permanent": true
+ },
+ {
+  "source": "/products/bouquet-protection-bag/01.webp",
+  "destination": "/products/bouquet-protection-bag/bouquet-protection-bag-clear.webp",
+  "permanent": true
+ }
+]
