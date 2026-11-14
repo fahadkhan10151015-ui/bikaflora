@@ -83,13 +83,11 @@ export default function HeroSlider() {
     };
     // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
     // The still poster image shows in the meantime.
-    const idle = (fn: () => void, ms: number) => setTimeout(() => ("requestIdleCallback" in window ? (window as Window & { requestIdleCallback: (f: () => void) => void }).requestIdleCallback(fn) : fn()), ms);
-    const startWhenLoaded = () => { idle(pick, 900); };
-    if (document.readyState === "complete") startWhenLoaded();
-    else window.addEventListener("load", startWhenLoaded, { once: true });
+    // Start right after the page becomes interactive (the first picture is already on screen by then).
+    const t0 = setTimeout(pick, 150);
     const m = window.matchMedia("(orientation: portrait)");
     m.addEventListener("change", pick);
-    return () => m.removeEventListener("change", pick);
+    return () => { clearTimeout(t0); m.removeEventListener("change", pick); };
   }, []);
   useEffect(() => {
     const v = video.current;
@@ -99,14 +97,11 @@ export default function HeroSlider() {
     v.muted = true; v.defaultMuted = true; v.playsInline = true;
     v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
     v.currentTime = 0;
-    // Wait until enough of the video has downloaded to play through without stopping
-    // (2 s safety fallback), so it never starts and then stutters. The poster shows meanwhile.
+    // Play as soon as the first frames are ready (the file streams while it plays).
     const start = () => { if (v.paused) v.play().catch(() => {}); };
-    let t: ReturnType<typeof setTimeout> | undefined;
-    const soon = () => { if (!t) t = setTimeout(start, 2000); };
-    if (v.readyState >= 4) start();
-    v.addEventListener("canplaythrough", start);
-    v.addEventListener("canplay", soon);
+    if (v.readyState >= 3) start();
+    v.addEventListener("canplay", start);
+    v.addEventListener("loadeddata", start);
     // If the phone still blocks autoplay (e.g. Low Power Mode), start on the first touch or scroll.
     const kick = () => start();
     const opts = { passive: true } as AddEventListenerOptions;
@@ -114,7 +109,7 @@ export default function HeroSlider() {
     window.addEventListener("scroll", kick, opts);
     window.addEventListener("click", kick);
     return () => {
-      clearTimeout(t); v.removeEventListener("canplaythrough", start); v.removeEventListener("canplay", soon);
+      v.removeEventListener("canplay", start); v.removeEventListener("loadeddata", start);
       window.removeEventListener("touchstart", kick); window.removeEventListener("scroll", kick); window.removeEventListener("click", kick);
     };
   }, [isVideo, src]);
@@ -164,8 +159,8 @@ export default function HeroSlider() {
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         </picture>
         {src && (
-          <video key={src.v} ref={video} src={src.v} poster={src.p} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
-            className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%] bg-deep" />
+          <video key={src.v} ref={video} src={src.v} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
+            className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         )}
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0" : ""}`} />

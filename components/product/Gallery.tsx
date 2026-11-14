@@ -1,5 +1,6 @@
 "use client";
 import FillImage from "@/components/ui/FillImage";
+import { getImageProps } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Palette, X, ZoomIn } from "lucide-react";
 import { useVariant } from "./VariantProvider";
@@ -44,9 +45,22 @@ export default function Gallery({ alt }: { alt: string }) {
     }
   }, [paper]);
 
+  // Zoom: show the photo already on screen straight away, then swap in the full-size original once it
+  // has downloaded (it starts downloading the moment the zoom button is touched).
+  const [hi, setHi] = useState<string | null>(null);
+  const fetchOriginal = (u: string) => { const im = new window.Image(); im.onload = () => setHi((h) => (h === u ? h : u === srcRef.current ? u : h)); im.src = u; };
+  const srcRef = useRef("");
   const go = (d: number) => { setShowPaper(false); setI((n) => (n + d + images.length) % images.length); };
   const previewing = showPaper && paper?.image;
   const src = previewing ? paper!.image! : images[Math.min(i, images.length - 1)];
+
+  srcRef.current = src;
+  useEffect(() => {
+    if (zoom) fetchOriginal(src);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src, zoom]);
+  const low = getImageProps({ src, alt: "", width: 540, height: 540, sizes: "(max-width: 1024px) 92vw, 540px", quality: 80 }).props;
+  const sharp = hi === src;
 
   return (
     <div>
@@ -64,7 +78,7 @@ export default function Gallery({ alt }: { alt: string }) {
             className={`object-cover transition-opacity duration-300 ${!previewing && idx === Math.min(i, images.length - 1) ? "opacity-100" : "opacity-0"}`} />
         ))}
         {previewing && <FillImage key={src} src={src} alt={`${alt} – ${paper!.label} wrapping preview`} w={540} h={540} className="object-cover gallery-in" />}
-        <button type="button" onClick={() => { setZoom(true); setZoomed(false); }} aria-label="Zoom photo"
+        <button type="button" onPointerDown={() => fetchOriginal(src)} onClick={() => { setZoom(true); setZoomed(false); }} aria-label="Zoom photo"
           className="absolute inset-0 z-[1] cursor-zoom-in" />
         <span className="pointer-events-none absolute right-3 bottom-3 sm:bottom-auto sm:top-3 z-[2] w-9 h-9 rounded-full bg-white/85 text-ink grid place-items-center shadow-md"><ZoomIn className="w-4 h-4" /></span>
         {previewing && (
@@ -101,7 +115,7 @@ export default function Gallery({ alt }: { alt: string }) {
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" role="dialog" aria-label="Zoomed photo"
           onClick={() => setZoom(false)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={src} alt={alt} draggable={false}
+          <img key={sharp ? "hi" : "low"} src={sharp ? src : low.src} srcSet={sharp ? undefined : low.srcSet} sizes={sharp ? undefined : low.sizes} alt={alt} draggable={false} decoding="sync"
             onClick={(e) => {
               e.stopPropagation();
               const r = e.currentTarget.getBoundingClientRect();
@@ -109,7 +123,7 @@ export default function Gallery({ alt }: { alt: string }) {
               setZoomed((z) => !z);
             }}
             style={{ transformOrigin: origin }}
-            className={`max-w-[96vw] max-h-[90vh] object-contain select-none transition-transform duration-300 ${zoomed ? "scale-[2.2] cursor-zoom-out" : "cursor-zoom-in"}`} />
+            className={`w-[96vw] h-[90vh] object-contain select-none transition-transform duration-300 ${zoomed ? "scale-[2.2] cursor-zoom-out" : "cursor-zoom-in"}`} />
           <button onClick={() => setZoom(false)} aria-label="Close" className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/15 text-white grid place-items-center"><X className="w-6 h-6" /></button>
           {images.length > 1 && !previewing && (
             <>
