@@ -8,9 +8,21 @@ const nextConfig = {
     deviceSizes: [390, 640, 828, 1080, 1280],
   },
   compress: true,
+  // Let browsers and Vercel's CDN keep photos, videos and logos (they were sent with max-age=0 before).
+  async headers() {
+    const media = "public, max-age=604800, stale-while-revalidate=2592000"; // 7 days, then refresh in the background
+    return [
+      { source: "/video/:path*", headers: [{ key: "Cache-Control", value: media }] },
+      { source: "/products/:path*", headers: [{ key: "Cache-Control", value: media }] },
+      { source: "/images/:path*", headers: [{ key: "Cache-Control", value: media }] },
+      { source: "/brand/:path*", headers: [{ key: "Cache-Control", value: media }] },
+    ];
+  },
   // Old product links (before colours became separate products)
   async redirects() {
     return [
+      // One address only: the old Vercel address sends everyone to bikaflora.my
+      { source: "/:path*", has: [{ type: "host", value: "bikaflora.vercel.app" }], destination: "https://bikaflora.my/:path*", permanent: true },
       { source: "/product/ferrero-rocher-soap-rose-bouquet", destination: "/product/ferrero-rocher-pink-roses", permanent: true },
       { source: "/product/soap-rose-heart-large", destination: "/product/red-soap-rose-heart-large", permanent: true },
     ];

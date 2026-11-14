@@ -76,7 +76,11 @@ export default function HeroSlider() {
         : w < 1280 ? { v: "/video/hero-making-720.mp4", p: "/video/hero-making-poster.webp" }
         : { v: "/video/hero-making-1080.mp4", p: "/video/hero-making-poster.webp" });
     };
-    pick();
+    // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
+    // The still poster image shows in the meantime.
+    const startWhenLoaded = () => setTimeout(pick, 150);
+    if (document.readyState === "complete") startWhenLoaded();
+    else window.addEventListener("load", startWhenLoaded, { once: true });
     const m = window.matchMedia("(orientation: portrait)");
     m.addEventListener("change", pick);
     return () => m.removeEventListener("change", pick);
@@ -140,6 +144,14 @@ export default function HeroSlider() {
       ))}
       {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+        {!src && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" className="md:hidden absolute inset-0 w-full h-full object-cover" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/video/hero-making-poster.webp" alt="" width={1280} height={720} fetchPriority="high" className="hidden md:block absolute inset-0 w-full h-full object-cover lg:object-[center_18%]" />
+          </>
+        )}
         {src && (
           <video key={src.v} ref={video} src={src.v} poster={src.p} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%] bg-deep" />
