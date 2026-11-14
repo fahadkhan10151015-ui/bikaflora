@@ -49,7 +49,6 @@ export default function Home() {
   preload("/video/hero-vertical-poster-v2.avif", { as: "image", type: "image/avif", fetchPriority: "high", media: "(max-width: 767px)" } as Parameters<typeof preload>[1]);
   preload("/video/hero-making-poster.avif", { as: "image", type: "image/avif", fetchPriority: "high", media: "(min-width: 768px)" } as Parameters<typeof preload>[1]);
   const popular = featuredProducts().slice(0, 4);
-  const popularSlugs = new Set(popular.map((p) => p.slug));
   return (
     <>
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
@@ -64,10 +63,10 @@ export default function Home() {
 
       {/* Everything below is drawn only when the visitor scrolls near it (much less work for phones on first load). */}
       <div className="home-lazy">
-      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets").filter((p) => !popularSlugs.has(p.slug))} />
+      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
       {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
         const c = getCategory(slug);
-        const items = productsInCategory(slug).filter((p) => !popularSlugs.has(p.slug));
+        const items = productsInCategory(slug);
         return c && <ProductRow key={slug} eyebrow={c.short} title={c.name} href={`/category/${slug}`} items={items} />;
       })}
 

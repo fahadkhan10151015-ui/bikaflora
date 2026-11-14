@@ -170,4 +170,4 @@ html.dark .eyebrow, html.dark .text-gold-deep { color: var(--color-gold); }
 html.dark ::selection { background: #34477a; color: #fff; }
 
 /* Below-the-fold home sections: skip layout/paint until near the screen (faster first load on phones). */
-.home-lazy > * { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+.home-lazy > :not(section.container-x) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
