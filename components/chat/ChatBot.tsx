@@ -41,7 +41,12 @@ export default function ChatBot() {
   const [busy, setBusy] = useState(false);
   const end = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, busy, open]);
+  // Scroll only the chat's own message list (never the page), and only while the chat is open.
+  useEffect(() => {
+    if (!open) return;
+    const box = end.current?.parentElement;
+    if (box) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
+  }, [msgs, busy, open]);
 
   async function ask(q: string) {
     const question = q.trim().slice(0, 500);

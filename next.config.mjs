@@ -5,7 +5,8 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [60, 70, 75, 80], // 75 for photos: sharp and small (under 100 KB)
     minimumCacheTTL: 60 * 60 * 24 * 30, // keep optimised images for 30 days
-    deviceSizes: [390, 640, 828, 1080, 1280],
+    deviceSizes: [390, 640, 828, 1080],
+    imageSizes: [96, 128, 256, 320],
   },
   compress: true,
   // Let browsers and Vercel's CDN keep photos, videos and logos (they were sent with max-age=0 before).

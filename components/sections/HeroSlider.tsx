@@ -66,6 +66,11 @@ export default function HeroSlider() {
   const total = slides.length + 1;
   const isVideo = active === 0;
   const video = useRef<HTMLVideoElement>(null);
+  // The 4 photo slides (backgrounds, bouquets, flowers) are only added a few seconds after the page
+  // has loaded — the video slide shows first, so the first load stays light and fast.
+  const [ready, setReady] = useState(false);
+  const [changed, setChanged] = useState(false);
+  useEffect(() => { if (active !== 0) { setReady(true); setChanged(true); } }, [active]);
   // Phones (portrait) get a vertical edit that fills the screen; tablets 720p; desktop 1080p.
   const [src, setSrc] = useState<{ v: string; p: string } | null>(null);
   useEffect(() => {
@@ -78,7 +83,8 @@ export default function HeroSlider() {
     };
     // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
     // The still poster image shows in the meantime.
-    const startWhenLoaded = () => setTimeout(pick, 150);
+    const idle = (fn: () => void, ms: number) => setTimeout(() => ("requestIdleCallback" in window ? (window as Window & { requestIdleCallback: (f: () => void) => void }).requestIdleCallback(fn) : fn()), ms);
+    const startWhenLoaded = () => { idle(pick, 900); };
     if (document.readyState === "complete") startWhenLoaded();
     else window.addEventListener("load", startWhenLoaded, { once: true });
     const m = window.matchMedia("(orientation: portrait)");
@@ -127,7 +133,7 @@ export default function HeroSlider() {
   const s = isVideo ? videoSlide : slides[active - 1];
 
   return (
-    <section className="relative overflow-hidden bg-deep text-white" aria-roledescription="carousel" aria-label="Featured bouquets"
+    <section className={`relative overflow-hidden bg-deep text-white ${changed ? "" : "hero-first"}`} aria-roledescription="carousel" aria-label="Featured bouquets"
       onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
         if (touchX.current === null) return;
@@ -136,7 +142,7 @@ export default function HeroSlider() {
         touchX.current = null;
       }}>
       {/* backgrounds: one per slide, cross-fading with a slow zoom */}
-      {slides.map((sl, i) => (
+      {ready && slides.map((sl, i) => (
         <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
           <FillImage src={sl.bg} alt="" w={1080} h={720} quality={70}
             className={`object-cover object-center opacity-80 ${i + 1 === active ? "hero-bg-zoom" : ""}`} />
@@ -144,14 +150,13 @@ export default function HeroSlider() {
       ))}
       {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        {!src && (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" className="md:hidden absolute inset-0 w-full h-full object-cover" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/video/hero-making-poster.webp" alt="" width={1280} height={720} fetchPriority="high" className="hidden md:block absolute inset-0 w-full h-full object-cover lg:object-[center_18%]" />
-          </>
-        )}
+        {/* Still frame shown instantly (only the right size is downloaded); the video takes over once loaded. */}
+        <picture>
+          <source media="(min-width: 768px)" srcSet="/video/hero-making-poster.webp" width={1280} height={720} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
+            className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
+        </picture>
         {src && (
           <video key={src.v} ref={video} src={src.v} poster={src.p} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%] bg-deep" />
@@ -187,18 +192,20 @@ export default function HeroSlider() {
         </div>
 
         {/* slide controls */}
-        <div className="mt-8 flex items-center gap-2 justify-center lg:justify-start" role="tablist" aria-label="Featured bouquets">
+        <div className="mt-8 flex items-center gap-2 justify-center lg:justify-start">
           <button onClick={() => go(-1)} aria-label="Previous slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center mr-1"><ChevronLeft className="w-4 h-4" /></button>
+          <div className="flex items-center gap-2" role="tablist" aria-label="Featured bouquets">
           {["How we make a bouquet", ...slides.map((sl) => sl.alt)].map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={`Show ${label}`} onClick={() => setActive(i)}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
               {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? 15600 : DURATION}ms` }} />}
             </button>
           ))}
+          </div>
           <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
         </div>
       </div>
-      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "opacity-0 pointer-events-none" : "opacity-100"}`}><HeroStage slides={slides} active={isVideo ? -1 : active - 1} /></div>
+      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "opacity-0 pointer-events-none" : "opacity-100"}`}>{ready ? <HeroStage slides={slides} active={isVideo ? -1 : active - 1} /> : <div className="w-full max-w-[560px] aspect-square mx-auto" />}</div>
       </div>
     </section>
   );

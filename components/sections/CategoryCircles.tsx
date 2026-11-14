@@ -46,9 +46,9 @@ export default function CategoryCircles({ compact = false }: { compact?: boolean
         </div>
       </div>
       <div ref={track} onPointerDown={pause} onTouchStart={pause} onMouseEnter={pause} onWheel={pause}
-        className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-4 md:gap-7 overflow-x-auto snap-x scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-4 md:gap-7 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((c) => (
-          <Link key={c.slug} href={`/category/${c.slug}`} className="group snap-start shrink-0 w-[76px] sm:w-[100px] md:w-[124px] text-center">
+          <Link key={c.slug} href={`/category/${c.slug}`} className="group shrink-0 w-[76px] sm:w-[100px] md:w-[124px] text-center">
             <span className="block p-[3px] rounded-full bg-gradient-to-br from-gold via-petal to-brand shadow-md shadow-brand/10 group-hover:scale-105 transition">
               <span className="relative block aspect-square rounded-full overflow-hidden border-[3px] border-cream bg-blush">
                 <FillImage src={c.image} alt={c.name} w={124} h={124} className="object-cover group-hover:scale-110 transition duration-500" />

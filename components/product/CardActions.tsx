@@ -1,22 +1,24 @@
 "use client";
 import { Check, Plus } from "lucide-react";
-import type { Product } from "@/data/products";
 import { waLink, productMessages } from "@/lib/whatsapp";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useOrderList } from "@/components/order/OrderListProvider";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 
 /** Two buttons on every product card: order this one now, or add it to a multi-item order list. */
-export default function CardActions({ p }: { p: Product }) {
+/** Only what the buttons need (keeps the page small — not the whole product description). */
+export type CardProduct = { slug: string; name: string; sku: string; price: number; instant: boolean; variants?: string[] };
+
+export default function CardActions({ p }: { p: CardProduct }) {
   const { user } = useAuth();
   const list = useOrderList();
-  const colour = p.variants?.[0]?.label;
+  const colour = p.variants?.[0];
   const price = p.price;
   const added = list.has(p.slug);
 
   const orderNow = waLink(
     productMessages(
-      { name: p.name, sku: p.sku, slug: p.slug, price, colour: p.variants ? p.variants.map((v) => v.label).join(" or ") + " (please confirm)" : undefined },
+      { name: p.name, sku: p.sku, slug: p.slug, price, colour: p.variants ? p.variants.join(" or ") + " (please confirm)" : undefined },
       p.instant ? "Same-day Instant Delivery or Pre-order (please advise)" : "Pre-order (I will share my date)",
       user ? { name: displayName(user), email: user.email } : undefined,
     )[0].text,

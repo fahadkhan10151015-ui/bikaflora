@@ -12,7 +12,7 @@ export default function WhatsAppButton({ label = "Chat on WhatsApp", className =
   const { user } = useAuth();
   const customer = user ? { name: displayName(user), email: user.email } : undefined;
   return (
-    <button type="button" className={className} onClick={() => open({ title: "How can we help?", options: generalMessages(customer) })}>
+    <button type="button" className={className} aria-label={label || "Chat on WhatsApp"} onClick={() => open({ title: "How can we help?", options: generalMessages(customer) })}>
       <WhatsAppIcon className={iconClassName} />
       {label && <span>{label}</span>}
     </button>

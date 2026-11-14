@@ -12,7 +12,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
   return (
     <div className="group tilt bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-blush-2/70 flex flex-col h-full">
       <div className="relative">
-        <Link href={`/product/${p.slug}`} className="relative block aspect-square overflow-hidden bg-blush" aria-label={p.name}>
+        <Link href={`/product/${p.slug}`} className="relative block aspect-square overflow-hidden bg-blush">
           <Photo src={p.images[0]} alt={`${p.name} – soap flower bouquet delivery KL & Selangor`} sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 25vw"
              imgClassName="transition duration-700 group-hover:scale-105" priority={priority} />
           {second && (
@@ -43,7 +43,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
           <span className="font-semibold text-brand">{formatPrice(p.price)}</span>
           {p.compareAt && <span className="text-xs text-muted line-through">{formatPrice(p.compareAt)}</span>}
         </div>
-        <CardActions p={p} />
+        <CardActions p={{ slug: p.slug, name: p.name, sku: p.sku, price: p.price, instant: p.instant, variants: p.variants?.map((v) => v.label) }} />
       </div>
     </div>
   );

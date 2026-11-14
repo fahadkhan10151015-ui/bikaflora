@@ -11,9 +11,10 @@
   --color-cream: #f7f7f5;
   --color-sage: #7e9c86;
   --color-gold: #c9a45c;
+  --color-gold-deep: #866428; /* gold for small text on white (5:1 contrast) */
   --color-ink: #1c2233;
   --color-muted: #626a7a;
-  --color-wa: #25d366;
+  --color-wa: #168043; /* deeper WhatsApp green: white text readable (5:1) */
   --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-sans: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -33,7 +34,9 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .input { width: 100%; border: 1px solid #e6e1d8; background: #fff; border-radius: .8rem; padding: .75rem 1rem; font-size: .95rem; outline: none; }
 .input:focus { border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(31,42,68,.15); }
 .label { display:block; font-size:.85rem; font-weight:600; margin-bottom:.35rem; color: var(--color-ink); }
-.eyebrow { text-transform: uppercase; letter-spacing: .28em; font-size: .7rem; font-weight: 500; color: var(--color-gold); }
+.eyebrow { text-transform: uppercase; letter-spacing: .28em; font-size: .7rem; font-weight: 500; color: var(--color-gold-deep); }
+/* on dark sections keep the bright gold */
+.bg-deep .eyebrow, .text-white .eyebrow, .bg-brand .eyebrow { color: var(--color-gold); }
 .prose-bf p { margin: .75rem 0; line-height: 1.8; color: var(--color-muted); }
 .prose-bf h2 { font-size: 1.9rem; margin-top: 2rem; color: var(--color-ink); }
 .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
@@ -111,10 +114,12 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 @media (prefers-reduced-motion: reduce) { .gallery-in { animation: none } }
 
 /* Hero slider */
-@keyframes hero-text-in { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+/* Headline slides in but is never invisible (keeps Google's "largest content" measurable). */
+@keyframes hero-text-in { from { opacity: .35; transform: translateY(12px) } to { opacity: 1; transform: none } }
+.hero-first .hero-text-in { animation: none }
 .hero-text-in { animation: hero-text-in .7s cubic-bezier(.2,.7,.2,1) }
-@keyframes hero-progress { from { width: 0 } to { width: 100% } }
-.hero-progress { animation: hero-progress linear forwards }
+@keyframes hero-progress { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+.hero-progress { width: 100%; transform-origin: left; animation: hero-progress linear forwards }
 @media (prefers-reduced-motion: reduce) { .hero-text-in, .hero-progress { animation: none } }
 
 /* "How your bouquet is made" film: slow camera moves (Ken Burns) */
@@ -161,4 +166,8 @@ html.dark .input::placeholder { color: #6f7890; }
 html.dark .glass { background: rgba(13, 18, 32, .78); }
 html.dark .shadow-xl, html.dark .shadow-lg { --tw-shadow-color: rgb(0 0 0 / .5); }
 html.dark img { filter: none; }
+html.dark .eyebrow, html.dark .text-gold-deep { color: var(--color-gold); }
 html.dark ::selection { background: #34477a; color: #fff; }
+
+/* Below-the-fold home sections: skip layout/paint until near the screen (faster first load on phones). */
+.home-lazy > * { content-visibility: auto; contain-intrinsic-size: auto 720px; }

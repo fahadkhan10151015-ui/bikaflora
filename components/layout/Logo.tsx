@@ -34,11 +34,11 @@ export function LogoMark({ className = "w-11 h-11" }: { className?: string }) {
 
 export default function Logo({ light = false }: { light?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink min-w-0" aria-label="BikaFlora home">
+    <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink min-w-0">
       <LogoMark className="w-9 h-9 min-[400px]:w-10 min-[400px]:h-10 sm:w-11 sm:h-11 shrink-0" />
       <span className="flex flex-col leading-none">
         <span className={`font-serif text-[1.4rem] min-[400px]:text-[1.6rem] sm:text-[1.75rem] font-semibold tracking-tight ${light ? "text-white" : "text-ink"}`}>
-          Bika<span className="text-gold">Flora</span>
+          Bika<span className={light ? "text-gold" : "text-gold-deep"}>Flora</span>
         </span>
         <span className={`mt-0.5 text-[0.5rem] min-[400px]:text-[0.55rem] tracking-[0.22em] min-[400px]:tracking-[0.32em] uppercase whitespace-nowrap ${light ? "text-white/60" : "text-muted"}`}>Florist · Malaysia</span>
       </span>

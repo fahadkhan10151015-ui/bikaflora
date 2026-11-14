@@ -56,8 +56,10 @@ export default function Home() {
       <CategoryCircles />
 
       {/* PRODUCTS (like a shop front). Rows with fewer than 2 products hide themselves. */}
-      <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/shop" items={popular} priority />
+      <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/shop" items={popular} />
 
+      {/* Everything below is drawn only when the visitor scrolls near it (much less work for phones on first load). */}
+      <div className="home-lazy">
       <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets").filter((p) => !popularSlugs.has(p.slug))} />
       {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
         const c = getCategory(slug);
@@ -176,6 +178,7 @@ export default function Home() {
       <MomentsCarousel />
 
       <VideoBand />
+      </div>
     </>
   );
 }
