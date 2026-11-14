@@ -21,6 +21,14 @@ export default function Gallery({ alt }: { alt: string }) {
     return () => { document.removeEventListener("keydown", k); document.body.style.overflow = ""; };
   }, [zoom]);
   const touchX = useRef<number | null>(null);
+  // The other photos download right after the page has loaded (not competing with the first photo),
+  // so they are ready before the visitor swipes.
+  const [rest, setRest] = useState(false);
+  useEffect(() => {
+    const go = () => setRest(true);
+    if (document.readyState === "complete") go(); else window.addEventListener("load", go, { once: true });
+    return () => window.removeEventListener("load", go);
+  }, []);
 
   // New colour picked: start again from its first photo.
   useEffect(() => setI(0), [images]);
@@ -50,7 +58,12 @@ export default function Gallery({ alt }: { alt: string }) {
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
           touchX.current = null;
         }}>
-        <FillImage key={src} src={src} alt={previewing ? `${alt} – ${paper!.label} wrapping preview` : `${alt} – photo ${i + 1}`} w={540} h={540} priority className="object-cover gallery-in" />
+        {/* Every photo is in the page already (only the current one is visible), so swiping is instant. */}
+        {images.map((im, idx) => (idx === 0 || rest || idx === i) && (
+          <FillImage key={im} src={im} alt={`${alt} – photo ${idx + 1}`} w={540} h={540} sizes="(max-width: 1024px) 92vw, 540px" priority={idx === 0} loading="eager"
+            className={`object-cover transition-opacity duration-300 ${!previewing && idx === Math.min(i, images.length - 1) ? "opacity-100" : "opacity-0"}`} />
+        ))}
+        {previewing && <FillImage key={src} src={src} alt={`${alt} – ${paper!.label} wrapping preview`} w={540} h={540} className="object-cover gallery-in" />}
         <button type="button" onClick={() => { setZoom(true); setZoomed(false); }} aria-label="Zoom photo"
           className="absolute inset-0 z-[1] cursor-zoom-in" />
         <span className="pointer-events-none absolute right-3 bottom-3 sm:bottom-auto sm:top-3 z-[2] w-9 h-9 rounded-full bg-white/85 text-ink grid place-items-center shadow-md"><ZoomIn className="w-4 h-4" /></span>
@@ -79,7 +92,7 @@ export default function Gallery({ alt }: { alt: string }) {
           {images.map((s, idx) => (
             <button key={s} onClick={() => { setShowPaper(false); setI(idx); }} aria-label={`View photo ${idx + 1}`}
               className={`relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition ${idx === i && !previewing ? "border-brand" : "border-transparent opacity-75 hover:opacity-100"}`}>
-              <FillImage src={s} alt="" w={120} h={120} className="object-cover" />
+              <FillImage src={s} alt="" w={120} h={120} loading="eager" className="object-cover" />
             </button>
           ))}
         </div>

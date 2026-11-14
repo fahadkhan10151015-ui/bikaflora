@@ -72,7 +72,7 @@ export default function ChatBot() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Ask our AI florist"
+        <button onClick={() => setOpen(true)} aria-label="Ask our florist (AI chat)"
           className={`fixed left-4 sm:left-5 ${lift} z-50 items-center gap-2 rounded-full bg-gradient-to-br from-brand to-deep text-white shadow-xl shadow-black/25 p-3.5 sm:px-4 sm:py-3 font-semibold text-sm ring-1 ring-gold/40 hover:scale-105 transition`}>
           <Sparkles className="w-6 h-6 text-gold" /><span className="hidden sm:inline">Ask our florist</span>
         </button>

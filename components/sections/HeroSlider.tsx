@@ -99,10 +99,14 @@ export default function HeroSlider() {
     v.muted = true; v.defaultMuted = true; v.playsInline = true;
     v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
     v.currentTime = 0;
+    // Wait until enough of the video has downloaded to play through without stopping
+    // (2 s safety fallback), so it never starts and then stutters. The poster shows meanwhile.
     const start = () => { if (v.paused) v.play().catch(() => {}); };
-    start();
-    v.addEventListener("canplay", start);
-    v.addEventListener("loadeddata", start);
+    let t: ReturnType<typeof setTimeout> | undefined;
+    const soon = () => { if (!t) t = setTimeout(start, 2000); };
+    if (v.readyState >= 4) start();
+    v.addEventListener("canplaythrough", start);
+    v.addEventListener("canplay", soon);
     // If the phone still blocks autoplay (e.g. Low Power Mode), start on the first touch or scroll.
     const kick = () => start();
     const opts = { passive: true } as AddEventListenerOptions;
@@ -110,7 +114,7 @@ export default function HeroSlider() {
     window.addEventListener("scroll", kick, opts);
     window.addEventListener("click", kick);
     return () => {
-      v.removeEventListener("canplay", start); v.removeEventListener("loadeddata", start);
+      clearTimeout(t); v.removeEventListener("canplaythrough", start); v.removeEventListener("canplay", soon);
       window.removeEventListener("touchstart", kick); window.removeEventListener("scroll", kick); window.removeEventListener("click", kick);
     };
   }, [isVideo, src]);
@@ -152,7 +156,9 @@ export default function HeroSlider() {
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
         {/* Still frame shown instantly (only the right size is downloaded); the video takes over once loaded. */}
         <picture>
+          <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-making-poster.avif" />
           <source media="(min-width: 768px)" srcSet="/video/hero-making-poster.webp" width={1280} height={720} />
+          <source type="image/avif" srcSet="/video/hero-making-vertical-poster.avif" width={540} height={960} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />

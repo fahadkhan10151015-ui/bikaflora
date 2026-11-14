@@ -8,7 +8,7 @@ export default function LazyVideo({ src, mobileSrc, poster, className = "" }: { 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); io.disconnect(); } }, { rootMargin: "200px" });
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); io.disconnect(); } }, { rootMargin: "600px" });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -20,7 +20,7 @@ export default function LazyVideo({ src, mobileSrc, poster, className = "" }: { 
     v.play().catch(() => {});
   }, [load]);
   return (
-    <video ref={ref} className={className} muted loop playsInline preload="none" poster={poster} autoPlay={load}>
+    <video ref={ref} className={className} muted loop playsInline preload="none" poster={load ? poster : undefined} autoPlay={load}>
       {load && mobileSrc && <source src={mobileSrc} type="video/mp4" media="(max-width: 767px)" />}
       {load && <source src={src} type="video/mp4" />}
     </video>

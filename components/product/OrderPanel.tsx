@@ -28,7 +28,7 @@ function Choice({ on, onClick, title, note, warn }: { on: boolean; onClick: () =
     <button type="button" onClick={onClick} aria-pressed={on}
       className={`relative text-left rounded-2xl border-2 px-3.5 py-3 transition ${on ? "border-brand bg-blush/60" : "border-blush-2 bg-white hover:border-brand/50"}`}>
       <span className={`block text-sm font-semibold ${warn ? "text-ink" : ""}`}>{title}</span>
-      {note && <span className={`block text-xs mt-0.5 ${warn ? "text-red-600" : "text-muted"}`}>{note}</span>}
+      {note && <span className={`block text-xs mt-0.5 ${warn ? "text-red-700" : "text-muted"}`}>{note}</span>}
       {on && <Check className="absolute top-2.5 right-2.5 w-4 h-4 text-brand" />}
     </button>
   );

@@ -11,7 +11,7 @@ const nextConfig = {
   compress: true,
   // Let browsers and Vercel's CDN keep photos, videos and logos (they were sent with max-age=0 before).
   async headers() {
-    const media = "public, max-age=604800, stale-while-revalidate=2592000"; // 7 days, then refresh in the background
+    const media = "public, max-age=31536000, immutable"; // 1 year (files get a new name whenever they change)
     return [
       { source: "/video/:path*", headers: [{ key: "Cache-Control", value: media }] },
       { source: "/products/:path*", headers: [{ key: "Cache-Control", value: media }] },

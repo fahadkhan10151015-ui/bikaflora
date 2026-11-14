@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Star, Loader2, Trash2, PenLine } from "lucide-react";
-import { getSupabase } from "@/lib/supabase";
+import { loadSupabase } from "@/lib/supabase-config";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useRatings } from "./RatingsProvider";
 
@@ -35,7 +35,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   const [guestName, setGuestName] = useState("");
 
   const load = useCallback(async () => {
-    const sb = getSupabase();
+    const sb = await loadSupabase();
     if (!sb) return setReviews([]);
     const { data } = await sb.from("reviews").select("id,user_id,name,rating,comment,created_at").eq("product_slug", slug).order("created_at", { ascending: false }).limit(50);
     setReviews((data as Review[]) || []);
@@ -47,7 +47,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const sb = getSupabase();
+    const sb = await loadSupabase();
     if (!sb) return;
     if (!user && guestName.trim().length < 2) return setMsg("Please enter your name.");
     if (comment.trim().length < 3) return setMsg("Please write a few words about your bouquet.");
@@ -67,7 +67,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   }
 
   async function remove() {
-    const sb = getSupabase();
+    const sb = await loadSupabase();
     if (!sb || !mine) return;
     await sb.from("reviews").delete().eq("id", mine.id);
     setComment(""); setRating(5); setMsg("Your review was removed.");

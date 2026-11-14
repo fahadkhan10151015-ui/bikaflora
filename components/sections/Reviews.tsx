@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Star, Quote, PenLine } from "lucide-react";
-import { getSupabase } from "@/lib/supabase";
+import { loadSupabase } from "@/lib/supabase-config";
 import { getProduct } from "@/data/products";
 import { waLink } from "@/lib/whatsapp";
 
@@ -17,10 +17,12 @@ export default function Reviews({ limit = 6 }: { limit?: number }) {
   const [reviews, setReviews] = useState<Review[] | null>(null);
 
   useEffect(() => {
-    const sb = getSupabase();
+    (async () => {
+    const sb = await loadSupabase();
     if (!sb) return setReviews([]);
     sb.from("reviews").select("id,product_slug,name,rating,comment,created_at").order("created_at", { ascending: false }).limit(limit)
       .then(({ data }) => setReviews((data as Review[]) || []));
+    })();
   }, [limit]);
 
   if (reviews === null) return <div className="h-40" />;

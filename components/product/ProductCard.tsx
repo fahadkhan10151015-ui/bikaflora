@@ -13,11 +13,11 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
     <div className="group tilt bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-blush-2/70 flex flex-col h-full">
       <div className="relative">
         <Link href={`/product/${p.slug}`} className="relative block aspect-square overflow-hidden bg-blush">
-          <Photo src={p.images[0]} alt={`${p.name} – soap flower bouquet delivery KL & Selangor`} sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 25vw"
+          <Photo src={p.images[0]} alt={`${p.name} – soap flower bouquet delivery KL & Selangor`} w={320} h={320}
              imgClassName="transition duration-700 group-hover:scale-105" priority={priority} />
           {second && (
-            <Photo src={second} alt="" sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 25vw" 
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <Photo src={second} alt="" w={320} h={320}
+              className="hidden [@media(hover:hover)]:block opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           )}
           {p.badge && <span className="absolute top-2 left-2 sm:top-3 sm:left-3 glass text-brand text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">{p.badge}</span>}
           {p.compareAt && <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-petal text-deep text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">-{Math.round((1 - p.price / p.compareAt) * 100)}%</span>}

@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getSupabase } from "@/lib/supabase";
+import { loadSupabase } from "@/lib/supabase-config";
 
 /** Real star ratings from customer reviews (Supabase), shared by every card and product page. */
 type Agg = { avg: number; count: number };
@@ -10,7 +10,7 @@ const RatingsCtx = createContext<Ctx>({ get: () => undefined, reload: () => {} }
 export function RatingsProvider({ children }: { children: React.ReactNode }) {
   const [map, setMap] = useState<Record<string, Agg>>({});
   const load = useCallback(async () => {
-    const sb = getSupabase();
+    const sb = await loadSupabase();
     if (!sb) return;
     const { data } = await sb.from("reviews").select("product_slug,rating").limit(5000);
     const m: Record<string, { sum: number; count: number }> = {};
