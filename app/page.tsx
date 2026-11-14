@@ -63,7 +63,7 @@ export default function Home() {
 
       {/* Everything below is drawn only when the visitor scrolls near it (much less work for phones on first load). */}
       <div className="home-lazy">
-      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Flower's Bouquet" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
+      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Soap Flower Bouquets" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
       {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
         const c = getCategory(slug);
         const items = productsInCategory(slug);
