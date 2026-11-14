@@ -121,7 +121,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
           {user ? (
             <p className="text-xs text-muted">Posted as <b>{displayName(user) || "Customer"}</b>. Your email is never shown.</p>
           ) : (
-            <p className="text-xs text-muted">No account needed. <Link href={`/login?next=/product/${slug}`} className="underline">Log in</Link> if you want to edit your review later.</p>
+            <p className="text-xs text-muted">No account needed. <Link rel="nofollow" href={`/login?next=/product/${slug}`} className="underline">Log in</Link> if you want to edit your review later.</p>
           )}
         </form>
       )}

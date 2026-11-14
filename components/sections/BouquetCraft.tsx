@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import FillImage from "@/components/ui/FillImage";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Layers, Flower2, Heart, Ribbon, Gift, Check, ArrowRight } from "lucide-react";
@@ -115,7 +116,7 @@ function Layer({ src, show, from, delay = 0 }: { src: string; show: boolean; fro
   return (
     <div className="absolute inset-0 transition-all duration-[600ms] ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform"
       style={{ opacity: show ? 1 : 0, transform: show ? "none" : from, transitionDelay: show ? `${delay}ms` : "0ms" }}>
-      <Image src={src} alt="" fill sizes="(max-width:1024px) 70vw, 360px" quality={90} className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.4)]" />
+      <FillImage src={src} alt="" w={360} h={360} quality={80} className="object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.4)]" />
     </div>
   );
 }

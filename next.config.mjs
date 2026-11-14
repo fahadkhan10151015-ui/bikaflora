@@ -3,9 +3,9 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
     formats: ["image/avif", "image/webp"],
-    qualities: [75, 90], // product photos use 90 so they stay sharp
+    qualities: [60, 70, 75, 80], // 75 for photos: sharp and small (under 100 KB)
     minimumCacheTTL: 60 * 60 * 24 * 30, // keep optimised images for 30 days
-    deviceSizes: [390, 640, 828, 1080, 1280, 1920],
+    deviceSizes: [390, 640, 828, 1080, 1280],
   },
   compress: true,
   // Old product links (before colours became separate products)

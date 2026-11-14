@@ -60,7 +60,7 @@ export default function ForgotForm() {
       {err && <Alert kind="error">{err}</Alert>}
       <div><label className="label" htmlFor="email">Email</label><input id="email" type="email" required autoComplete="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
       <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Sending…" : "Send reset code"}</button>
-      <p className="text-sm text-center text-muted">Remembered it? <Link href="/login" className="text-brand font-semibold">Back to login</Link></p>
+      <p className="text-sm text-center text-muted">Remembered it? <Link rel="nofollow" href="/login" className="text-brand font-semibold">Back to login</Link></p>
     </form>
   );
 }

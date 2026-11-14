@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -50,7 +51,7 @@ export default function CategoryCircles({ compact = false }: { compact?: boolean
           <Link key={c.slug} href={`/category/${c.slug}`} className="group snap-start shrink-0 w-[76px] sm:w-[100px] md:w-[124px] text-center">
             <span className="block p-[3px] rounded-full bg-gradient-to-br from-gold via-petal to-brand shadow-md shadow-brand/10 group-hover:scale-105 transition">
               <span className="relative block aspect-square rounded-full overflow-hidden border-[3px] border-cream bg-blush">
-                <Image src={c.image} alt={c.name} fill sizes="124px" className="object-cover group-hover:scale-110 transition duration-500" />
+                <FillImage src={c.image} alt={c.name} w={124} h={124} className="object-cover group-hover:scale-110 transition duration-500" />
               </span>
             </span>
             <span className="mt-2 block text-[11px] sm:text-sm font-medium leading-tight line-clamp-2 group-hover:text-brand">{c.name}</span>

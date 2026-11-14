@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
@@ -84,12 +85,24 @@ export default function HeroSlider() {
     const v = video.current;
     if (!v || !src) return;
     if (!isVideo) { v.pause(); return; }
+    // iPhone only autoplays when the video is muted *before* play() — set it on the element itself.
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
     v.currentTime = 0;
-    // Play straight away (iPhone only keeps loading once playback starts); retry when more data arrives.
     const start = () => { if (v.paused) v.play().catch(() => {}); };
     start();
     v.addEventListener("canplay", start);
-    return () => v.removeEventListener("canplay", start);
+    v.addEventListener("loadeddata", start);
+    // If the phone still blocks autoplay (e.g. Low Power Mode), start on the first touch or scroll.
+    const kick = () => start();
+    const opts = { passive: true } as AddEventListenerOptions;
+    window.addEventListener("touchstart", kick, opts);
+    window.addEventListener("scroll", kick, opts);
+    window.addEventListener("click", kick);
+    return () => {
+      v.removeEventListener("canplay", start); v.removeEventListener("loadeddata", start);
+      window.removeEventListener("touchstart", kick); window.removeEventListener("scroll", kick); window.removeEventListener("click", kick);
+    };
   }, [isVideo, src]);
   const [paused, setPaused] = useState(false);
   // Pause only while the visitor is on another browser tab.
@@ -121,7 +134,7 @@ export default function HeroSlider() {
       {/* backgrounds: one per slide, cross-fading with a slow zoom */}
       {slides.map((sl, i) => (
         <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-          <Image src={sl.bg} alt="" fill sizes="100vw" quality={70}
+          <FillImage src={sl.bg} alt="" w={1080} h={720} quality={60}
             className={`object-cover object-center opacity-80 ${i + 1 === active ? "hero-bg-zoom" : ""}`} />
         </div>
       ))}

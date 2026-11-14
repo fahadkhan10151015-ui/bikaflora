@@ -162,6 +162,3 @@ html.dark .glass { background: rgba(13, 18, 32, .78); }
 html.dark .shadow-xl, html.dark .shadow-lg { --tw-shadow-color: rgb(0 0 0 / .5); }
 html.dark img { filter: none; }
 html.dark ::selection { background: #34477a; color: #fff; }
-@keyframes moment-float { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
-.moment-float { animation: moment-float 4s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .moment-float { animation: none; } }

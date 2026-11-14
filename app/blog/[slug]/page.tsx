@@ -23,7 +23,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <Breadcrumbs items={[{ name: "Blog", path: "/blog" }, { name: p.title, path: `/blog/${p.slug}` }]} />
         <h1 className="text-3xl md:text-5xl font-semibold leading-tight">{p.title}</h1>
         <p className="mt-3 text-sm text-muted">{new Date(p.date).toLocaleDateString("en-MY", { dateStyle: "long" })} · {site.name}</p>
-        <div className="relative aspect-[16/10] rounded-3xl overflow-hidden mt-8"><Photo src={p.image} tone={p.tone} alt={p.title} priority sizes="768px"  /></div>
+        <div className="relative aspect-[16/10] rounded-3xl overflow-hidden mt-8"><Photo src={p.image} tone={p.tone} alt={p.title} priority w={768} h={480} quality={70} /></div>
         <div className="prose-bf mt-8"><p className="text-lg">{p.description}</p>{p.sections.map((s) => <div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>)}</div>
       </article>
       <WaCta />

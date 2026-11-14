@@ -1,4 +1,5 @@
 import Link from "next/link";
+import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
 import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin } from "lucide-react";
 import { featuredProducts, productsInCategory } from "@/data/products";
@@ -90,10 +91,10 @@ export default function Home() {
       <section className="container-x mt-24 grid lg:grid-cols-2 gap-12 items-center">
         <div className="relative">
           <div className="relative aspect-[4/5] max-w-md w-full rounded-[2rem] overflow-hidden shadow-2xl">
-            <Image src={siteImages.florist} alt="BikaFlora florist arranging a bouquet" fill sizes="(max-width:1024px) 100vw, 40vw" className="object-cover" />
+            <FillImage src={siteImages.florist} alt="BikaFlora florist arranging a bouquet" w={500} h={625} className="object-cover" />
           </div>
           <div className="absolute -bottom-6 right-0 md:right-10 w-40 md:w-52 aspect-square rounded-3xl overflow-hidden border-8 border-cream shadow-xl">
-            <Image src={siteImages.holdingBouquet} alt="Bouquet ready for delivery" fill sizes="220px" className="object-cover" />
+            <FillImage src={siteImages.holdingBouquet} alt="Bouquet ready for delivery" w={210} h={210} className="object-cover" />
           </div>
         </div>
         <div>
@@ -115,7 +116,7 @@ export default function Home() {
 
       {/* MALAYSIA / AREAS */}
       <section className="mt-28 relative overflow-hidden">
-        <Image src={siteImages.klNight} alt="Kuala Lumpur skyline with the Petronas Twin Towers" fill sizes="100vw" className="object-cover" />
+        <FillImage src={siteImages.klNight} alt="Kuala Lumpur skyline with the Petronas Twin Towers" w={1080} h={608} quality={60} className="object-cover" />
         <div className="absolute inset-0 bg-deep/80" />
         <div className="relative container-x py-20 text-white">
           <div className="text-center max-w-2xl mx-auto mb-12">

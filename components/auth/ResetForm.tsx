@@ -31,7 +31,7 @@ export default function ResetForm() {
     router.push("/account?reset=1");
   };
 
-  if (!ready) return <div className="text-sm text-muted">Checking your reset link… If nothing happens, <Link href="/forgot-password" className="text-brand underline">request a new code</Link>.</div>;
+  if (!ready) return <div className="text-sm text-muted">Checking your reset link… If nothing happens, <Link rel="nofollow" href="/forgot-password" className="text-brand underline">request a new code</Link>.</div>;
   return (
     <form onSubmit={save} className="grid gap-4">
       {err && <Alert kind="error">{err}</Alert>}

@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Palette, X } from "lucide-react";
 import { useVariant } from "./VariantProvider";
@@ -39,8 +40,7 @@ export default function Gallery({ alt }: { alt: string }) {
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
           touchX.current = null;
         }}>
-        <Image key={src} src={src} alt={previewing ? `${alt} – ${paper!.label} wrapping preview` : `${alt} – photo ${i + 1}`} fill priority quality={90}
-          sizes="(max-width:1024px) 100vw, 50vw" className="object-cover gallery-in" />
+        <FillImage key={src} src={src} alt={previewing ? `${alt} – ${paper!.label} wrapping preview` : `${alt} – photo ${i + 1}`} w={414} h={414} priority className="object-cover gallery-in" />
         {previewing && (
           <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2">
             <span className="glass text-brand text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
@@ -66,7 +66,7 @@ export default function Gallery({ alt }: { alt: string }) {
           {images.map((s, idx) => (
             <button key={s} onClick={() => { setShowPaper(false); setI(idx); }} aria-label={`View photo ${idx + 1}`}
               className={`relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition ${idx === i && !previewing ? "border-brand" : "border-transparent opacity-75 hover:opacity-100"}`}>
-              <Image src={s} alt="" fill sizes="120px" className="object-cover" />
+              <FillImage src={s} alt="" w={120} h={120} className="object-cover" />
             </button>
           ))}
         </div>

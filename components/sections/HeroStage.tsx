@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { Sparkle } from "./Flowers";
@@ -98,7 +99,7 @@ export default function HeroStage({ slides, active }: { slides: StageSlide[]; ac
       <div className="absolute inset-0 z-20 [perspective:1200px] pointer-events-none">
         <div className="absolute inset-[10%] hero-float" style={{ transform: "rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg))", transformStyle: "preserve-3d" }}>
           {slides.map((sl, i) => (
-            <Image key={sl.image} src={sl.image} alt={sl.alt} fill priority={i === 0} quality={90} sizes="(max-width:1024px) 80vw, 520px"
+            <FillImage key={sl.image} src={sl.image} alt={sl.alt} w={500} h={500} priority={i === 0} quality={80}
               className={`object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)] transition-all duration-1000 ${i === active ? "opacity-100 [transform:rotateY(0deg)_scale(1)]" : "opacity-0 [transform:rotateY(90deg)_scale(.9)]"}`} />
           ))}
         </div>

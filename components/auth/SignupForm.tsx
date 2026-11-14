@@ -75,7 +75,7 @@ export default function SignupForm() {
       </div>
       <button disabled={busy} className="btn btn-primary !py-3.5 disabled:opacity-60">{busy ? "Creating account…" : "Create account"}</button>
       <p className="text-xs text-center text-muted">By signing up you agree to our <Link href="/terms" className="underline">Terms</Link> and <Link href="/privacy-policy" className="underline">Privacy Policy</Link>.</p>
-      <p className="text-sm text-center text-muted">Already have an account? <Link href="/login" className="text-brand font-semibold">Log in</Link></p>
+      <p className="text-sm text-center text-muted">Already have an account? <Link rel="nofollow" href="/login" className="text-brand font-semibold">Log in</Link></p>
     </form>
   );
 }

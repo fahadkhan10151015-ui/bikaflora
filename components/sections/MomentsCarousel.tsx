@@ -1,30 +1,27 @@
 "use client";
 import Image from "next/image";
+import FillImage from "@/components/ui/FillImage";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getProduct } from "@/data/products";
-import { formatPrice } from "@/lib/site";
 
 /**
  * "Moments" 3D card carousel (before the video, after the FAQ).
- * Each card: a moment photo (free Pexels licence, /public/images/moments/) + OUR bouquet as a cut-out badge
- * (/public/images/badges/<product>.webp) with its name and price. Replace a photo with your own any time
- * (same file name). Moves one card every 2.3 seconds; swipe / drag / tap a side card. No arrows.
+ * Photos: free Pexels licence, stored in /public/images/moments/. They show the kind of moments
+ * our bouquets are for. Swap in real customer photos (with permission) any time.
+ * Moves one card every 3 seconds; visitors can swipe / drag or tap a side card. No arrows.
  */
 const moments = [
-  { photo: "proposal", slug: "red-soap-rose-heart-large", title: "Proposals", text: "The moment she says yes" },
-  { photo: "nikah", slug: "pink-soap-rose-heart-large", title: "Nikah & Weddings", text: "For the happiest day" },
-  { photo: "graduation", slug: "graduation-signature", title: "Graduation Day", text: "Celebrate the big day in style" },
-  { photo: "anniversary", slug: "365-days-of-love", title: "Anniversaries", text: "Another year of loving you" },
-  { photo: "birthday", slug: "pink-charm", title: "Birthdays", text: "Make her wish come true" },
-  { photo: "date-day", slug: "ferrero-rocher-red-roses", title: "Date Day", text: "Roses and chocolate for two" },
-  { photo: "convocation", slug: "graduates-sunshine", title: "Convocation", text: "Sunflowers for a bright future" },
-  { photo: "engagement", slug: "pink-white-rose-heart-large", title: "Engagements", text: "A heart full of roses" },
-  { photo: "mothers-day", slug: "everlasting-stem", title: "Mother's Day", text: "Thank you, Mama" },
-].flatMap((m) => {
-  const p = getProduct(m.slug);
-  return p ? [{ ...m, src: `/images/moments/${m.photo}-2.webp`, badge: `/images/badges/${m.slug}.webp`, product: p.name, price: p.price, href: `/product/${p.slug}` }] : [];
-});
+  { img: "surprise", title: "Surprise Moments", text: "The look when the roses arrive", href: "/product/365-days-of-love" },
+  { img: "proposal", title: "Proposals", text: "Say \"will you\" with a grand bouquet", href: "/product/52-roses-heart" },
+  { img: "birthday", title: "Birthdays", text: "Cake, candles and her favourite flowers", href: "/category/best-seller" },
+  { img: "anniversary", title: "Anniversaries", text: "Another year of loving you", href: "/product/pink-white-rose-heart-large" },
+  { img: "doorstep", title: "Doorstep Delivery", text: "Delivered today, any time in KL & Selangor", href: "/shop" },
+  { img: "birthday-party", title: "Birthday Parties", text: "Make the celebration bloom", href: "/category/below-100" },
+  { img: "just-because", title: "Just Because", text: "No reason needed to say I love you", href: "/product/hearts-desire" },
+  { img: "proposal-night", title: "Engagement Nights", text: "Lights, a ring and red roses", href: "/category/pre-order" },
+  { img: "date-day", title: "Date Days", text: "Flowers that make the day", href: "/category/premium-bouquets" },
+  { img: "forever", title: "Forever Moments", text: "Roses that last as long as the memory", href: "/product/red-soap-rose-heart-large" },
+];
 
 const STEP_MS = 2300;
 
@@ -77,8 +74,8 @@ export default function MomentsCarousel() {
     <section ref={root} className="mt-24 overflow-hidden" aria-roledescription="carousel" aria-labelledby="moments-title">
       <div className="container-x">
         <span className="inline-block rounded-lg bg-blush px-3.5 py-1.5 text-xs font-semibold tracking-[0.2em] uppercase text-brand">Moments that bloom</span>
-        <h2 id="moments-title" className="mt-4 text-3xl md:text-5xl font-semibold">A bouquet for every moment</h2>
-        <p className="mt-3 text-muted max-w-2xl">Proposals, birthdays, graduations, anniversaries and little surprises. Tap a card to see the bouquet.</p>
+        <h2 id="moments-title" className="mt-4 text-3xl md:text-5xl font-semibold">Flowers for every love story</h2>
+        <p className="mt-3 text-muted max-w-2xl">Proposals, birthdays, anniversaries and little surprises. Tap a moment to find the bouquet for yours.</p>
         <div className="mt-6 h-px bg-blush-2" />
       </div>
 
@@ -104,28 +101,20 @@ export default function MomentsCarousel() {
           };
           const card = (
             <div className={`relative w-full h-full rounded-[22px] overflow-hidden bg-deep transition-shadow duration-700 ${center ? "ring-4 ring-gold/80 shadow-[0_30px_70px_-20px_rgba(16,23,42,.55)]" : "shadow-[0_20px_50px_-25px_rgba(16,23,42,.45)]"}`}>
-              <Image src={m.src} alt={m.title} fill sizes="(min-width: 768px) 330px, 240px" quality={80} draggable={false}
+              <FillImage src={`/images/moments/${m.img}.webp`} alt={m.title} w={330} h={460} draggable={false}
                 className={`object-cover transition duration-700 ${center ? "" : "saturate-[.75] brightness-[.92]"}`} />
               <div className={`absolute inset-0 transition duration-700 ${center ? "bg-gradient-to-t from-deep/90 via-deep/10 to-transparent" : "bg-gradient-to-t from-deep/80 via-white/10 to-white/25"}`} />
-              {/* Our bouquet, floating as a badge */}
-              <div className={`absolute right-2 md:right-3 bottom-[4.6rem] md:bottom-[5.2rem] w-[42%] aspect-square transition duration-700 ${center ? "opacity-100 scale-100" : "opacity-90 scale-90"}`}>
-                <div className="absolute inset-[12%] rounded-full bg-white/70 blur-xl" />
-                <Image src={m.badge} alt={m.product} fill sizes="160px" quality={85} draggable={false} className="object-contain drop-shadow-[0_10px_14px_rgba(0,0,0,.45)] moment-float" />
-              </div>
               <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-white">
                 <div className="font-serif text-xl md:text-2xl font-semibold leading-tight">{m.title}</div>
                 <div className="text-xs md:text-sm text-white/85 mt-1 line-clamp-1">{m.text}</div>
-                <span className={`mt-3 flex items-center justify-between gap-2 rounded-full bg-white/95 text-brand text-xs font-semibold pl-3 pr-1 py-1 transition ${center ? "opacity-100" : "opacity-0"}`}>
-                  <span className="truncate">{m.product}</span>
-                  <span className="shrink-0 rounded-full bg-brand text-white px-2.5 py-1">{formatPrice(m.price)}</span>
-                </span>
+                {center && <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-white text-brand text-xs font-semibold px-3 py-1.5">Shop for this moment →</span>}
               </div>
             </div>
           );
           return (
-            <div key={m.photo} aria-hidden={!show} className="absolute left-1/2 top-4 w-[230px] h-[330px] md:w-[330px] md:h-[460px] transition-all duration-700 ease-[cubic-bezier(.22,.8,.26,1)] [transform-style:preserve-3d]" style={style}>
+            <div key={m.img} aria-hidden={!show} className="absolute left-1/2 top-4 w-[230px] h-[330px] md:w-[330px] md:h-[460px] transition-all duration-700 ease-[cubic-bezier(.22,.8,.26,1)] [transform-style:preserve-3d]" style={style}>
               {center ? (
-                <Link href={m.href} draggable={false} onClick={(e) => drag.current?.moved && e.preventDefault()} className="block w-full h-full" aria-label={`${m.title}: ${m.product}`}>{card}</Link>
+                <Link href={m.href} draggable={false} onClick={(e) => drag.current?.moved && e.preventDefault()} className="block w-full h-full" aria-label={`${m.title}: shop bouquets`}>{card}</Link>
               ) : (
                 <button type="button" tabIndex={show ? 0 : -1} onClick={() => !drag.current?.moved && setActive(i)} className="block w-full h-full cursor-pointer" aria-label={`Show ${m.title}`}>{card}</button>
               )}
@@ -135,7 +124,7 @@ export default function MomentsCarousel() {
       </div>
 
       <div className="flex justify-center gap-1.5 -mt-4 md:-mt-6" aria-hidden="true">
-        {moments.map((m, i) => <span key={m.photo} className={`h-1.5 rounded-full transition-all duration-500 ${i === active ? "w-6 bg-gold" : "w-1.5 bg-blush-2"}`} />)}
+        {moments.map((m, i) => <span key={m.img} className={`h-1.5 rounded-full transition-all duration-500 ${i === active ? "w-6 bg-gold" : "w-1.5 bg-blush-2"}`} />)}
       </div>
     </section>
   );
