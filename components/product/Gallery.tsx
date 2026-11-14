@@ -1,8 +1,7 @@
 "use client";
-import Image from "next/image";
 import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Palette, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Palette, X, ZoomIn } from "lucide-react";
 import { useVariant } from "./VariantProvider";
 
 /** Product photos: big image with a soft fade between photos, arrows, swipe on phones and thumbnails. */
@@ -10,6 +9,17 @@ export default function Gallery({ alt }: { alt: string }) {
   const { images, paper, setPaper } = useVariant();
   const [i, setI] = useState(0);
   const [showPaper, setShowPaper] = useState(false);
+  // Full-screen zoom: loads the full-resolution original only when opened.
+  const [zoom, setZoom] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
+  const [origin, setOrigin] = useState("50% 50%");
+  useEffect(() => {
+    if (!zoom) return;
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") setZoom(false); };
+    document.addEventListener("keydown", k);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", k); document.body.style.overflow = ""; };
+  }, [zoom]);
   const touchX = useRef<number | null>(null);
 
   // New colour picked: start again from its first photo.
@@ -40,7 +50,10 @@ export default function Gallery({ alt }: { alt: string }) {
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
           touchX.current = null;
         }}>
-        <FillImage key={src} src={src} alt={previewing ? `${alt} – ${paper!.label} wrapping preview` : `${alt} – photo ${i + 1}`} w={414} h={414} priority className="object-cover gallery-in" />
+        <FillImage key={src} src={src} alt={previewing ? `${alt} – ${paper!.label} wrapping preview` : `${alt} – photo ${i + 1}`} w={540} h={540} priority className="object-cover gallery-in" />
+        <button type="button" onClick={() => { setZoom(true); setZoomed(false); }} aria-label="Zoom photo"
+          className="absolute inset-0 z-[1] cursor-zoom-in" />
+        <span className="pointer-events-none absolute right-3 bottom-3 sm:bottom-auto sm:top-3 z-[2] w-9 h-9 rounded-full bg-white/85 text-ink grid place-items-center shadow-md"><ZoomIn className="w-4 h-4" /></span>
         {previewing && (
           <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2">
             <span className="glass text-brand text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
@@ -53,8 +66,8 @@ export default function Gallery({ alt }: { alt: string }) {
         )}
         {images.length > 1 && (
           <>
-            <button onClick={() => go(-1)} aria-label="Previous photo" className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 backdrop-blur grid place-items-center shadow-md opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition"><ChevronLeft className="w-5 h-5" /></button>
-            <button onClick={() => go(1)} aria-label="Next photo" className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 backdrop-blur grid place-items-center shadow-md opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition"><ChevronRight className="w-5 h-5" /></button>
+            <button onClick={() => go(-1)} aria-label="Previous photo" className="z-[2] absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 backdrop-blur grid place-items-center shadow-md opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition"><ChevronLeft className="w-5 h-5" /></button>
+            <button onClick={() => go(1)} aria-label="Next photo" className="z-[2] absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 backdrop-blur grid place-items-center shadow-md opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition"><ChevronRight className="w-5 h-5" /></button>
             <div className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5 sm:hidden">
               {images.map((_, idx) => <span key={idx} className={`h-1.5 rounded-full transition-all ${idx === i && !previewing ? "w-5 bg-white" : "w-1.5 bg-white/60"}`} />)}
             </div>
@@ -69,6 +82,29 @@ export default function Gallery({ alt }: { alt: string }) {
               <FillImage src={s} alt="" w={120} h={120} className="object-cover" />
             </button>
           ))}
+        </div>
+      )}
+      {zoom && (
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" role="dialog" aria-label="Zoomed photo"
+          onClick={() => setZoom(false)}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={src} alt={alt} draggable={false}
+            onClick={(e) => {
+              e.stopPropagation();
+              const r = e.currentTarget.getBoundingClientRect();
+              setOrigin(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`);
+              setZoomed((z) => !z);
+            }}
+            style={{ transformOrigin: origin }}
+            className={`max-w-[96vw] max-h-[90vh] object-contain select-none transition-transform duration-300 ${zoomed ? "scale-[2.2] cursor-zoom-out" : "cursor-zoom-in"}`} />
+          <button onClick={() => setZoom(false)} aria-label="Close" className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/15 text-white grid place-items-center"><X className="w-6 h-6" /></button>
+          {images.length > 1 && !previewing && (
+            <>
+              <button onClick={(e) => { e.stopPropagation(); setZoomed(false); go(-1); }} aria-label="Previous photo" className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/15 text-white grid place-items-center"><ChevronLeft className="w-6 h-6" /></button>
+              <button onClick={(e) => { e.stopPropagation(); setZoomed(false); go(1); }} aria-label="Next photo" className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/15 text-white grid place-items-center"><ChevronRight className="w-6 h-6" /></button>
+            </>
+          )}
+          <p className="absolute bottom-4 inset-x-0 text-center text-white/70 text-sm">Tap the photo to zoom in · tap outside to close</p>
         </div>
       )}
     </div>

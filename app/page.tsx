@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* MALAYSIA / AREAS */}
       <section className="mt-28 relative overflow-hidden">
-        <FillImage src={siteImages.klNight} alt="Kuala Lumpur skyline with the Petronas Twin Towers" w={1080} h={608} quality={60} className="object-cover" />
+        <FillImage src={siteImages.klNight} alt="Kuala Lumpur skyline with the Petronas Twin Towers" w={1080} h={608} quality={70} className="object-cover" />
         <div className="absolute inset-0 bg-deep/80" />
         <div className="relative container-x py-20 text-white">
           <div className="text-center max-w-2xl mx-auto mb-12">

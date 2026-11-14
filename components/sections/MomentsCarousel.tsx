@@ -112,7 +112,7 @@ export default function MomentsCarousel() {
             </div>
           );
           return (
-            <div key={m.img} aria-hidden={!show} className="absolute left-1/2 top-4 w-[230px] h-[330px] md:w-[330px] md:h-[460px] transition-all duration-700 ease-[cubic-bezier(.22,.8,.26,1)] [transform-style:preserve-3d]" style={style}>
+            <div key={m.img} aria-hidden={!show} className="absolute left-1/2 top-4 w-[230px] h-[330px] md:w-[330px] md:h-[460px] will-change-transform transition-all duration-700 ease-[cubic-bezier(.22,.8,.26,1)] [transform-style:preserve-3d]" style={style}>
               {center ? (
                 <Link href={m.href} draggable={false} onClick={(e) => drag.current?.moved && e.preventDefault()} className="block w-full h-full" aria-label={`${m.title}: shop bouquets`}>{card}</Link>
               ) : (

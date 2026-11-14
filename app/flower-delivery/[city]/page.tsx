@@ -48,7 +48,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       <JsonLd data={{ "@context": "https://schema.org", "@type": "Service", serviceType: "Flower delivery", name: `Flower delivery ${l.name}`,
         provider: { "@id": absoluteUrl("/#business") }, areaServed: { "@type": "City", name: l.name, containedInPlace: { "@type": "State", name: l.state } }, url: absoluteUrl(`/flower-delivery/${l.slug}`) }} />
       <div className="relative overflow-hidden text-white">
-        <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={60} priority className="object-cover" />
+        <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-deep/90 to-deep/50" />
         <div className="relative container-x pb-14 [&_nav]:text-white/70 [&_nav_span]:text-white">
           <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />

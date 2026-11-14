@@ -134,7 +134,7 @@ export default function HeroSlider() {
       {/* backgrounds: one per slide, cross-fading with a slow zoom */}
       {slides.map((sl, i) => (
         <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-          <FillImage src={sl.bg} alt="" w={1080} h={720} quality={60}
+          <FillImage src={sl.bg} alt="" w={1080} h={720} quality={70}
             className={`object-cover object-center opacity-80 ${i + 1 === active ? "hero-bg-zoom" : ""}`} />
         </div>
       ))}
