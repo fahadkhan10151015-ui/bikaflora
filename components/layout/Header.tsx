@@ -43,14 +43,14 @@ export default function Header() {
             </div>
             {nav.map((n) => <Link key={n.href} href={n.href} className="hover:text-brand">{n.label}</Link>)}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 min-[400px]:gap-2 shrink-0">
             <Link href={user ? "/account" : "/login"} className="hidden sm:flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-full hover:bg-blush">
               <User className="w-5 h-5" /> {user ? displayName(user) : "Login"}
             </Link>
             <FavouritesLink />
             <OrderListButton />
-            <WhatsAppButton label="WhatsApp" className="btn btn-wa !py-2 !px-4 text-sm [&>span]:hidden sm:[&>span]:inline" iconClassName="w-4 h-4" />
-            <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
+            <WhatsAppButton label="WhatsApp" className="btn btn-wa !py-2 !px-3 min-[400px]:!px-4 text-sm [&>span]:hidden sm:[&>span]:inline" iconClassName="w-4 h-4" />
+            <button className="lg:hidden p-1.5 min-[400px]:p-2" onClick={() => setOpen(!open)} aria-label="Menu">
               {open ? <X /> : <Menu />}
             </button>
           </div>

@@ -15,7 +15,7 @@ export default function VideoBand() {
           <div className="relative aspect-video rounded-[1.5rem] md:rounded-[2rem] overflow-hidden shadow-2xl shadow-deep/25 ring-1 ring-gold/30 bg-deep">
             <LazyVideo src={flowerVideo} mobileSrc={flowerVideoMobile} poster={flowerVideoPoster} className="absolute inset-0 w-full h-full object-cover" />
           </div>
-          <div className="absolute -bottom-6 -right-2 md:-right-6 glass rounded-2xl px-5 py-4 shadow-xl border border-white flex items-center gap-3">
+          <div className="absolute -bottom-6 right-2 lg:-right-6 glass rounded-2xl px-5 py-4 shadow-xl border border-white flex items-center gap-3">
             <span className="w-10 h-10 rounded-full bg-brand text-white grid place-items-center"><Sparkles className="w-5 h-5" /></span>
             <div><div className="font-serif text-xl leading-none">Hand-tied</div><div className="text-xs text-muted">with love, every day</div></div>
           </div>

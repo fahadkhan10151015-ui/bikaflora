@@ -111,21 +111,21 @@ export default function HeroSlider() {
       ))}
       {/* slide 1: video */}
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
-        {/* Phones & tablets: soft blurred backdrop, the full 16:9 video sits in a frame on top (nothing cropped). */}
-        <div className="lg:hidden absolute inset-0 bg-cover bg-center blur-2xl scale-110 opacity-40" style={{ backgroundImage: "url(/video/hero-making-poster.webp)" }} />
-        <video ref={video} className="absolute max-lg:z-[1] max-lg:left-4 max-lg:right-4 max-lg:top-8 max-lg:aspect-video max-lg:max-w-[720px] max-lg:mx-auto max-lg:rounded-2xl max-lg:ring-2 max-lg:ring-gold/70 max-lg:shadow-2xl max-lg:shadow-black/50 lg:inset-0 w-[calc(100%-2rem)] lg:w-full lg:h-full object-cover object-center bg-deep" muted playsInline preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
+        {/* Phones & tablets: full-width 16:9 video (nothing cropped), edges fade into the background. Desktop: fills the hero. */}
+        <video ref={video} className="hero-video-m lg:absolute lg:inset-0 lg:w-full lg:h-full object-cover object-center bg-deep" muted playsInline preload="auto" poster="/video/hero-making-poster.webp" onEnded={() => setActive(1)}>
           <source src="/video/hero-making-720.mp4" type="video/mp4" media="(max-width: 1023px)" />
           <source src="/video/hero-making-1080.mp4" type="video/mp4" />
         </video>
+        <div className="hero-video-m lg:hidden z-[1] pointer-events-none scale-[1.02] bg-[linear-gradient(to_bottom,#10172a_0%,transparent_14%,transparent_78%,#10172a_97%)]" />
       </div>
       <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0" : ""}`} />
       <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "bg-[linear-gradient(to_top,rgba(16,23,42,.95)_0%,rgba(16,23,42,.75)_40%,rgba(16,23,42,0)_65%)] md:bg-gradient-to-t md:from-deep/80 md:via-transparent md:to-deep/30" : "bg-gradient-to-t from-deep/80 via-transparent to-deep/30"}`} />
       <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
-      <Petals />
+      {!isVideo && <Petals />}
 
       {/* arrows */}
-      <button onClick={() => go(-1)} aria-label="Previous slide" className="hidden md:grid absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur place-items-center hover:bg-white/20 transition"><ChevronLeft className="w-6 h-6" /></button>
-      <button onClick={() => go(1)} aria-label="Next slide" className="hidden md:grid absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 backdrop-blur place-items-center hover:bg-white/20 transition"><ChevronRight className="w-6 h-6" /></button>
+      <button onClick={() => go(-1)} aria-label="Previous slide" className="hidden md:grid absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 place-items-center hover:bg-white/20 transition"><ChevronLeft className="w-6 h-6" /></button>
+      <button onClick={() => go(1)} aria-label="Next slide" className="hidden md:grid absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 place-items-center hover:bg-white/20 transition"><ChevronRight className="w-6 h-6" /></button>
 
       <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
       <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
