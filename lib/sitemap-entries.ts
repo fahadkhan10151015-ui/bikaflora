@@ -5,7 +5,7 @@ import { posts } from "@/data/posts";
 import { absoluteUrl } from "@/lib/site";
 import { overrides } from "@/lib/overrides";
 
-export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number };
+export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number; images?: string[] };
 export type SitemapGroup = { file: string; title: string; entries: SitemapEntry[] };
 
 const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly"): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency, path } as SitemapEntry & { path: string });
@@ -22,7 +22,7 @@ export function allSitemapGroups(): SitemapGroup[] {
       ...["/privacy-policy", "/terms", "/refund-policy"].map((p) => s(p, 0.2, "monthly")),
       s("/flower-delivery", 0.8), ...locations.map((l) => s(`/flower-delivery/${l.slug}`, 0.7)),
     ] },
-    { file: "product-sitemap.xml", title: "Products", entries: products.map((p) => s(`/product/${p.slug}`, 0.8)) },
+    { file: "product-sitemap.xml", title: "Products", entries: products.map((p) => ({ ...s(`/product/${p.slug}`, 0.8), images: p.images.slice(0, 4).map((i) => (i.startsWith("http") ? i : absoluteUrl(i))) })) },
     { file: "category-sitemap.xml", title: "Categories", entries: categories.map((c) => s(`/category/${c.slug}`, 0.9)) },
     { file: "post-sitemap.xml", title: "Blog posts", entries: [s("/blog", 0.6), ...posts.map((p) => s(`/blog/${p.slug}`, 0.6, "monthly"))] },
   ];

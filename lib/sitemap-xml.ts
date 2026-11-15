@@ -7,7 +7,7 @@ const xmlResponse = (xml: string) => new Response(xml, { headers: { "Content-Typ
 
 /** /sitemap.xml: the sitemap index (list of sub-sitemaps). */
 export function sitemapIndexResponse() {
-  const now = new Date().toISOString();
+  const now = new Date().toISOString().replace(/\.\d{3}Z$/, "+00:00");
   const items = sitemapGroups().map((g) => `  <sitemap>\n    <loc>${esc(absoluteUrl("/" + g.file))}</loc>\n    <lastmod>${now}</lastmod>\n  </sitemap>`).join("\n");
   return xmlResponse(`${head}<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</sitemapindex>\n`);
 }
@@ -16,7 +16,7 @@ export function sitemapIndexResponse() {
 export function subSitemapResponse(file: string) {
   const g = sitemapGroups().find((x) => x.file === file);
   if (!g) return new Response("Not found", { status: 404 });
-  const now = new Date().toISOString();
-  const urls = g.entries.map((e) => `  <url>\n    <loc>${esc(e.url)}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${e.changeFrequency}</changefreq>\n    <priority>${e.priority.toFixed(1)}</priority>\n  </url>`).join("\n");
-  return xmlResponse(`${head}<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
+  const now = new Date().toISOString().replace(/\.\d{3}Z$/, "+00:00");
+  const urls = g.entries.map((e) => `  <url>\n    <loc>${esc(e.url)}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${e.changeFrequency}</changefreq>\n    <priority>${e.priority.toFixed(1)}</priority>${(e.images ?? []).map((i) => `\n    <image:image>\n      <image:loc>${esc(i)}</image:loc>\n    </image:image>`).join("")}\n  </url>`).join("\n");
+  return xmlResponse(`${head}<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`);
 }
