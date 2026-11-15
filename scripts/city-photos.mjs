@@ -14,7 +14,7 @@ const UA = "BikaFloraSiteBuild/1.0 (https://bikaflora.my; support@bikaflora.my)"
 const MAX = 380 * 1024; // HD source (1920 px); the site then serves a smaller AVIF/WebP sized to each screen
 // Vercel keeps .next/cache between builds, so photos are downloaded once and reused after that.
 const CACHE = path.join(ROOT, ".next/cache/city-photos");
-const VERSION = "v3"; // change to download all photos again
+const VERSION = "v4"; // change to download all photos again
 
 /** Area slug -> [area name, Wikipedia pages to try, in order]. */
 const AREAS = {
@@ -53,8 +53,8 @@ const AREAS = {
 };
 
 const BAD = /map|locator|location|\.svg|flag|seal|logo|coat|emblem|montage|collage|skyline_collage|sign|plan|diagram/i;
-// Free licences. Credits for CC BY / CC BY-SA photos are listed on /image-credits (linked in the footer).
-const FREE = /^(CC0|Public domain|PD|CC BY(-SA)? [\d.]+)/i;
+// Only licences that need no photo credit anywhere on the site.
+const FREE = /^(CC0|Public domain|PD)/i;
 const slugify = (s) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50);
 const strip = (s = "") => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 

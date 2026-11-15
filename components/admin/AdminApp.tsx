@@ -76,6 +76,12 @@ export default function AdminApp() {
       </div>
       {pub.msg && <div className={`mt-4 rounded-2xl px-4 py-3 text-sm ${pub.state === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{pub.msg}</div>}
 
+      <ol className="mt-5 grid sm:grid-cols-3 gap-2 text-sm">
+        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">1. Edit</b> · open a product, page or post and change what you need.</li>
+        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">2. Save</b> · press Save on that item. Nothing is live yet.</li>
+        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">3. Publish</b> · press “Publish changes” once. Live in 2–3 minutes.</li>
+      </ol>
+
       <nav className="mt-6 flex flex-wrap gap-2 border-b border-blush-2 pb-3">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button key={id} onClick={() => setTab(id)}

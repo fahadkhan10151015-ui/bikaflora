@@ -10,6 +10,7 @@ import { posts } from "@/data/posts";
 import { products } from "@/data/products";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
+import PostEditor from "./PostEditor";
 import { Field, FaqEditor, uploadPhoto, type QA } from "./fields";
 import { card, Note } from "./ui";
 
@@ -38,12 +39,25 @@ export default function PagesTab() {
   const [group, setGroup] = useState<Kind>("collection");
   const [open, setOpen] = useState<Item | null>(null);
   const [q, setQ] = useState("");
+  const [drafts, setDrafts] = useState<Item[]>([]);
+  // Posts saved in the admin but not live yet (new or scheduled).
+  useEffect(() => {
+    (async () => {
+      const sb = await loadSupabase();
+      const { data } = await sb!.from("content").select("key,data,deleted").eq("kind", "post");
+      const live = new Set(posts.map((p) => p.slug));
+      setDrafts(((data ?? []) as { key: string; data: { title?: string; date?: string }; deleted: boolean }[])
+        .filter((r) => !r.deleted && !live.has(r.key.slice(5)))
+        .map((r) => ({ kind: "post" as const, slug: r.key.slice(5), name: `${r.data.title ?? r.key.slice(5)} · ${r.data.date && r.data.date > new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 10) ? `scheduled ${r.data.date}` : "not published yet"}`, path: `/blog/${r.key.slice(5)}` })));
+    })();
+  }, []);
   const items: Record<Kind, Item[]> = {
     collection: allCategories.map((c) => ({ kind: "collection" as const, slug: c.slug, name: c.name, path: `/category/${c.slug}` })),
     location: locations.map((l) => ({ kind: "location" as const, slug: l.slug, name: `Flower delivery ${l.name}`, path: `/flower-delivery/${l.slug}` })),
     page: (Object.keys(pageNames) as (keyof typeof pageNames)[]).map((k) => ({ kind: "page" as const, slug: k, name: pageNames[k], path: pagePaths[k] })),
-    post: posts.map((p) => ({ kind: "post" as const, slug: p.slug, name: p.title, path: `/blog/${p.slug}` })),
+    post: [...drafts, ...posts.map((p) => ({ kind: "post" as const, slug: p.slug, name: p.title, path: `/blog/${p.slug}` }))],
   };
+  if (open?.kind === "post") return <PostEditor slug={open.slug} onClose={() => setOpen(null)} />;
   if (open) return <PageEditor item={open} onClose={() => setOpen(null)} />;
   const list = items[group].filter((i) => i.name.toLowerCase().includes(q.toLowerCase()));
   return (

@@ -44,6 +44,17 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const set = (patch: Partial<Form>) => setF((x) => ({ ...x, ...patch }));
 
+  // New product: next free code, counting products saved but not published yet.
+  useEffect(() => {
+    if (!isNew) return;
+    (async () => {
+      const sb = await loadSupabase();
+      const { data } = await sb!.from("content").select("data").eq("kind", "product");
+      const nums = [...products.map((p) => p.sku), ...((data ?? []) as { data: { sku?: string } }[]).map((r) => r.data?.sku ?? "")].map((s) => Number(s.replace(/\D/g, "")) || 0);
+      set({ sku: `BF-${String(Math.max(0, ...nums) + 1).padStart(3, "0")}` });
+    })();
+  }, [isNew]);
+
   // Load edits that were saved but not published yet.
   useEffect(() => {
     if (isNew) return;
@@ -58,7 +69,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
         const s = (d.seo ?? {}) as Record<string, unknown>;
         return {
           ...x,
-          ...(d.name !== undefined && { name: d.name }), ...(d.nameZh !== undefined && { nameZh: d.nameZh ?? "" }), ...(d.sku !== undefined && { sku: d.sku }),
+          ...(d.name !== undefined && { name: d.name }), ...(d.nameZh !== undefined && { nameZh: d.nameZh ?? "" }), 
           ...(d.badge !== undefined && { badge: d.badge ?? "" }), ...(d.short !== undefined && { short: d.short }), ...(d.description !== undefined && { description: d.description }),
           ...(d.design !== undefined && { design: d.design }), ...(d.durability !== undefined && { durability: d.durability }), ...(d.occasions !== undefined && { occasions: d.occasions }),
           ...(d.size !== undefined && { size: d.size ?? "" }), ...(d.care && { care: d.care }), ...(d.includes && { includes: d.includes }), ...(d.tags && { tags: d.tags.join(", ") }),
@@ -84,11 +95,16 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
     setBusy(true); setMsg(null);
     const sb = await loadSupabase();
     const data = {
-      name: f.name.trim(), nameZh: f.nameZh.trim() || null, sku: f.sku.trim(), badge: f.badge.trim() || null, price: Number(f.price),
+      name: f.name.trim(), nameZh: f.nameZh.trim() || null, sku: base?.sku ?? f.sku, badge: f.badge.trim() || null, price: Number(f.price),
       categories: [...(f.bestSeller ? ["best-seller"] : []), ...f.categories], instant: f.instant, preorder: f.preorder, giftCard: f.giftCard, protectionBag: f.protectionBag,
       short: f.short, description: f.description, design: f.design, durability: f.durability, occasions: f.occasions, size: f.size || null,
       care: f.care.filter(Boolean), includes: f.includes.filter(Boolean), tags: f.tags.split(",").map((x) => x.trim()).filter(Boolean), images: f.images,
-      seo: { title: f.seoTitle, description: f.seoDescription, keyword: f.keyword, short: f.seoShort, html: f.html, faqs: f.faqs.filter((q) => q.q && q.a), alts: f.alts },
+      seo: {
+        title: f.seoTitle.trim() || `${f.name.trim()} | Buy Online in Malaysia`.slice(0, 60),
+        description: f.seoDescription.trim() || (f.seoShort || f.short).trim().slice(0, 155) || `Buy ${f.name.trim()} online from BikaFlora. Same-day delivery across KL & Selangor.`,
+        keyword: f.keyword.trim() || f.name.trim().toLowerCase(), short: f.seoShort, html: f.html, faqs: f.faqs.filter((q) => q.q && q.a),
+        alts: Object.fromEntries(f.images.map((src, i) => [src, f.alts[src]?.trim() || `${f.name.trim()}, handmade bouquet by BikaFlora${i ? ` (photo ${i + 1})` : ""}`])),
+      },
     };
     const num = (v: string) => (v.trim() === "" ? null : Number(v));
     const [a, b] = await Promise.all([
@@ -112,8 +128,12 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
     setMsg({ kind: "ok", text: "Product deleted. Press “Publish changes” to remove it from the website." });
   };
 
+  const box = `${card} p-5 space-y-3`;
   const sec = `${card} p-5 sm:p-6 space-y-4`;
-  const h = "text-xl font-semibold";
+  const Req = () => <span className="text-red-600" title="Required">*</span>;
+  const autoTitle = f.seoTitle || `${f.name} | Buy Online in Malaysia`.slice(0, 60);
+  const autoDesc = f.seoDescription || (f.seoShort || f.short).slice(0, 155);
+  const webSlug = isNew ? f.slug || slugify(f.name) : slug;
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -123,71 +143,92 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
           <button onClick={save} disabled={busy} className="btn btn-primary !py-2">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save</button>
         </div>
       </div>
-      <h2 className="text-2xl font-semibold">{isNew ? "New product" : f.name}</h2>
       {msg && <Note kind={msg.kind}>{msg.text}</Note>}
+      <p className="text-sm text-muted">Fields with <span className="text-red-600">*</span> are required. Everything else fills in automatically if you leave it empty.</p>
 
-      <section className={sec}>
-        <h3 className={h}>Basics</h3>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Product name" value={f.name} onChange={(v) => set({ name: v })} />
-          <Field label="Chinese name (optional)" value={f.nameZh} onChange={(v) => set({ nameZh: v })} />
-          {isNew && <Field label="Web address" value={f.slug || slugify(f.name)} onChange={(v) => set({ slug: slugify(v) })} hint={`bikaflora.my/product/${f.slug || slugify(f.name) || "…"}`} />}
-          <Field label="Product code (SKU)" value={f.sku} onChange={(v) => set({ sku: v })} />
-          <Field label="Badge (optional)" value={f.badge} onChange={(v) => set({ badge: v })} placeholder="e.g. Top Seller" />
-          <Field label="Price (RM)" value={f.price} onChange={(v) => set({ price: v })} />
-          <Field label="Before price (RM, optional)" value={f.compareAt} onChange={(v) => set({ compareAt: v })} hint="Shown crossed out for a sale." />
-          <Field label="Stock" value={f.stock} onChange={(v) => set({ stock: v })} hint="Leave empty for “Made to order”." />
-        </div>
-        <div>
-          <span className="label">Categories</span>
-          <div className="flex flex-wrap gap-2">
-            {allCategories.filter((c) => c.slug !== "best-seller").map((c) => {
-              const on = f.categories.includes(c.slug);
-              return <button key={c.slug} type="button" onClick={() => set({ categories: on ? f.categories.filter((x) => x !== c.slug) : [...f.categories, c.slug] })}
-                className={`px-3 py-1.5 rounded-full text-sm border ${on ? "bg-brand text-white border-brand" : "bg-white border-blush-2 hover:bg-blush"}`}>{c.name}</button>;
-            })}
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
+        <div className="space-y-5">
+          <div>
+            <input className="input !text-2xl !py-4 font-serif" placeholder="Product name *" value={f.name} onChange={(e) => set({ name: e.target.value })} aria-label="Product name" />
+            <div className="mt-2 text-sm text-muted flex flex-wrap items-center gap-1">
+              Web address: <span className="text-ink">bikaflora.my/product/</span>
+              {isNew ? <input className="border-b border-dashed border-brand/50 bg-transparent outline-none text-ink min-w-[12ch]" value={webSlug} onChange={(e) => set({ slug: slugify(e.target.value) })} aria-label="Web address" />
+                : <span className="text-ink">{slug}</span>}
+            </div>
           </div>
+
+          <section className={sec}>
+            <h3 className="text-xl font-semibold">Photos <Req /></h3>
+            <PhotosEditor images={f.images} alts={f.alts} folder="products" name={f.name || "product"} onChange={(images, alts) => set({ images, alts })} />
+            <p className="text-xs text-muted">Alt text describes each photo for Google and blind visitors. Leave it empty and it is written for you.</p>
+          </section>
+
+          <section className={sec}>
+            <h3 className="text-xl font-semibold">Description</h3>
+            <Field label="Short description (shown under the name)" value={f.seoShort || f.short} rows={2} onChange={(v) => set({ seoShort: v, short: v })} />
+            <div><span className="label">Long description</span><RichText value={f.html} onChange={(v) => set({ html: v })} /></div>
+          </section>
+
+          <section className={sec}>
+            <h3 className="text-xl font-semibold">Details</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <LinesEditor label="What's included" items={f.includes} onChange={(v) => set({ includes: v })} />
+              <LinesEditor label="Care tips" items={f.care} onChange={(v) => set({ care: v })} />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Size" value={f.size} onChange={(v) => set({ size: v })} placeholder="e.g. 40 × 45 cm" />
+              <Field label="Chinese name" value={f.nameZh} onChange={(v) => set({ nameZh: v })} />
+            </div>
+          </section>
+
+          <section className={sec}>
+            <h3 className="text-xl font-semibold">FAQs</h3>
+            <FaqEditor items={f.faqs} onChange={(v) => set({ faqs: v })} />
+          </section>
         </div>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {([["bestSeller", "Best seller"], ["instant", "Instant (same-day) delivery"], ["preorder", "Pre-order"], ["giftCard", "Gift card option"], ["protectionBag", "Protection bag option"]] as const).map(([k, label]) => (
-            <div key={k} className="flex items-center justify-between rounded-2xl bg-cream px-4 py-3"><span className="text-sm font-semibold">{label}</span><Toggle on={f[k]} onChange={(v) => set({ [k]: v } as Partial<Form>)} label={label} /></div>
-          ))}
-        </div>
-      </section>
 
-      <section className={sec}>
-        <h3 className={h}>Photos</h3>
-        <PhotosEditor images={f.images} alts={f.alts} folder="products" name={f.name || "product"} onChange={(images, alts) => set({ images, alts })} />
-      </section>
+        <aside className="space-y-4 lg:sticky lg:top-32">
+          <div className={box}>
+            <h3 className="font-semibold">Price and stock</h3>
+            <label className="block"><span className="label">Price (RM) <Req /></span><input className="input" inputMode="decimal" value={f.price} onChange={(e) => set({ price: e.target.value })} /></label>
+            <label className="block"><span className="label">Before price (RM)</span><input className="input" inputMode="decimal" placeholder="No sale" value={f.compareAt} onChange={(e) => set({ compareAt: e.target.value })} /></label>
+            <label className="block"><span className="label">Stock</span><input className="input" inputMode="numeric" placeholder="Made to order" value={f.stock} onChange={(e) => set({ stock: e.target.value })} /></label>
+            <div><span className="label">Product code</span><div className="input bg-cream text-muted cursor-not-allowed" aria-readonly>{f.sku}</div><span className="mt-1 block text-xs text-muted">Made automatically and can't be changed.</span></div>
+          </div>
 
-      <section className={sec}>
-        <h3 className={h}>Short description and details</h3>
-        <Field label="Short description (under the name)" value={f.seoShort || f.short} rows={2} onChange={(v) => set({ seoShort: v, short: v })} />
-        <div className="grid sm:grid-cols-2 gap-4">
-          <LinesEditor label="What's included" items={f.includes} onChange={(v) => set({ includes: v })} />
-          <LinesEditor label="Care tips" items={f.care} onChange={(v) => set({ care: v })} />
-        </div>
-        <Field label="Size (optional)" value={f.size} onChange={(v) => set({ size: v })} placeholder="e.g. 40 × 45 cm" />
-        <Field label="Search words (comma separated)" value={f.tags} onChange={(v) => set({ tags: v })} hint="Helps the site search and the chat assistant." />
-      </section>
+          <div className={box}>
+            <h3 className="font-semibold">Options</h3>
+            {([["bestSeller", "Best seller"], ["instant", "Same-day delivery"], ["preorder", "Pre-order"], ["giftCard", "Gift card option"], ["protectionBag", "Protection bag option"]] as const).map(([k, label]) => (
+              <div key={k} className="flex items-center justify-between"><span className="text-sm">{label}</span><Toggle on={f[k]} onChange={(v) => set({ [k]: v } as Partial<Form>)} label={label} /></div>
+            ))}
+            <label className="block pt-1"><span className="label">Badge</span><input className="input" placeholder="e.g. Top Seller" value={f.badge} onChange={(e) => set({ badge: e.target.value })} /></label>
+          </div>
 
-      <section className={sec}>
-        <h3 className={h}>Long description</h3>
-        <RichText value={f.html} onChange={(v) => set({ html: v })} />
-        <p className="text-xs text-muted">Use “Heading” for H2 and “Sub-heading” for H3.</p>
-      </section>
+          <div className={box}>
+            <h3 className="font-semibold">Categories</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {allCategories.filter((c) => c.slug !== "best-seller").map((c) => {
+                const on = f.categories.includes(c.slug);
+                return <button key={c.slug} type="button" onClick={() => set({ categories: on ? f.categories.filter((x) => x !== c.slug) : [...f.categories, c.slug] })}
+                  className={`px-2.5 py-1 rounded-full text-xs border ${on ? "bg-brand text-white border-brand" : "bg-white border-blush-2 hover:bg-blush"}`}>{c.name}</button>;
+              })}
+            </div>
+          </div>
 
-      <section className={sec}>
-        <h3 className={h}>SEO</h3>
-        <Field label="Meta title" value={f.seoTitle} max={60} onChange={(v) => set({ seoTitle: v })} />
-        <Field label="Meta description" value={f.seoDescription} max={160} rows={2} onChange={(v) => set({ seoDescription: v })} />
-        <Field label="Focus keyword" value={f.keyword} onChange={(v) => set({ keyword: v })} />
-      </section>
-
-      <section className={sec}>
-        <h3 className={h}>FAQs</h3>
-        <FaqEditor items={f.faqs} onChange={(v) => set({ faqs: v })} />
-      </section>
+          <div className={box}>
+            <h3 className="font-semibold">SEO</h3>
+            <label className="block"><span className="label">Focus keyword</span><input className="input" placeholder={f.name.toLowerCase() || "e.g. pink rose bouquet KL"} value={f.keyword} onChange={(e) => set({ keyword: e.target.value })} /></label>
+            <label className="block"><span className="label">Meta title <span className={`font-normal ${autoTitle.length > 60 ? "text-red-600" : "text-muted"}`}>({autoTitle.length}/60)</span></span><input className="input" placeholder={autoTitle || "Made from the name"} value={f.seoTitle} onChange={(e) => set({ seoTitle: e.target.value })} /></label>
+            <label className="block"><span className="label">Meta description <span className={`font-normal ${autoDesc.length > 160 ? "text-red-600" : "text-muted"}`}>({autoDesc.length}/160)</span></span><textarea className="input" rows={3} placeholder="Made from the short description" value={f.seoDescription} onChange={(e) => set({ seoDescription: e.target.value })} /></label>
+            <div className="rounded-xl border border-gray-200 p-3 bg-white">
+              <div className="text-[11px] text-gray-500">Google preview</div>
+              <div className="text-[12px] text-gray-700 truncate">bikaflora.my › product › {webSlug || "…"}</div>
+              <div className="text-[16px] leading-snug text-[#1a0dab] line-clamp-1">{autoTitle || "Product name"}</div>
+              <div className="text-[12px] text-gray-600 line-clamp-2">{autoDesc || "Short description appears here."}</div>
+            </div>
+          </div>
+        </aside>
+      </div>
 
       <div className="flex justify-end"><button onClick={save} disabled={busy} className="btn btn-primary">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save product</button></div>
     </div>
