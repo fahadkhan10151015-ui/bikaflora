@@ -11,7 +11,7 @@ export const site = {
   // WhatsApp number: country code + number, digits only (Malaysia example: 60123456789)
   whatsapp: "601161326484",
   phoneDisplay: "+60 11-6132 6484",
-  email: "bikaflora01@gmail.com",
+  email: "support@bikaflora.my",
 
   currency: "RM",
   openingHours: "Daily, 9:00 AM – 9:00 PM",

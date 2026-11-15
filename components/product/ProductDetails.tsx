@@ -39,7 +39,7 @@ export default function ProductDetails({ p, html, children }: { p: Product; html
         </div>
         {children}
       </div>
-      <aside className="bg-white rounded-3xl border border-blush-2/70 p-6 h-fit lg:sticky lg:top-28">
+      <aside className="bg-white rounded-3xl border border-blush-2/70 p-6 h-fit lg:sticky lg:top-32">
         <h3 className="font-sans font-semibold mb-3">What&apos;s included{variant ? ` (${variant.label})` : ""}</h3>
         <ul className="space-y-2 text-[15px]">{includes.map((x) => <li key={x} className="flex gap-2"><Check className="w-4 h-4 text-brand mt-0.5 shrink-0" /> {x}</li>)}</ul>
         {size && (

@@ -4,6 +4,7 @@ import type { Product } from "@/data/products";
 import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
 import Stars from "./Stars";
+import StockBadge from "./StockBadge";
 import CardActions from "./CardActions";
 import HeartButton from "@/components/favourites/HeartButton";
 
@@ -25,11 +26,14 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
         <HeartButton slug={p.slug} name={p.name} className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 z-10" />
       </div>
       <div className="p-2.5 sm:p-4 flex flex-col flex-1">
-        <Stars slug={p.slug} />
-        <Link href={`/product/${p.slug}`} className="mt-0.5">
-          <h3 className="font-serif text-[15px] sm:text-lg leading-snug hover:text-brand line-clamp-2">{p.name}</h3>
+        <Link href={`/product/${p.slug}`}>
+          <h3 className="font-serif text-[15px] sm:text-lg leading-snug hover:text-brand line-clamp-2 min-h-[2.5em]">{p.name}</h3>
         </Link>
-        <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-xs text-muted">
+        <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <Stars slug={p.slug} />
+          <StockBadge slug={p.slug} />
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-muted">
           {p.instant && <span className="inline-flex items-center gap-1 text-brand font-medium"><Zap className="w-3 h-3" /> Same-day delivery</span>}
           {p.paperColours && <span className="inline-flex items-center gap-1" title="Custom wrapping colours (pre-order)"><Palette className="w-3 h-3 text-gold" /><span className="hidden sm:inline">Custom paper</span></span>}
           {p.variants && (

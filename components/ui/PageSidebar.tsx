@@ -20,7 +20,7 @@ export default function PageSidebar({ path, image = "florist" }: { path: string;
     ? { src: siteImages.florist, alt: "BikaFlora florist wrapping a handmade bouquet in KL" }
     : { src: siteImages.holdingBouquet, alt: "Handmade bouquet ready for same-day delivery in KL" };
   return (
-    <aside className="space-y-5 lg:sticky lg:top-28">
+    <aside className="space-y-5 lg:sticky lg:top-32">
       <div className="relative aspect-[4/3] lg:aspect-[4/5] rounded-[1.75rem] overflow-hidden">
         <Photo src={img.src} alt={img.alt} w={400} sizes="(min-width:1024px) 340px, 100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-deep/90 via-deep/30 to-transparent" />

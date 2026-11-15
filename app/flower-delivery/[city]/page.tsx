@@ -60,7 +60,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           ? <FillImage src={photo.src} alt={photo.alt} w={1080} h={540} quality={72} priority className="object-cover" />
           : <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-r from-deep/90 via-deep/70 to-deep/35" />
-        {photo && <a href={photo.source} target="_blank" rel="nofollow noopener" className="absolute bottom-2 right-3 z-10 text-[10px] text-white/60 hover:text-white">Photo: {photo.credit}</a>}
         <div className="relative container-x pb-14 md:pb-16 [&_nav]:text-white/70 [&_nav_span]:text-white">
           <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
           <div className="eyebrow !text-petal mb-3 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
@@ -81,28 +80,30 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{picks.map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}</div>
         <div className="text-center mt-8"><Link href="/shop" className="btn btn-outline">See all bouquets</Link></div>
 
-        {seo ? (
-          <article className="prose-location mt-16 md:mt-20 max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: seo.html }} />
-        ) : (
+        <div className="mt-16 md:mt-20 grid lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_400px] gap-8 lg:gap-10 items-start">
+          {seo ? (
+            <article className="prose-location bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: seo.html }} />
+          ) : (
           <div className="mt-16 prose-bf max-w-3xl mx-auto">
             <h2 className="!mt-0">Your florist for {l.name}</h2>
             <p>We prepare every bouquet by hand and deliver it to {l.name}. Message us on WhatsApp and we confirm the total before you pay.</p>
           </div>
-        )}
+          )}
 
-        <section className="mt-16 md:mt-20 grid lg:grid-cols-2 gap-6 lg:gap-10 items-center bg-white rounded-[2rem] border border-blush-2/70 p-6 sm:p-10" aria-labelledby="area-contact">
-          <div>
-            <div className="eyebrow mb-2 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.name}</div>
-            <h2 id="area-contact" className="text-3xl md:text-4xl font-semibold leading-tight">Send flowers to {l.name}</h2>
-            <p className="mt-3 text-muted text-lg leading-relaxed">Tell us the occasion, your budget and the delivery date. Your message opens in WhatsApp, and our florist replies with the best bouquet and the full price.</p>
-            <ul className="mt-5 space-y-2 text-[15px]">
-              <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand" /> Same-day delivery to {l.name}</li>
-              <li className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand" /> Pre-order for any date</li>
-              <li className="flex items-center gap-2"><Camera className="w-4 h-4 text-brand" /> Photo before delivery</li>
-            </ul>
-          </div>
-          <div className="bg-cream rounded-3xl border border-blush-2/70 p-5 sm:p-7"><ContactForm area={l.name} /></div>
-        </section>
+          <aside className="lg:sticky lg:top-32 space-y-4" aria-labelledby="area-contact">
+            <div className="rounded-3xl bg-gradient-to-br from-brand to-deep text-white p-6">
+              <div className="eyebrow !text-gold mb-1 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.name}</div>
+              <h2 id="area-contact" className="text-2xl md:text-3xl font-semibold leading-tight">Send flowers to {l.name}</h2>
+              <p className="mt-2 text-white/80 text-[15px] leading-relaxed">Tell us the occasion, budget and date. Your message opens in WhatsApp, and our florist replies with the best bouquet and full price.</p>
+              <ul className="mt-4 space-y-1.5 text-sm text-white/90">
+                <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-gold" /> Same-day delivery to {l.name}</li>
+                <li className="flex items-center gap-2"><Clock className="w-4 h-4 text-gold" /> Pre-order for any date</li>
+                <li className="flex items-center gap-2"><Camera className="w-4 h-4 text-gold" /> Photo before delivery</li>
+              </ul>
+            </div>
+            <div className="rounded-3xl bg-white border border-blush-2/70 p-5 sm:p-6"><ContactForm area={l.name} /></div>
+          </aside>
+        </div>
 
         <section className="mt-16 md:mt-20">
           <h2 className="text-3xl md:text-4xl font-semibold text-center max-w-3xl mx-auto mb-8">{seo?.faqTitle ?? `Flower delivery ${l.name}: FAQ`}</h2>

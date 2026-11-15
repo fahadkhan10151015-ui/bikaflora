@@ -10,11 +10,11 @@ import sharp from "sharp";
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const OUT_DIR = path.join(ROOT, "public/images/cities");
 const DATA = path.join(ROOT, "data/city-photos.json");
-const UA = "BikaFloraSiteBuild/1.0 (https://bikaflora.my; bikaflora01@gmail.com)";
+const UA = "BikaFloraSiteBuild/1.0 (https://bikaflora.my; support@bikaflora.my)";
 const MAX = 100 * 1024 - 2048;
 // Vercel keeps .next/cache between builds, so photos are downloaded once and reused after that.
 const CACHE = path.join(ROOT, ".next/cache/city-photos");
-const VERSION = "v1"; // change to download all photos again
+const VERSION = "v2"; // change to download all photos again
 
 /** Area slug -> [area name, Wikipedia pages to try, in order]. */
 const AREAS = {
@@ -53,7 +53,8 @@ const AREAS = {
 };
 
 const BAD = /map|locator|location|\.svg|flag|seal|logo|coat|emblem|montage|collage|skyline_collage|sign|plan|diagram/i;
-const FREE = /^(CC0|Public domain|PD|CC BY(-SA)? [\d.]+)/i;
+// Only licences that need no photo credit on the page.
+const FREE = /^(CC0|Public domain|PD)/i;
 const slugify = (s) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50);
 const strip = (s = "") => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 

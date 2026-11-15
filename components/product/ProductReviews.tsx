@@ -78,7 +78,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   const avg = reviews?.length ? reviews.reduce((n, r) => n + r.rating, 0) / reviews.length : 0;
 
   return (
-    <section className="mt-16" aria-labelledby="customer-reviews">
+    <section id="reviews" className="mt-16 scroll-mt-28" aria-labelledby="customer-reviews">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
           <div className="eyebrow mb-1">Customer reviews</div>

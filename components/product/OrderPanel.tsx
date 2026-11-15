@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Zap, CalendarClock, Check, Plus, Palette, Mail, ShoppingBag } from "lucide-react";
 import { useOrderList } from "@/components/order/OrderListProvider";
 import Stars from "./Stars";
+import StockBadge from "./StockBadge";
 import { useVariant } from "./VariantProvider";
 import { isAddOn, type Product } from "@/data/products";
 import { deliveryMethods, formatPrice, paymentNote, type DeliveryMethodId } from "@/lib/site";
@@ -72,7 +73,10 @@ export default function OrderPanel({ p }: { p: Product }) {
 
   return (
     <div className="space-y-6">
-      <Stars slug={p.slug} className="!text-sm" />
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-5 border-b border-blush-2/70">
+        <Stars slug={p.slug} size="lg" />
+        <StockBadge slug={p.slug} size="lg" />
+      </div>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
         <span className="text-3xl font-semibold text-brand">{formatPrice(p.price)}</span>
         {p.compareAt && (

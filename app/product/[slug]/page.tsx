@@ -86,7 +86,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <Breadcrumbs items={[...(cat ? [{ name: cat.name, path: `/category/${cat.slug}` }] : []), { name: p.name, path: `/product/${p.slug}` }]} />
 
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-        <div className="lg:sticky lg:top-28">
+        <div className="lg:sticky lg:top-32">
           <Gallery alt={`${p.name} by ${site.name}`} alts={seo?.alts} />
         <ul className="hidden lg:grid mt-5 grid-cols-2 gap-3 text-sm">
               {perks.filter((k) => !("instant" in k) || p.instant).map(({ icon: Icon, text }) => (

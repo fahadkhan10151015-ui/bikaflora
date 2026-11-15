@@ -2,20 +2,33 @@
 import { Star } from "lucide-react";
 import { useRatings } from "./RatingsProvider";
 
-/** Star rating from real customer reviews. Shows nothing until a product has its first review. */
-export default function Stars({ slug, className = "" }: { slug: string; className?: string }) {
+/**
+ * Star rating from real customer reviews only (never invented).
+ * With no reviews yet: `size="sm"` (cards) shows grey stars + "New", `size="lg"` (product page) invites the first review.
+ */
+export default function Stars({ slug, size = "sm", className = "" }: { slug: string; size?: "sm" | "lg"; className?: string }) {
   const r = useRatings().get(slug);
-  if (!r) return null;
-  const full = Math.round(r.avg);
+  const lg = size === "lg";
+  const star = lg ? "w-4 h-4" : "w-3.5 h-3.5";
+  const full = r ? Math.round(r.avg) : 0;
   return (
-    <div className={`flex items-center gap-1 text-[11px] sm:text-xs ${className}`} aria-label={`Rated ${r.avg.toFixed(1)} out of 5 from ${r.count} review${r.count > 1 ? "s" : ""}`}>
-      <span className="flex" aria-hidden>
+    <div className={`flex items-center gap-1.5 ${lg ? "text-sm" : "text-xs"} ${className}`}
+      aria-label={r ? `Rated ${r.avg.toFixed(1)} out of 5 from ${r.count} review${r.count > 1 ? "s" : ""}` : "No reviews yet"}>
+      <span className="flex gap-px" aria-hidden>
         {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${i < full ? "fill-gold text-gold" : "text-blush-2 fill-blush-2"}`} />
+          <Star key={i} className={`${star} ${i < full ? "fill-gold text-gold" : "fill-blush-2 text-blush-2"}`} />
         ))}
       </span>
-      <span className="font-semibold text-ink">{r.avg.toFixed(1)}</span>
-      <span className="text-muted">({r.count})</span>
+      {r ? (
+        <>
+          <span className="font-semibold text-ink">{r.avg.toFixed(1)}</span>
+          {lg ? <a href="#reviews" className="text-muted underline underline-offset-2 hover:text-brand">{r.count} review{r.count > 1 ? "s" : ""}</a> : <span className="text-muted">({r.count})</span>}
+        </>
+      ) : lg ? (
+        <a href="#reviews" className="text-muted underline underline-offset-2 hover:text-brand">No reviews yet. Be the first to review</a>
+      ) : (
+        <span className="text-muted">New</span>
+      )}
     </div>
   );
 }
