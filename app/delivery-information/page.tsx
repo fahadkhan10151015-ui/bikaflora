@@ -1,4 +1,5 @@
 import PageShell from "@/components/ui/PageShell";
+import PageSidebar from "@/components/ui/PageSidebar";
 import { pageMeta } from "@/lib/seo";
 import { site, paymentNote, paymentMethods } from "@/lib/site";
 
@@ -7,7 +8,8 @@ export const metadata = pageMeta({ title: "Delivery Information", description: "
 export default function Page() {
   return (
     <PageShell title="Delivery Information" path="/delivery-information">
-      <div className="max-w-3xl prose-bf bg-white rounded-3xl border border-blush-2/70 p-6 md:p-10">
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-8 lg:gap-10 items-start">
+      <div className="prose-bf prose-location bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12">
         <h2 className="!mt-0">Where we deliver</h2>
         <p>We deliver to 32 areas across Kuala Lumpur and Selangor. See the full list on our <a className="text-brand underline" href="/flower-delivery">Delivery Areas</a> page.</p>
         <h2>Instant Delivery</h2>
@@ -30,6 +32,8 @@ export default function Page() {
         <p>Please include the block and unit number, company name or ward, and the recipient&apos;s phone number. Some hospitals do not allow fresh flowers in wards; our soap and crochet bouquets are a good alternative.</p>
         <h2>If the recipient is not available</h2>
         <p>We will call the recipient and you. If no one is available, we can leave the bouquet with the guardhouse, reception or a neighbour with your permission, or arrange a re-delivery (extra fee may apply).</p>
+      </div>
+      <PageSidebar path="/delivery-information" />
       </div>
     </PageShell>
   );

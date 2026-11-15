@@ -8,24 +8,16 @@ import { products } from "@/data/products";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Faq from "@/components/sections/Faq";
+import ContactForm from "@/components/ui/ContactForm";
 import WaCta from "@/components/sections/WaCta";
 import JsonLd from "@/components/ui/JsonLd";
 import SectionTitle from "@/components/sections/SectionTitle";
 import { pageMeta } from "@/lib/seo";
 import { locationSeo } from "@/data/location-seo";
-import { locationImages } from "@/data/location-images";
+import cityPhotosJson from "@/data/city-photos.json";
 
-/** Put the area's bouquet photo just before the second H2 of the content. */
-function withAreaImage(html: string, slug: string) {
-  const img = locationImages[slug];
-  if (!img) return html;
-  const p = products.find((x) => x.slug === img.product);
-  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
-  const fig = `<figure class="area-figure"><img src="${img.src}" alt="${esc(img.alt)}" width="${img.w}" height="${img.h}" loading="lazy" decoding="async" /><figcaption>${esc(img.caption)}${p ? ` <a href="/product/${p.slug}">See this bouquet</a>` : ""}</figcaption></figure>`;
-  const first = html.indexOf("<h2");
-  const second = first < 0 ? -1 : html.indexOf("<h2", first + 3);
-  return second > 0 ? html.slice(0, second) + fig + html.slice(second) : html + fig;
-}
+type CityPhoto = { src: string; alt: string; credit: string; source: string };
+const cityPhotos = cityPhotosJson as Record<string, CityPhoto>;
 import { absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() { return locations.map((l) => ({ city: l.slug })); }
@@ -47,6 +39,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   if (!l) notFound();
   const seo = locationSeo[l.slug];
   const idx = locations.indexOf(l);
+  const photo = cityPhotos[l.slug];
   const picks = seo
     ? seo.featured.map((slug) => products.find((p) => p.slug === slug)).filter((p): p is (typeof products)[number] => Boolean(p))
     : [...products.slice(idx % products.length), ...products].slice(0, 4);
@@ -63,8 +56,11 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
       <JsonLd data={{ "@context": "https://schema.org", "@type": "Service", serviceType: "Flower delivery", name: seo?.h1 ?? `Flower delivery ${l.name}`, description: seo?.description,
         provider: { "@id": absoluteUrl("/#business") }, areaServed: { "@type": "City", name: l.name, containedInPlace: { "@type": "State", name: l.state } }, url: absoluteUrl(`/flower-delivery/${l.slug}`) }} />
       <div className="relative overflow-hidden text-white">
-        <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/85 to-deep/60" />
+        {photo
+          ? <FillImage src={photo.src} alt={photo.alt} w={1080} h={540} quality={72} priority className="object-cover" />
+          : <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />}
+        <div className="absolute inset-0 bg-gradient-to-r from-deep/90 via-deep/70 to-deep/35" />
+        {photo && <a href={photo.source} target="_blank" rel="nofollow noopener" className="absolute bottom-2 right-3 z-10 text-[10px] text-white/60 hover:text-white">Photo: {photo.credit}</a>}
         <div className="relative container-x pb-14 md:pb-16 [&_nav]:text-white/70 [&_nav_span]:text-white">
           <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
           <div className="eyebrow !text-petal mb-3 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
@@ -86,13 +82,27 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <div className="text-center mt-8"><Link href="/shop" className="btn btn-outline">See all bouquets</Link></div>
 
         {seo ? (
-          <article className="prose-location mt-16 md:mt-20 max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: withAreaImage(seo.html, l.slug) }} />
+          <article className="prose-location mt-16 md:mt-20 max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: seo.html }} />
         ) : (
           <div className="mt-16 prose-bf max-w-3xl mx-auto">
             <h2 className="!mt-0">Your florist for {l.name}</h2>
             <p>We prepare every bouquet by hand and deliver it to {l.name}. Message us on WhatsApp and we confirm the total before you pay.</p>
           </div>
         )}
+
+        <section className="mt-16 md:mt-20 grid lg:grid-cols-2 gap-6 lg:gap-10 items-center bg-white rounded-[2rem] border border-blush-2/70 p-6 sm:p-10" aria-labelledby="area-contact">
+          <div>
+            <div className="eyebrow mb-2 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.name}</div>
+            <h2 id="area-contact" className="text-3xl md:text-4xl font-semibold leading-tight">Send flowers to {l.name}</h2>
+            <p className="mt-3 text-muted text-lg leading-relaxed">Tell us the occasion, your budget and the delivery date. Your message opens in WhatsApp, and our florist replies with the best bouquet and the full price.</p>
+            <ul className="mt-5 space-y-2 text-[15px]">
+              <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand" /> Same-day delivery to {l.name}</li>
+              <li className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand" /> Pre-order for any date</li>
+              <li className="flex items-center gap-2"><Camera className="w-4 h-4 text-brand" /> Photo before delivery</li>
+            </ul>
+          </div>
+          <div className="bg-cream rounded-3xl border border-blush-2/70 p-5 sm:p-7"><ContactForm area={l.name} /></div>
+        </section>
 
         <section className="mt-16 md:mt-20">
           <h2 className="text-3xl md:text-4xl font-semibold text-center max-w-3xl mx-auto mb-8">{seo?.faqTitle ?? `Flower delivery ${l.name}: FAQ`}</h2>

@@ -55,9 +55,19 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .prose-product-card h2 { font-size: 1.6rem; margin-top: 2.25rem; }
 @media (min-width: 768px) { .prose-product-card h2 { font-size: 1.85rem; } }
 .prose-product-card h2:first-child { margin-top: 0; }
-.area-figure { margin: 2rem auto; max-width: 30rem; }
-.area-figure img { width: 100%; height: auto; border-radius: 1.5rem; border: 1px solid var(--color-blush-2, #f3dfe5); }
-.area-figure figcaption { margin-top: .6rem; text-align: center; font-size: .95rem; color: var(--color-muted); }
+.home-card p { margin: .6rem 0; color: var(--color-muted); line-height: 1.8; font-size: 1.03rem; }
+.home-card h3 { font-family: var(--font-sans, inherit); font-weight: 600; font-size: 1.05rem; margin: 1rem 0 .4rem; color: var(--color-ink); }
+.home-card ul, .home-card ol { margin: .6rem 0; display: grid; gap: .5rem; }
+.home-card li { position: relative; padding-left: 1.6rem; color: var(--color-muted); line-height: 1.65; }
+.home-card ul li::before { content: ""; position: absolute; left: .2rem; top: .6rem; width: .55rem; height: .55rem; border-radius: 999px; background: var(--color-gold, #c9a45c); }
+.home-card ol { counter-reset: step; }
+.home-card ol li { counter-increment: step; }
+.home-card ol li::before { content: counter(step); position: absolute; left: 0; top: .1rem; width: 1.25rem; height: 1.25rem; border-radius: 999px; background: var(--color-brand); color: #fff; font-size: .72rem; font-weight: 700; display: grid; place-items: center; }
+.home-card strong { color: var(--color-ink); font-weight: 600; }
+.home-card a { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+.home-card-dark p, .home-card-dark li { color: rgba(255,255,255,.85); }
+.home-card-dark strong, .home-card-dark h3 { color: #fff; }
+.home-card-dark a { color: var(--color-gold, #e0c27a); }
 .prose-location ol { list-style: decimal; margin: .85rem 0 .85rem 1.4rem; }
 .prose-location li { margin: .35rem 0; }
 .prose-location li::marker { color: var(--color-brand); font-weight: 600; }

@@ -1,4 +1,5 @@
 import PageShell from "@/components/ui/PageShell";
+import PageSidebar from "@/components/ui/PageSidebar";
 import { pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -7,7 +8,8 @@ export const metadata = pageMeta({ title: "Refund & Replacement Policy", descrip
 export default function Page() {
   return (
     <PageShell title="Refund & Replacement Policy" path="/refund-policy">
-      <div className="max-w-3xl prose-bf bg-white rounded-3xl border border-blush-2/70 p-6 md:p-10">
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-8 lg:gap-10 items-start">
+      <div className="prose-bf prose-location bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12">
         <p className="!mt-0">We want every customer to be happy with their bouquet. Please read our policy below.</p>
         <h2>Damaged or wrong items</h2>
         <p>If your bouquet arrives damaged or is different from what you ordered, contact us on WhatsApp within 24 hours with photos. We will offer a replacement or refund after review.</p>
@@ -17,6 +19,8 @@ export default function Page() {
         <p>Handmade items and wrapping may vary slightly. If a specific material is unavailable, we will replace it with one of equal or higher value and inform you first.</p>
         <h2>Wrong address or unavailable recipient</h2>
         <p>We are not able to refund orders where the address provided was incorrect or the recipient could not be reached after reasonable attempts.</p>
+      </div>
+      <PageSidebar path="/refund-policy" />
       </div>
     </PageShell>
   );

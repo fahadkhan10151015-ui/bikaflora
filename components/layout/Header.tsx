@@ -58,7 +58,7 @@ export default function Header() {
                     ))}
                   </div>
                   <Link href="/flower-delivery" className="mt-2 flex items-center justify-center gap-1.5 rounded-xl bg-blush px-3 py-2.5 font-semibold text-brand hover:bg-blush-2">
-                    View all 32 delivery areas <ArrowRight className="w-4 h-4" />
+                    View all delivery areas <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function Header() {
                 <div className="grid grid-cols-2 gap-x-3 pt-1 pb-2">
                   {topAreas.map((l) => <Link key={l.slug} href={`/flower-delivery/${l.slug}`} onClick={() => setOpen(false)} className="py-1.5 text-muted">{l.name}</Link>)}
                 </div>
-                <Link href="/flower-delivery" onClick={() => setOpen(false)} className="inline-flex items-center gap-1 py-1 font-semibold text-brand">View all 32 areas <ArrowRight className="w-4 h-4" /></Link>
+                <Link href="/flower-delivery" onClick={() => setOpen(false)} className="inline-flex items-center gap-1 py-1 font-semibold text-brand">View all delivery areas <ArrowRight className="w-4 h-4" /></Link>
               </details>
               <div className="pt-2 text-xs eyebrow">Categories</div>
               {categories.map((c) => <Link key={c.slug} href={`/category/${c.slug}`} onClick={() => setOpen(false)} className="py-1.5 text-muted">{c.name}</Link>)}

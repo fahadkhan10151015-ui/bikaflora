@@ -19,9 +19,9 @@ const slides: Slide[] = [
     bg: siteImages.klNight,
     image: "/images/hero/red-soap-rose-heart-large.webp",
     alt: "Red Soap Rose Heart Large bouquet",
-    eyebrow: "Top Seller",
-    title: ["25 roses,", "one heart"],
-    text: "Our best-selling soap rose heart. It looks real, smells lovely and lasts for months. Same-day delivery across KL & Selangor, any time.",
+    eyebrow: "Best seller in KL",
+    title: ["Soap rose heart,", "made to last"],
+    text: "Twenty-five red soap roses shaped into one big heart. It looks real, smells lovely and stays bright for months. Order today for same-day delivery in KL.",
     orbiters: [<Rose key="1" tint="red" />, <Sprig key="2" color="#b98a96" />, <Rose key="3" tint="red" />, <Leaf key="4" />, <Rose key="5" tint="blush" />],
   },
   {
@@ -29,9 +29,9 @@ const slides: Slide[] = [
     bg: siteImages.klTowers,
     image: "/images/hero/ferrero-rocher-pink-roses.webp",
     alt: "Ferrero Rocher Pink Roses soap bouquet",
-    eyebrow: "Sweet & long-lasting",
-    title: ["Roses &", "Ferrero Rocher"],
-    text: "Ten pink soap roses with seven Ferrero Rocher chocolates, wrapped as one sweet gift for someone special.",
+    eyebrow: "Chocolate bouquets",
+    title: ["Ferrero bouquet,", "sweet & pretty"],
+    text: "Ten pink soap roses with seven Ferrero Rocher chocolates. A gift that tastes as good as it looks, delivered across KL and Selangor.",
     orbiters: [<Rose key="1" tint="pink" />, <GoldBall key="2" />, <Sprig key="3" color="#b0227a" />, <Rose key="4" tint="blush" />, <GoldBall key="5" />],
   },
   {
@@ -40,8 +40,8 @@ const slides: Slide[] = [
     image: "/images/hero/graduation-signature.webp",
     alt: "The Graduation Signature soap bouquet with sunflowers and teddy",
     eyebrow: "Convocation season",
-    title: ["Celebrate their", "big day"],
-    text: "Sunflowers, blue and white roses and a little graduate teddy. Available in your university's colours on pre-order.",
+    title: ["Graduation bouquets", "for convo day"],
+    text: "Sunflowers, roses and a little graduate teddy. Pre-order a graduation bouquet in their university colours, delivered on the big day.",
     orbiters: [<Sunflower key="1" />, <Daisy key="2" />, <Rose key="3" tint="blue" />, <Sunflower key="4" />, <Rose key="5" tint="ivory" />],
   },
   {
@@ -49,9 +49,9 @@ const slides: Slide[] = [
     bg: siteImages.cover,
     image: "/images/hero/blue-noir-for-him.webp",
     alt: "Blue Noir For Him soap rose bouquet",
-    eyebrow: "For him",
+    eyebrow: "Flowers for him",
     title: ["Bold, elegant,", "made for him"],
-    text: "Twenty-five blue and black soap roses in sleek black wrapping. A bouquet he will actually keep.",
+    text: "Twenty-five blue and black soap roses in sleek black wrap. A bouquet for him that he will actually keep on his desk.",
     orbiters: [<Rose key="1" tint="blue" />, <Rose key="2" tint="black" />, <Orchid key="3" />, <Rose key="4" tint="blue" />, <Rose key="5" tint="black" />],
   },
 ];
@@ -59,7 +59,7 @@ const slides: Slide[] = [
 const DURATION = 4000;
 /** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
 const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~15.6s)
-const videoSlide = { eyebrow: "Handmade by our florists", title: ["Made by hand,", "start to finish"] as [string, string], text: "Every BikaFlora bouquet is hand-tied with care and delivered across KL & Selangor, any time." };
+const videoSlide = { eyebrow: "Online florist in KL & Selangor", title: ["Soap flower bouquets", "that last for months"] as [string, string], text: "Handmade by our florists, then delivered the same day across Kuala Lumpur and Selangor. No cut-off time, and you see a photo before it goes out." };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
@@ -175,15 +175,15 @@ export default function HeroSlider() {
       <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
       <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
         <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
-          <Sparkles className="w-4 h-4 text-gold" /> Florist in Kuala Lumpur & Selangor, Malaysia
+          <Sparkles className="w-4 h-4 text-gold" /> Same-day flower delivery in KL & Selangor
         </div>
 
         <div key={active} className="hero-text-in" aria-live="polite">
           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{s.eyebrow}</p>
-          <p className="mt-3 font-serif text-4xl sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
-            {s.title[0]} <span className="italic text-petal">{s.title[1]}</span>
-          </p>
-          <p className="mt-5 text-lg text-white/80 leading-relaxed max-w-xl mx-auto lg:mx-0">{s.text}</p>
+          <h1 className="mt-3 font-serif text-[2.6rem] sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
+            {s.title[0]} <span className="block italic text-petal">{s.title[1]}</span>
+          </h1>
+          <p className="mt-5 text-lg md:text-xl text-white/85 leading-relaxed max-w-xl mx-auto lg:mx-0">{s.text}</p>
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">

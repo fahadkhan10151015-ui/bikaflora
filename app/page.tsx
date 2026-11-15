@@ -2,7 +2,7 @@ import { preload } from "react-dom";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
-import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin } from "lucide-react";
+import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin, Gift, Award, Clock, Wallet, Languages } from "lucide-react";
 import { featuredProducts, productsInCategory } from "@/data/products";
 import CategoryCircles from "@/components/sections/CategoryCircles";
 import { getCategory } from "@/data/categories";
@@ -26,6 +26,8 @@ import { pageMeta } from "@/lib/seo";
 
 const c = pageCopy.home;
 export const metadata = pageMeta({ title: c.title, description: c.description, path: "/", absoluteTitle: true });
+
+const copyIcons = [Gift, Award, Leaf, Clock, MessageCircle, Wallet, Languages];
 
 const steps = [
   { icon: MousePointerClick, title: "Tap “Order now”", text: "Tap Order now on any bouquet. Want several? Tap + to add them to your order list." },
@@ -51,12 +53,6 @@ export default function Home() {
       <HeroSlider />
 
       <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>
-
-      {/* H1 + intro */}
-      <section className="container-x mt-12 md:mt-16 text-center">
-        <h1 className="text-3xl md:text-5xl font-semibold leading-tight max-w-4xl mx-auto">{c.h1}</h1>
-        <div className="mt-4 text-muted text-lg md:text-xl leading-relaxed max-w-3xl mx-auto prose-intro" dangerouslySetInnerHTML={{ __html: c.intro }} />
-      </section>
 
       <CategoryCircles />
 
@@ -153,9 +149,26 @@ export default function Home() {
         <div className="text-center mt-8"><Link href="/reviews" className="btn btn-outline">Read more reviews</Link></div>
       </section>
 
-      {/* SEO CONTENT */}
-      <section className="container-x mt-24">
-        <article className="prose-location max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: c.html! }} />
+      {/* SEO CONTENT (homepage copy as cards) */}
+      <section className="mt-24 bg-white border-y border-blush-2 petal-bg">
+        <div className="container-x py-16 md:py-20">
+          <div className="text-center max-w-3xl mx-auto">
+            <div className="eyebrow mb-2">Online florist in KL</div>
+            <h2 className="text-3xl md:text-5xl font-semibold">Handmade bouquets for every moment</h2>
+          </div>
+          <div className="mt-12 grid md:grid-cols-2 gap-5 md:gap-6">
+            {c.sections!.map((sec, i) => {
+              const Icon = copyIcons[i % copyIcons.length];
+              return (
+                <div key={sec.title} className={`home-card rounded-[1.75rem] border border-blush-2/80 p-6 md:p-8 ${i === c.sections!.length - 1 && c.sections!.length % 2 ? "md:col-span-2" : ""} ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white home-card-dark" : "bg-cream"}`}>
+                  <span className={`w-12 h-12 rounded-2xl grid place-items-center ${i === 0 ? "bg-white/15 text-gold" : "bg-white text-brand border border-blush-2"}`}><Icon className="w-6 h-6" /></span>
+                  <h2 className="mt-4 text-2xl md:text-[1.7rem] font-semibold leading-snug">{sec.title}</h2>
+                  <div className="mt-2" dangerouslySetInnerHTML={{ __html: sec.html }} />
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {/* FAQ */}

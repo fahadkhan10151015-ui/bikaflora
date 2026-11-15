@@ -6,3 +6,6 @@ out
 .vercel
 *.log
 .DS_Store
+
+# generated at build time
+/public/images/cities/

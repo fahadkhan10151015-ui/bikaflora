@@ -85,8 +85,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <MobileOrderBar p={p} />
       <Breadcrumbs items={[...(cat ? [{ name: cat.name, path: `/category/${cat.slug}` }] : []), { name: p.name, path: `/product/${p.slug}` }]} />
 
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-14">
-        <Gallery alt={`${p.name} by ${site.name}`} alts={seo?.alts} />
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="lg:sticky lg:top-28">
+          <Gallery alt={`${p.name} by ${site.name}`} alts={seo?.alts} />
+        <ul className="hidden lg:grid mt-5 grid-cols-2 gap-3 text-sm">
+              {perks.filter((k) => !("instant" in k) || p.instant).map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 border border-blush-2/70"><Icon className="w-4 h-4 text-brand" /> {text}</li>
+              ))}
+            </ul>
+        </div>
         <div>
           {p.badge && <span className="inline-block bg-blush text-brand text-xs font-semibold px-3 py-1 rounded-full">{p.badge}</span>}
           <div className="mt-3 flex items-start justify-between gap-3">
@@ -99,7 +106,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p className="mt-1 text-sm text-muted">Product code: {p.sku}</p>
           <p className="mt-4 text-muted leading-relaxed">{seo?.short ?? p.short}</p>
           <div className="mt-6"><OrderPanel p={p} /></div>
-          <ul className="mt-8 grid grid-cols-2 gap-3 text-sm">
+          <ul className="mt-8 grid grid-cols-2 gap-3 text-sm lg:hidden">
             {perks.filter((k) => !("instant" in k) || p.instant).map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2.5 border border-blush-2/70"><Icon className="w-4 h-4 text-brand" /> {text}</li>
             ))}
