@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, Save, Loader2, Trash2, CalendarClock, Upload, Plus, Pencil, X, Check } from "lucide-react";
-import { posts, blogCategories } from "@/data/posts";
+import { allPosts as posts, blogCategories } from "@/data/posts";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
 import { uploadPhoto, KeywordsField } from "./fields";

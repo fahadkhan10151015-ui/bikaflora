@@ -1,25 +1,34 @@
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import SocialLinks from "@/components/ui/SocialLinks";
-import Link from "next/link";
-import Photo from "@/components/ui/Photo";
-import PageShell from "@/components/ui/PageShell";
-import { posts } from "@/data/posts";
+import BlogList from "@/components/blog/BlogList";
+import JsonLd from "@/components/ui/JsonLd";
+import { posts, blogCategories } from "@/data/posts";
 import { pageMeta } from "@/lib/seo";
+import { readMinutes, fmtDate } from "@/lib/blog";
+import { absoluteUrl, site } from "@/lib/site";
 
-export const metadata = pageMeta({ title: "Flower Tips & Guides Malaysia | BikaFlora Blog", description: "Flower guides for Malaysia: convocation flowers, soap vs fresh flowers, flower colour meanings and gifting tips.", path: "/blog" });
+export const metadata = pageMeta({ title: "Flower Tips & Gift Guides Malaysia | BikaFlora Blog", description: "Flower tips and gift guides for Malaysia: gift ideas for every occasion, card messages, soap flower care and same-day delivery advice from our KL florists.", path: "/blog" });
 
 export default function Blog() {
+  const items = posts.map((p) => ({ slug: p.slug, title: p.title, description: p.description, date: p.date, dateLabel: fmtDate(p.date), image: p.image, imageAlt: p.imageAlt || p.title, tone: p.tone, category: p.category, read: readMinutes(p) }));
   return (
-    <PageShell title="Flower tips & guides" path="/blog" intro="Helpful guides for choosing and sending flowers in Malaysia.">
-      <div className="grid md:grid-cols-3 gap-6">
-        {posts.map((p) => (
-          <Link key={p.slug} href={`/blog/${p.slug}`} className="bg-white rounded-3xl overflow-hidden border border-blush-2/70 card-hover">
-            <div className="relative aspect-[4/3]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt || p.title} w={420} h={315} /></div>
-            <div className="p-5"><div className="text-xs text-muted flex flex-wrap items-center gap-2">{p.category && <span className="rounded-full bg-blush text-brand font-semibold px-2 py-0.5">{p.category}</span>}<span>{new Date(p.date).toLocaleDateString("en-MY", { dateStyle: "medium" })}</span></div>
-              <h2 className="mt-1 text-xl font-semibold leading-snug">{p.title}</h2><p className="mt-2 text-sm text-muted line-clamp-3">{p.description}</p></div>
-          </Link>
-        ))}
+    <>
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "Blog", name: `${site.name} Blog`, url: absoluteUrl("/blog"), publisher: { "@id": absoluteUrl("/#business") },
+        blogPost: posts.slice(0, 20).map((p) => ({ "@type": "BlogPosting", headline: p.title, url: absoluteUrl(`/blog/${p.slug}`), datePublished: p.date })) }} />
+      <section className="bg-gradient-to-b from-blush/70 to-transparent">
+        <div className="container-x pb-10">
+          <Breadcrumbs items={[{ name: "Blog", path: "/blog" }]} />
+          <div className="max-w-3xl">
+            <p className="eyebrow">The BikaFlora journal</p>
+            <h1 className="mt-2 text-4xl md:text-5xl font-semibold leading-tight">Flower tips &amp; gift guides</h1>
+            <p className="mt-4 text-lg text-muted leading-relaxed">Gift ideas for every occasion, card messages that sound like you, and simple care tips from our florists in Kuala Lumpur.</p>
+            <SocialLinks variant="pills" className="mt-6" />
+          </div>
+        </div>
+      </section>
+      <div className="container-x pb-16">
+        <BlogList items={items} categories={blogCategories} />
       </div>
-      <SocialLinks variant="card" className="mt-12" />
-    </PageShell>
+    </>
   );
 }

@@ -8,7 +8,7 @@ const icons: Record<string, React.ReactNode> = {
 const names: Record<string, string> = { instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok" };
 
 /** Round social buttons (footer) or a "Follow us" card (blog). */
-export default function SocialLinks({ variant = "icons", className = "" }: { variant?: "icons" | "card"; className?: string }) {
+export default function SocialLinks({ variant = "icons", className = "" }: { variant?: "icons" | "card" | "pills" | "list"; className?: string }) {
   const links = socialLinks();
   if (!links.length) return null;
   if (variant === "icons")
@@ -21,6 +21,30 @@ export default function SocialLinks({ variant = "icons", className = "" }: { var
           </a>
         ))}
       </div>
+    );
+  if (variant === "pills")
+    return (
+      <div className={`flex flex-wrap gap-2 ${className}`}>
+        {links.map((l) => (
+          <a key={l.name} href={l.url} target="_blank" rel="noopener" className="inline-flex items-center gap-2 rounded-full border border-blush-2 bg-white px-3.5 py-1.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand transition">
+            <span className="w-4 h-4 text-brand">{icons[l.name]}</span> {names[l.name]}
+          </a>
+        ))}
+      </div>
+    );
+  if (variant === "list")
+    return (
+      <ul className={`grid gap-2 ${className}`}>
+        {links.map((l) => (
+          <li key={l.name}>
+            <a href={l.url} target="_blank" rel="noopener" className="flex items-center gap-3 rounded-2xl border border-blush-2/70 bg-white px-4 py-3 hover:border-brand transition group">
+              <span className="w-9 h-9 rounded-full bg-blush text-brand grid place-items-center shrink-0"><span className="w-[18px] h-[18px]">{icons[l.name]}</span></span>
+              <span className="min-w-0"><span className="block font-semibold text-ink group-hover:text-brand">{names[l.name]}</span><span className="block text-xs text-muted">@bikaflora</span></span>
+              <span className="ml-auto text-xs font-semibold text-brand">Follow</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     );
   return (
     <div className={`rounded-3xl bg-gradient-to-br from-brand to-deep text-white p-6 sm:p-8 ${className}`}>

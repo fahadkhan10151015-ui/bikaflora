@@ -1,3 +1,5 @@
+import { allPosts } from "@/data/posts";
+
 export const dynamic = "force-dynamic";
 
 /**
@@ -9,8 +11,10 @@ export async function GET(req: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, hook = process.env.VERCEL_DEPLOY_HOOK;
   if (!url || !key || !hook) return Response.json({ skipped: "not configured" });
   const today = new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 10);
+  // Posts kept in the code (data/blog-posts.json) that are due today.
+  const dueInCode = allPosts.filter((p) => p.date === today).length;
   const r = await fetch(`${url}/rest/v1/content?kind=eq.post&deleted=eq.false&data->>date=eq.${today}&select=key`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
-  const due = r.ok ? ((await r.json()) as unknown[]).length : 0;
+  const due = dueInCode + (r.ok ? ((await r.json()) as unknown[]).length : 0);
   if (!due) return Response.json({ published: 0 });
   await fetch(hook, { method: "POST" });
   return Response.json({ published: due });

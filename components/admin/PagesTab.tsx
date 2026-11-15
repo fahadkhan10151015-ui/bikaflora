@@ -6,7 +6,7 @@ import { collectionSeo } from "@/data/collection-seo";
 import { allLocations as locations } from "@/data/locations";
 import { locationSeo } from "@/data/location-seo";
 import { pageCopy } from "@/data/page-copy";
-import { posts } from "@/data/posts";
+import { posts, allPosts } from "@/data/posts";
 import { products } from "@/data/products";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
@@ -66,7 +66,7 @@ export default function PagesTab({ kinds = ["collection", "location", "page", "p
         .filter((r) => r.data?.custom && !r.deleted && !liveCustom.has(r.key.slice(5)))
         .map((r) => ({ kind: "page" as const, slug: r.key.slice(5), name: `${r.data.h1 || r.data.title} · not published yet`, path: `/${r.key.slice(5)}` })));
       const { data } = await sb!.from("content").select("key,data,deleted").eq("kind", "post");
-      const live = new Set(posts.map((p) => p.slug));
+      const live = new Set(allPosts.map((p) => p.slug));
       setDrafts(((data ?? []) as { key: string; data: { title?: string; date?: string }; deleted: boolean }[])
         .filter((r) => !r.deleted && !live.has(r.key.slice(5)))
         .map((r) => ({ kind: "post" as const, slug: r.key.slice(5), name: `${r.data.title ?? r.key.slice(5)} · ${r.data.date && r.data.date > new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 10) ? `scheduled ${r.data.date}` : "not published yet"}`, path: `/blog/${r.key.slice(5)}` })));
@@ -80,7 +80,7 @@ export default function PagesTab({ kinds = ["collection", "location", "page", "p
       ...customPages.map((p) => ({ kind: "page" as const, slug: p.slug, name: p.h1 || p.title, path: `/${p.slug}` })),
       ...customDrafts,
     ],
-    post: [...drafts, ...posts.map((p) => ({ kind: "post" as const, slug: p.slug, name: p.title, path: `/blog/${p.slug}` }))],
+    post: [...drafts, ...allPosts.filter((p) => !posts.includes(p)).sort((a, b) => a.date.localeCompare(b.date)).map((p) => ({ kind: "post" as const, slug: p.slug, name: `${p.title} · scheduled ${p.date}`, path: `/blog/${p.slug}` })), ...posts.map((p) => ({ kind: "post" as const, slug: p.slug, name: p.title, path: `/blog/${p.slug}` }))],
   };
   if (open?.kind === "post") return <PostEditor slug={open.slug} onClose={() => setOpen(null)} />;
   if (open?.kind === "page" && open.slug === "hero") return <HeroEditor onClose={() => setOpen(null)} />;
