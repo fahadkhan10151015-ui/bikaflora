@@ -12,6 +12,9 @@ const OUT_DIR = path.join(ROOT, "public/images/cities");
 const DATA = path.join(ROOT, "data/city-photos.json");
 const UA = "BikaFloraSiteBuild/1.0 (https://bikaflora.my; bikaflora01@gmail.com)";
 const MAX = 100 * 1024 - 2048;
+// Vercel keeps .next/cache between builds, so photos are downloaded once and reused after that.
+const CACHE = path.join(ROOT, ".next/cache/city-photos");
+const VERSION = "v1"; // change to download all photos again
 
 /** Area slug -> [area name, Wikipedia pages to try, in order]. */
 const AREAS = {
@@ -28,7 +31,7 @@ const AREAS = {
   "ampang": ["Ampang", ["Ampang_Jaya", "Ampang,_Selangor"]],
   "bangi": ["Bangi", ["Bandar_Baru_Bangi", "National_University_of_Malaysia"]],
   "semenyih": ["Semenyih", ["Semenyih", "Broga_Hill"]],
-  "banting": ["Banting", ["Banting,_Selangor", "Jugra"]],
+  "banting": ["Banting", ["Banting", "Jugra", "Kuala_Langat_District"]],
   "kuala-selangor": ["Kuala Selangor", ["Kuala_Selangor", "Kota_Melawati"]],
   "sungai-buloh": ["Sungai Buloh", ["Sungai_Buloh", "Sungai_Buloh_Hospital"]],
   "port-klang": ["Port Klang", ["Port_Klang", "Westports_Malaysia"]],
@@ -45,7 +48,7 @@ const AREAS = {
   "sentul": ["Sentul", ["Sentul,_Kuala_Lumpur", "Sentul_Park"]],
   "kepong": ["Kepong", ["Kepong", "Forest_Research_Institute_Malaysia"]],
   "segambut": ["Segambut", ["Segambut"]],
-  "titiwangsa": ["Titiwangsa", ["Lake_Titiwangsa", "Titiwangsa"]],
+  "titiwangsa": ["Titiwangsa", ["Titiwangsa_Lake_Gardens", "Titiwangsa"]],
   "ampang-hilir": ["Ampang Hilir", ["Ampang_Hilir", "Taman_Tasik_Ampang_Hilir"]],
 };
 
@@ -101,8 +104,21 @@ async function compress(buf) {
   return null;
 }
 
+async function fromCache() {
+  try {
+    const saved = JSON.parse(await fs.readFile(path.join(CACHE, "credits.json"), "utf8"));
+    if (saved.version !== VERSION || !saved.photos || Object.keys(saved.photos).length === 0) return false;
+    for (const v of Object.values(saved.photos)) await fs.copyFile(path.join(CACHE, path.basename(v.src)), path.join(OUT_DIR, path.basename(v.src)));
+    await fs.writeFile(DATA, JSON.stringify(saved.photos, null, 2) + "\n");
+    await fs.writeFile(path.join(OUT_DIR, "credits.json"), JSON.stringify(saved.photos, null, 2));
+    console.log(`[city-photos] ${Object.keys(saved.photos).length} city photos reused from build cache`);
+    return true;
+  } catch { return false; }
+}
+
 async function main() {
   await fs.mkdir(OUT_DIR, { recursive: true });
+  if (await fromCache()) return;
   const result = {};
   const used = new Set();
   for (const [slug, [name, pages]] of Object.entries(AREAS)) {
@@ -132,6 +148,11 @@ async function main() {
   if (n > 0) {
     await fs.writeFile(DATA, JSON.stringify(result, null, 2) + "\n");
     await fs.writeFile(path.join(OUT_DIR, "credits.json"), JSON.stringify(result, null, 2));
+    try {
+      await fs.mkdir(CACHE, { recursive: true });
+      for (const v of Object.values(result)) await fs.copyFile(path.join(OUT_DIR, path.basename(v.src)), path.join(CACHE, path.basename(v.src)));
+      await fs.writeFile(path.join(CACHE, "credits.json"), JSON.stringify({ version: VERSION, photos: result }));
+    } catch (e) { console.warn("[city-photos] cache not saved:", e.message); }
   }
   console.log(`[city-photos] ${n}/${Object.keys(AREAS).length} city photos ready`);
 }
