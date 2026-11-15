@@ -52,6 +52,10 @@ async function main() {
     c[row.kind][slug] = row.deleted ? { deleted: true } : row.data;
   }
   await fs.writeFile(path.join(ROOT, "data/content.json"), JSON.stringify(c) + "\n");
+  // Small settings file for code that runs in the browser (menu, top bar, areas, hero), so the big content file stays on the server.
+  const cfg = {};
+  for (const k of ["settings", "areas", "redirects", "hero"]) if (c.page[k] && !c.page[k].deleted) cfg[k] = c.page[k];
+  await fs.writeFile(path.join(ROOT, "data/site-config.json"), JSON.stringify(cfg) + "\n");
   // Real "last changed" date per page for the sitemaps (from the admin edits).
   const lm = {};
   const bump = (p, d) => { if (p && d && (!lm[p] || d > lm[p])) lm[p] = d; };

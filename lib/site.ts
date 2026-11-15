@@ -2,7 +2,7 @@
 //  BikaFlora — business settings
 //  Defaults live here. "Site settings" in the admin panel can change them (merged at build time).
 // ============================================================
-import { content } from "./content";
+import { siteConfig } from "./site-config";
 
 export const site = {
   name: "BikaFlora",
@@ -81,7 +81,7 @@ type Settings = Partial<{
   menu: NavLink[]; footerShop: NavLink[]; footerHelp: NavLink[]; footerAreas: string[]; menuAreas: string[];
   announcement: AnnouncementItem[]; cutoff: string;
 }>;
-const cfg = ((content.page as Record<string, unknown>)?.settings ?? {}) as Settings;
+const cfg = (siteConfig.settings ?? {}) as Settings;
 const clean = (l?: NavLink[]) => (l ?? []).filter((x) => x?.label?.trim() && x?.href?.trim());
 if (cfg.whatsapp?.replace(/\D/g, "")) site.whatsapp = cfg.whatsapp.replace(/\D/g, "");
 if (cfg.phoneDisplay?.trim()) site.phoneDisplay = cfg.phoneDisplay.trim();

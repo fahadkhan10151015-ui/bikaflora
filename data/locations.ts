@@ -1,4 +1,4 @@
-import { content } from "@/lib/content";
+import { siteConfig } from "@/lib/site-config";
 // ============================================================
 //  DELIVERY AREAS — each becomes an SEO page: /flower-delivery/<slug>
 // ============================================================
@@ -124,7 +124,7 @@ const baseLocations: Location[] = [
 
 // ---- Edits from the admin panel ("Delivery areas") ----
 type AreaEdit = Partial<Location>;
-const edits = (((content.page as Record<string, { list?: Record<string, AreaEdit> }>)?.areas?.list) ?? {}) as Record<string, AreaEdit>;
+const edits = (((siteConfig.areas as { list?: Record<string, AreaEdit> } | undefined)?.list) ?? {}) as Record<string, AreaEdit>;
 const merged = baseLocations.map((l) => ({ ...l, ...clean(edits[l.slug]) }));
 for (const [slug, e] of Object.entries(edits)) {
   if (merged.some((l) => l.slug === slug) || !e.name?.trim()) continue;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Zap, Palette } from "lucide-react";
-import type { Product } from "@/data/products";
+import type { CardItem } from "@/data/products";
 import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
 import Stars from "./Stars";
@@ -10,7 +10,7 @@ import { floristScore } from "@/data/florist-picks";
 import CardActions from "./CardActions";
 import HeartButton from "@/components/favourites/HeartButton";
 
-export default function ProductCard({ p, priority = false }: { p: Product; priority?: boolean }) {
+export default function ProductCard({ p, priority = false }: { p: CardItem; priority?: boolean }) {
   const second = p.images[1];
   return (
     <div className="group tilt bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-blush-2/70 flex flex-col h-full">

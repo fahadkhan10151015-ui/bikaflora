@@ -9,7 +9,7 @@ import { siteImages } from "@/lib/images";
 import HeroStage, { type StageSlide } from "./HeroStage";
 import { Rose, Daisy, Sunflower, GoldBall, Sprig, Orchid, Leaf } from "./Flowers";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
-import { content } from "@/lib/content";
+import { siteConfig } from "@/lib/site-config";
 
 type Slide = StageSlide & { slug: string; bg: string; eyebrow: string; title: [string, string]; text: string };
 
@@ -59,7 +59,7 @@ const slides: Slide[] = [
 
 // Hero text and photos edited in the admin panel (Pages → Homepage hero).
 type HeroEdit = { eyebrow?: string; title1?: string; title2?: string; text?: string; image?: string; alt?: string };
-const heroEdits = content.page.hero as { slides?: HeroEdit[]; video?: HeroEdit } | undefined;
+const heroEdits = siteConfig.hero as { slides?: HeroEdit[]; video?: HeroEdit } | undefined;
 heroEdits?.slides?.forEach((e, i) => {
   const sl = slides[i];
   if (!sl || !e) return;

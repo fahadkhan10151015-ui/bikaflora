@@ -721,7 +721,17 @@ export const getProduct = (slug: string) => products.find((p) => p.slug === slug
 export const productsInCategory = (slug: string) => products.filter((p) => p.categories.includes(slug));
 /** Best sellers first, then the rest. */
 export const featuredProducts = () => [...products].sort((a, b) => Number(b.categories.includes("best-seller")) - Number(a.categories.includes("best-seller")));
-export const isAddOn = (p: Product) => p.categories.includes("add-ons");
+export const isAddOn = (p: Pick<Product, "categories">) => p.categories.includes("add-ons");
+
+/** Only what a product card needs (sent to the browser on the Shop page instead of the full product). */
+export type CardItem = Pick<Product, "slug" | "name" | "sku" | "price" | "compareAt" | "images" | "badge" | "instant" | "categories"> & {
+  variants?: Pick<Variant, "id" | "label" | "swatch">[]; paperColours?: unknown[];
+};
+export const toCard = (p: Product): CardItem => ({
+  slug: p.slug, name: p.name, sku: p.sku, price: p.price, compareAt: p.compareAt, images: p.images.slice(0, 2), badge: p.badge, instant: p.instant, categories: p.categories,
+  ...(p.variants ? { variants: p.variants.map((v) => ({ id: v.id, label: v.label, swatch: v.swatch })) } : {}),
+  ...(p.paperColours?.length ? { paperColours: [1] } : {}),
+});
 export const addOns = () => products.filter(isAddOn);
 export const relatedProducts = (p: Product, n = 4) =>
   products

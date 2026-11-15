@@ -1,10 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
-import { Product } from "@/data/products";
-import { categories } from "@/data/categories";
+import type { CardItem } from "@/data/products";
 import ProductCard from "@/components/product/ProductCard";
 
-export default function ShopGrid({ items, initialCat = "", showChips = true }: { items: Product[]; initialCat?: string; showChips?: boolean }) {
+export default function ShopGrid({ items, categories = [], initialCat = "", showChips = true }: { items: CardItem[]; categories?: { slug: string; name: string }[]; initialCat?: string; showChips?: boolean }) {
   const [cat, setCat] = useState(initialCat);
   const [sort, setSort] = useState("popular");
   const [q, setQ] = useState("");

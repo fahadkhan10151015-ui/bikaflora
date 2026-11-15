@@ -1,4 +1,4 @@
-import { products } from "@/data/products";
+import { products, toCard } from "@/data/products";
 import ShopGrid from "@/components/product/ShopGrid";
 import CategoryCircles from "@/components/sections/CategoryCircles";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -18,7 +18,7 @@ export default function Shop() {
     <>
       <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: seo.h1, description: seo.description, url: absoluteUrl("/shop"),
         mainEntity: { "@type": "ItemList", numberOfItems: products.length, itemListElement: products.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(`/product/${p.slug}`), name: p.name })) } }} />
-      <div className="bg-gradient-to-br from-blush via-[#fbf3ee] to-cream border-b border-blush-2">
+      <div className="cat-hero bg-gradient-to-br from-blush via-[#fbf3ee] to-cream border-b border-blush-2">
         <div className="container-x pb-10 md:pb-12">
           <Breadcrumbs items={[{ name: "Shop", path: "/shop" }]} />
           <p className="eyebrow mb-3">{products.length} handmade bouquets · KL &amp; Selangor</p>
@@ -28,7 +28,7 @@ export default function Shop() {
       </div>
       <CategoryCircles compact />
       <div className="container-x mt-10">
-        <ShopGrid items={products} showChips={false} />
+        <ShopGrid items={products.map(toCard)} showChips={false} />
         <CollectionGuide name="Shop" html={seo.html} faqTitle={seo.faqTitle} faqs={seo.faqs} />
       </div>
       <WaCta />

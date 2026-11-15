@@ -235,3 +235,8 @@ html.dark ::selection { background: #34477a; color: #fff; }
 .prose-guide th { background: #fbeef2; color: var(--color-ink); text-align: left; padding: .7rem .9rem; font-weight: 600; }
 .prose-guide td { padding: .7rem .9rem; border-top: 1px solid #f3e7eb; }
 .prose-guide a { color: var(--color-brand); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+/* Category & shop header in dark mode */
+html.dark .cat-hero { background: linear-gradient(135deg, #1a2238 0%, #141b2d 60%, #10162a 100%); border-color: rgb(255 255 255 / .08); }
+html.dark .cat-hero .text-ink, html.dark .cat-hero h1 { color: #f3f1ec; }
+html.dark .cat-hero .text-ink\/75 { color: rgb(243 241 236 / .78); }
+html.dark .cat-hero .bg-white\/80 { background-color: rgb(255 255 255 / .08); border-color: rgb(255 255 255 / .14); color: #f3f1ec; }

@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getProduct, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
 
 /** One line in the customer's WhatsApp order list. */
 export type OrderLine = { slug: string; size?: string; price: number; qty: number };
@@ -36,14 +36,20 @@ export function OrderListProvider({ children }: { children: React.ReactNode }) {
     try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* ignore */ }
   }, []);
 
+  // The full product list is only downloaded once something is in the order list (keeps first load light).
+  const [catalog, setCatalog] = useState<((slug: string) => Product | undefined) | null>(null);
+  useEffect(() => {
+    if (catalog || (!raw.length && !isOpen)) return;
+    import("@/data/products").then((m) => setCatalog(() => m.getProduct));
+  }, [raw.length, isOpen, catalog]);
   const lines = useMemo(
-    () => raw.map((l) => ({ ...l, product: getProduct(l.slug)! })).filter((l) => l.product),
-    [raw],
+    () => (catalog ? raw.map((l) => ({ ...l, product: catalog(l.slug)! })).filter((l) => l.product) : []),
+    [raw, catalog],
   );
 
   const value: Ctx = {
     lines,
-    count: lines.reduce((n, l) => n + l.qty, 0),
+    count: raw.reduce((n, l) => n + l.qty, 0),
     total: lines.reduce((n, l) => n + l.price * l.qty, 0),
     isOpen,
     open: () => setOpen(true),

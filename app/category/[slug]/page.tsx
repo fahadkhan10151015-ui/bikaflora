@@ -32,7 +32,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     <>
       <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: seo?.h1 ?? c.name, description: seo?.description ?? c.seoDescription, url: absoluteUrl(`/category/${c.slug}`),
         mainEntity: { "@type": "ItemList", itemListElement: items.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(`/product/${p.slug}`), name: p.name })) } }} />
-      <div className="relative overflow-hidden bg-gradient-to-br from-blush via-[#fbf3ee] to-cream border-b border-blush-2">
+      <div className="cat-hero relative overflow-hidden bg-gradient-to-br from-blush via-[#fbf3ee] to-cream border-b border-blush-2">
         <div className="container-x pb-12 md:pb-14 grid md:grid-cols-[minmax(0,1fr)_380px] lg:grid-cols-[minmax(0,1fr)_440px] gap-8 lg:gap-12 items-center">
           <div>
             <Breadcrumbs items={[{ name: "Shop", path: "/shop" }, { name: c.name, path: `/category/${c.slug}` }]} />
