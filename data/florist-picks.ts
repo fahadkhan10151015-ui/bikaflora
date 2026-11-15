@@ -4,7 +4,8 @@
 export const floristScore: Record<string, number> = {
   "red-soap-rose-heart-large": 4.5,
   "pink-white-rose-heart-large": 4.5,
-  "dark-obsession": 4.5,
+  "hearts-desire": 4.5,
+  "graduation-signature": 4.5,
   "pinky-promise": 4.5,
   "365-days-of-love": 4.5,
 };
