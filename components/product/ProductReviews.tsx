@@ -139,7 +139,7 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
                   <span className="w-10 h-10 rounded-full bg-brand text-white grid place-items-center font-semibold">{r.name.charAt(0).toUpperCase()}</span>
                   <div>
                     <div className="font-semibold leading-tight">{r.name}</div>
-                    <div className="text-xs text-muted">{new Date(r.created_at).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}</div>
+                    <div className="text-xs text-muted">Customer review</div>
                   </div>
                 </div>
                 <span className="flex">{[1, 2, 3, 4, 5].map((n) => <Star key={n} className={`w-4 h-4 ${r.rating >= n ? "fill-gold text-gold" : "text-blush-2"}`} />)}</span>

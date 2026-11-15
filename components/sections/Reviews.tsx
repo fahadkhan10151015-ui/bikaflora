@@ -55,7 +55,6 @@ export default function Reviews({ limit = 6 }: { limit?: number }) {
                 <div className="font-semibold text-sm">{r.name}</div>
                 <div className="text-xs text-muted">
                   {p ? <Link href={`/product/${p.slug}`} className="hover:text-brand">{p.name}</Link> : null}
-                  {p ? " · " : ""}{new Date(r.created_at).toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })}
                 </div>
               </div>
             </figcaption>
