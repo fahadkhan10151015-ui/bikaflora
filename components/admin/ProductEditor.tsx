@@ -7,7 +7,7 @@ import { allCategories } from "@/data/categories";
 import { stock as liveStock } from "@/data/stock";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
-import { Field, LinesEditor, FaqEditor, PhotosEditor, NumberField, BadgeField, type QA } from "./fields";
+import { Field, LinesEditor, FaqEditor, PhotosEditor, NumberField, BadgeField, KeywordsField, type QA } from "./fields";
 import { card, Note, Toggle } from "./ui";
 import SeoScore from "./SeoScore";
 
@@ -235,7 +235,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
 
           <div className={box}>
             <h3 className="font-semibold">SEO</h3>
-            <label className="block"><span className="label">Focus keyword</span><input className="input" placeholder={f.name.toLowerCase() || "e.g. pink rose bouquet KL"} value={f.keyword} onChange={(e) => set({ keyword: e.target.value })} /></label>
+            <KeywordsField value={f.keyword} onChange={(v) => set({ keyword: v })} placeholder={f.name.toLowerCase() || "e.g. pink rose bouquet KL"} />
             <label className="block"><span className="label">Meta title <span className={`font-normal ${autoTitle.length > 60 ? "text-red-600" : "text-muted"}`}>({autoTitle.length}/60)</span></span><input className="input" placeholder={autoTitle || "Made from the name"} value={f.seoTitle} onChange={(e) => set({ seoTitle: e.target.value })} /></label>
             <label className="block"><span className="label">Meta description <span className={`font-normal ${autoDesc.length > 160 ? "text-red-600" : "text-muted"}`}>({autoDesc.length}/160)</span></span><textarea className="input" rows={3} placeholder="Made from the short description" value={f.seoDescription} onChange={(e) => set({ seoDescription: e.target.value })} /></label>
             <div className="rounded-xl border border-gray-200 p-3 bg-white">

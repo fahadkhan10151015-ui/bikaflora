@@ -5,7 +5,7 @@ import { ArrowLeft, Save, Loader2, Trash2, CalendarClock, Upload, Plus, Pencil, 
 import { posts, blogCategories } from "@/data/posts";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
-import { uploadPhoto } from "./fields";
+import { uploadPhoto, KeywordsField } from "./fields";
 import { card, Note } from "./ui";
 import SeoScore from "./SeoScore";
 
@@ -160,10 +160,9 @@ export default function PostEditor({ slug: startSlug, onClose }: { slug: string;
 
           <div className={box}>
             <h3 className="font-semibold">SEO</h3>
-            <label className="block"><span className="label">Focus keyword</span><input className="input" placeholder="e.g. convocation flowers KL" value={p.keyword} onChange={(e) => set({ keyword: e.target.value })} /></label>
+            <KeywordsField value={p.keyword} onChange={(v) => set({ keyword: v })} placeholder="e.g. convocation flowers KL" />
             <label className="block"><span className="label">Meta title <span className={`font-normal ${autoTitle.length > 60 ? "text-red-600" : "text-muted"}`}>({autoTitle.length}/60)</span></span><input className="input" placeholder={p.title || "Uses the post title"} value={p.seoTitle} onChange={(e) => set({ seoTitle: e.target.value })} /></label>
             <label className="block"><span className="label">Meta description <span className={`font-normal ${autoDesc.length > 160 ? "text-red-600" : "text-muted"}`}>({autoDesc.length}/160)</span></span><textarea className="input" rows={3} placeholder="Leave empty to use the start of the post" value={p.description} onChange={(e) => set({ description: e.target.value })} /></label>
-            {p.keyword && <p className={`text-xs ${p.title.toLowerCase().includes(p.keyword.toLowerCase()) ? "text-emerald-700" : "text-amber-700"}`}>{p.title.toLowerCase().includes(p.keyword.toLowerCase()) ? "✓ Focus keyword is in the title." : "Tip: put the focus keyword in the title."}</p>}
             <div className="rounded-xl border border-gray-200 p-3 bg-white">
               <div className="text-[11px] text-gray-500">Google preview</div>
               <div className="text-[12px] text-gray-700 truncate">bikaflora.my › blog › {p.slug || "…"}</div>

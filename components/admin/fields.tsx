@@ -199,3 +199,29 @@ export function BadgeField({ value, onChange }: { value: string; onChange: (v: s
     </div>
   );
 }
+
+/** Keyword chips: type and press Enter (or comma). The first keyword is the main one. Stored comma separated. */
+export function KeywordsField({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
+  const [draft, setDraft] = useState("");
+  const list = value.split(",").map((k) => k.trim()).filter(Boolean);
+  const save = (l: string[]) => onChange(l.join(", "));
+  const add = () => { const k = draft.replace(/,/g, " ").trim(); if (k && !list.some((x) => x.toLowerCase() === k.toLowerCase())) save([...list, k]); setDraft(""); };
+  return (
+    <div>
+      <span className="label">Keywords <span className="font-normal text-muted">(first = main keyword)</span></span>
+      <div className="flex flex-wrap gap-1.5 rounded-[.8rem] border border-[#e6e1d8] bg-white p-2 focus-within:border-brand">
+        {list.map((k, i) => (
+          <span key={k} className={`inline-flex items-center gap-1 rounded-full pl-2.5 pr-1 py-1 text-xs font-semibold ${i === 0 ? "bg-brand text-white" : "bg-blush text-brand"}`}>
+            {i === 0 && <span className="text-[9px] opacity-80">MAIN</span>}{k}
+            {i > 0 && <button type="button" title="Make main keyword" onClick={() => save([k, ...list.filter((x) => x !== k)])} className="px-1 opacity-60 hover:opacity-100">★</button>}
+            <button type="button" aria-label={`Remove ${k}`} onClick={() => save(list.filter((x) => x !== k))} className="px-1 opacity-70 hover:opacity-100">✕</button>
+          </span>
+        ))}
+        <input className="flex-1 min-w-[10ch] outline-none text-sm px-1 py-1" placeholder={list.length ? "Add another…" : placeholder ?? "Type a keyword, press Enter"} value={draft}
+          onChange={(e) => setDraft(e.target.value)} onBlur={add}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); add(); } else if (e.key === "Backspace" && !draft && list.length) save(list.slice(0, -1)); }} />
+      </div>
+      <span className="mt-1 block text-xs text-muted">Press Enter after each keyword. Tap ★ to make one the main keyword.</span>
+    </div>
+  );
+}

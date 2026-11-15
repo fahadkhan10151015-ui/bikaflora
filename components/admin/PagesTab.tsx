@@ -14,7 +14,7 @@ import SeoScore, { seoChecks, ScorePill } from "./SeoScore";
 import HeroEditor from "./HeroEditor";
 import { customPages } from "@/lib/custom-pages";
 import PostEditor from "./PostEditor";
-import { Field, FaqEditor, SingleImage, uploadPhoto, type QA } from "./fields";
+import { Field, FaqEditor, SingleImage, uploadPhoto, KeywordsField, type QA } from "./fields";
 import { card, Note } from "./ui";
 
 type Kind = "collection" | "location" | "page" | "post";
@@ -238,7 +238,7 @@ export function PageEditor({ item, onClose }: { item: Item; onClose: () => void 
         <h3 className="text-xl font-semibold">SEO</h3>
         <Field label="Meta title" value={d.title} max={60} onChange={(v) => set({ title: v })} hint={item.kind === "collection" ? "Auto if empty." : undefined} />
         <Field label="Meta description" value={d.description} max={160} rows={2} onChange={(v) => set({ description: v })} />
-        <Field label="Focus keyword" value={d.keyword ?? ""} onChange={(v) => set({ keyword: v })} hint="The search phrase this page should rank for." />
+        <KeywordsField value={d.keyword ?? ""} onChange={(v) => set({ keyword: v })} />
         <div className="pt-2 border-t border-blush-2/60"><SeoScore keyword={d.keyword ?? ""} title={d.title} description={d.description} slug={item.slug || slug} h1={d.h1 ?? d.name ?? ""} html={`${d.intro ?? ""}${d.html ?? ""}`} /></div>
       </section>
 
