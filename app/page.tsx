@@ -9,6 +9,7 @@ import { getCategory } from "@/data/categories";
 import DeliveryWays from "@/components/sections/DeliveryWays";
 import { selangor, kl } from "@/data/locations";
 import { pageCopy } from "@/data/page-copy";
+import Reveal from "@/components/ui/Reveal";
 import ProductRow from "@/components/product/ProductRow";
 import HeroSlider from "@/components/sections/HeroSlider";
 import Petals from "@/components/sections/Petals";
@@ -159,12 +160,21 @@ export default function Home() {
           <div className="mt-12 grid md:grid-cols-2 gap-5 md:gap-6">
             {c.sections!.map((sec, i) => {
               const Icon = copyIcons[i % copyIcons.length];
+              const dark = i === 0;
+              const wide = i === c.sections!.length - 1 && c.sections!.length % 2 === 1;
               return (
-                <div key={sec.title} className={`home-card rounded-[1.75rem] border border-blush-2/80 p-6 md:p-8 ${i === c.sections!.length - 1 && c.sections!.length % 2 ? "md:col-span-2" : ""} ${i === 0 ? "bg-gradient-to-br from-brand to-deep text-white home-card-dark" : "bg-cream"}`}>
-                  <span className={`w-12 h-12 rounded-2xl grid place-items-center ${i === 0 ? "bg-white/15 text-gold" : "bg-white text-brand border border-blush-2"}`}><Icon className="w-6 h-6" /></span>
-                  <h2 className="mt-4 text-2xl md:text-[1.7rem] font-semibold leading-snug">{sec.title}</h2>
-                  <div className="mt-2" dangerouslySetInnerHTML={{ __html: sec.html }} />
-                </div>
+                <Reveal key={sec.title} delay={(i % 2) * 120} className={wide ? "md:col-span-2" : ""}>
+                  <div className={`home-card group relative h-full overflow-hidden rounded-[1.75rem] border p-6 md:p-8 ${dark ? "home-card-dark bg-gradient-to-br from-brand to-deep text-white border-transparent" : "bg-white border-blush-2/80"}`}>
+                    <span aria-hidden className="home-card-bar" />
+                    <span aria-hidden className="home-card-glow" />
+                    <div className="relative flex items-center gap-3">
+                      <span className={`home-card-icon w-12 h-12 rounded-2xl grid place-items-center shrink-0 ${dark ? "bg-white/15 text-gold" : "bg-blush text-brand"}`}><Icon className="w-6 h-6" /></span>
+                      <span className={`text-xs font-semibold tracking-[0.2em] ${dark ? "text-gold" : "text-gold-deep"}`}>{String(i + 1).padStart(2, "0")}</span>
+                    </div>
+                    <h2 className="relative mt-4 text-2xl md:text-[1.7rem] font-semibold leading-snug">{sec.title}</h2>
+                    <div className="relative mt-2" dangerouslySetInnerHTML={{ __html: sec.html }} />
+                  </div>
+                </Reveal>
               );
             })}
           </div>

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Zap, CalendarClock, Camera, ShieldCheck } from "lucide-react";
+import { Zap, CalendarClock, Camera, ShieldCheck, Truck } from "lucide-react";
 import { products, getProduct, relatedProducts, isAddOn, addOns } from "@/data/products";
 import { getCategory } from "@/data/categories";
 import Gallery from "@/components/product/Gallery";
@@ -115,11 +115,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <ProductDetails p={p} html={seo?.html}>
-        <div className="mt-6 prose-location prose-product-card bg-blush/60 rounded-3xl border border-blush-2/70 px-5 py-6 sm:px-8 sm:py-8">
-          <h2>Delivery in Kuala Lumpur & Selangor</h2>
-          <p>
-            Choose <strong>Instant Delivery</strong> (delivered the same day at any time) or <strong>Pre-order</strong> for your chosen date. Want something different? Send us a photo and we&apos;ll customise it. Payment is made in advance. We deliver to homes, offices, hospitals and campuses across KL and Selangor. See all <Link href="/flower-delivery" className="text-brand underline">delivery areas</Link>.
-          </p>
+        <div className="rounded-3xl bg-gradient-to-br from-brand to-deep text-white p-6">
+          <h3 className="font-sans font-semibold text-[15px] flex items-center gap-2"><Truck className="w-5 h-5 text-gold" /> Delivery in KL &amp; Selangor</h3>
+          <ul className="mt-3 space-y-2 text-[15px] text-white/85">
+            {p.instant && <li><b className="text-white">Instant Delivery:</b> same day, any time</li>}
+            <li><b className="text-white">Pre-order:</b> choose your date</li>
+            <li><b className="text-white">Custom:</b> send us a photo on WhatsApp</li>
+            <li><b className="text-white">Payment:</b> in advance, after we confirm</li>
+          </ul>
+          <Link href="/flower-delivery" className="mt-4 inline-flex items-center gap-1 text-gold font-semibold text-sm hover:underline">See delivery areas →</Link>
         </div>
       </ProductDetails>
       </VariantProvider>

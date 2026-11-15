@@ -11,10 +11,10 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..")
 const OUT_DIR = path.join(ROOT, "public/images/cities");
 const DATA = path.join(ROOT, "data/city-photos.json");
 const UA = "BikaFloraSiteBuild/1.0 (https://bikaflora.my; support@bikaflora.my)";
-const MAX = 100 * 1024 - 2048;
+const MAX = 380 * 1024; // HD source (1920 px); the site then serves a smaller AVIF/WebP sized to each screen
 // Vercel keeps .next/cache between builds, so photos are downloaded once and reused after that.
 const CACHE = path.join(ROOT, ".next/cache/city-photos");
-const VERSION = "v2"; // change to download all photos again
+const VERSION = "v3"; // change to download all photos again
 
 /** Area slug -> [area name, Wikipedia pages to try, in order]. */
 const AREAS = {
@@ -53,8 +53,8 @@ const AREAS = {
 };
 
 const BAD = /map|locator|location|\.svg|flag|seal|logo|coat|emblem|montage|collage|skyline_collage|sign|plan|diagram/i;
-// Only licences that need no photo credit on the page.
-const FREE = /^(CC0|Public domain|PD)/i;
+// Free licences. Credits for CC BY / CC BY-SA photos are listed on /image-credits (linked in the footer).
+const FREE = /^(CC0|Public domain|PD|CC BY(-SA)? [\d.]+)/i;
 const slugify = (s) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50);
 const strip = (s = "") => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
@@ -73,9 +73,9 @@ async function candidate(page) {
   // URL is either .../commons/a/ab/File.jpg or .../commons/thumb/a/ab/File.jpg/3840px-File.jpg, plus ?utm_ params.
   const parts = orig.source.split("?")[0].split("/");
   const file = decodeURIComponent(parts.includes("thumb") ? parts[parts.length - 2] : parts[parts.length - 1]);
-  if (BAD.test(file) || orig.width < 900 || orig.width < orig.height * 1.15) return why(page, `rejected ${file} ${orig.width}x${orig.height}`);
+  if (BAD.test(file) || orig.width < 1200 || orig.width < orig.height * 1.15) return why(page, `rejected ${file} ${orig.width}x${orig.height}`);
   // Licence + credit from Commons (files only on en.wikipedia are often non-free: skip them).
-  const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent("File:" + file)}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1600`;
+  const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent("File:" + file)}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1920`;
   const j = await (await get(api)).json();
   const p = Object.values(j.query?.pages ?? {})[0];
   const info = p?.imageinfo?.[0];
@@ -94,12 +94,11 @@ async function candidate(page) {
 }
 
 async function compress(buf) {
-  // Keep quality at 58+ by stepping the width down first; only then go lower on quality.
+  // Sharp HD first: 1920 px at high quality; step down only if the file would be too big.
   const tries = [];
-  for (const w of [1600, 1400, 1280, 1080, 960]) for (let q = 74; q >= 58; q -= 4) tries.push([w, q]);
-  for (let q = 54; q >= 46; q -= 4) tries.push([960, q]);
+  for (const w of [1920, 1600]) for (let q = 84; q >= 72; q -= 4) tries.push([w, q]);
   for (const [w, q] of tries) {
-    const out = await sharp(buf).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: q, effort: 6 }).toBuffer({ resolveWithObject: true });
+    const out = await sharp(buf).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: q, effort: 6, smartSubsample: true }).toBuffer({ resolveWithObject: true });
     if (out.data.length <= MAX) return { data: out.data, w: out.info.width, h: out.info.height };
   }
   return null;

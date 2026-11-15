@@ -6,7 +6,7 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [60, 70, 75, 80], // 75 for photos: sharp and small (under 100 KB)
     minimumCacheTTL: 60 * 60 * 24 * 30, // keep optimised images for 30 days
-    deviceSizes: [390, 640, 828, 1080],
+    deviceSizes: [390, 640, 828, 1080, 1440, 1920],
     imageSizes: [96, 128, 256, 320],
   },
   compress: true,

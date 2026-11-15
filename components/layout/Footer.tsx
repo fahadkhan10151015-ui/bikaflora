@@ -23,6 +23,7 @@ const help: [string, string][] = [
   ["/terms", "Terms & Conditions"],
   ["/privacy-policy", "Privacy Policy"],
   ["/contact", "Contact"],
+  ["/image-credits", "Image Credits"],
 ];
 
 const areaSlugs = ["kuala-lumpur", "shah-alam", "petaling-jaya", "subang-jaya", "cheras", "puchong", "klang"];

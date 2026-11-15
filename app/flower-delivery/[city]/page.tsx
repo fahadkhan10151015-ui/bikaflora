@@ -57,9 +57,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         provider: { "@id": absoluteUrl("/#business") }, areaServed: { "@type": "City", name: l.name, containedInPlace: { "@type": "State", name: l.state } }, url: absoluteUrl(`/flower-delivery/${l.slug}`) }} />
       <div className="relative overflow-hidden text-white">
         {photo
-          ? <FillImage src={photo.src} alt={photo.alt} w={1080} h={540} quality={72} priority className="object-cover" />
+          ? <FillImage src={photo.src} alt={photo.alt} w={1920} h={1080} sizes="100vw" quality={80} priority className="object-cover" />
           : <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />}
-        <div className="absolute inset-0 bg-gradient-to-r from-deep/90 via-deep/70 to-deep/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-deep/90 via-deep/60 to-deep/15" />
         <div className="relative container-x pb-14 md:pb-16 [&_nav]:text-white/70 [&_nav_span]:text-white">
           <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
           <div className="eyebrow !text-petal mb-3 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
