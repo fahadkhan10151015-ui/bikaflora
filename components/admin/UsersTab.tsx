@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { UserPlus, Loader2, Trash2, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
@@ -45,14 +44,12 @@ export default function UsersTab() {
     const { data: res, error } = await sb!.rpc("admin_add", { p_email: email, p_name: f.name.trim(), p_role: f.role });
     if (error) { setBusy(false); return setMsg({ kind: "err", text: error.message }); }
     let text = `${f.name} now has ${roleLabel(f.role)}.`;
-    // 2) New person: create their login with the password you chose (a separate session, so you stay logged in).
+    // 2) New person: create their login with the password you chose, already confirmed (no email code or link needed).
     if (res === "invited") {
-      const temp = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "bf-admin-adduser" } });
-      const { data: su, error: e2 } = await temp.auth.signUp({ email, password: f.password, options: { data: { full_name: f.name.trim() }, emailRedirectTo: `${window.location.origin}/admin` } });
-      if (e2) { setBusy(false); return setMsg({ kind: "err", text: `Permission saved, but the login could not be created: ${e2.message}` }); }
-      text = su.session
-        ? `Account created for ${f.name}. They can log in at bikaflora.my/admin with this email and password.`
-        : `Account created for ${f.name}. They must first click the confirmation link sent to ${email}, then log in at bikaflora.my/admin.`;
+      const { data: out, error: e2 } = await sb!.functions.invoke("admin-create-user", { body: { email, password: f.password, name: f.name.trim() } });
+      const fail = e2 ? ((await (e2 as { context?: Response }).context?.json?.().catch(() => null))?.error ?? e2.message) : (out as { error?: string })?.error;
+      if (fail) { setBusy(false); return setMsg({ kind: "err", text: `Permission saved, but the login could not be created: ${fail}` }); }
+      text = `Account created for ${f.name}. They can log in right away at bikaflora.my/admin with this email and password. No confirmation email is needed.`;
     } else {
       text += " They already had an account, so they log in with their existing password (or use “Forgot password”).";
     }
