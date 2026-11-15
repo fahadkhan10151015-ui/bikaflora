@@ -1,4 +1,3 @@
-import DeliveryFeeNote from "@/components/ui/DeliveryFeeNote";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { categories, getCategory } from "@/data/categories";
@@ -58,7 +57,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
       <div className="container-x mt-10 md:mt-14">
-        <DeliveryFeeNote className="mb-5" />
         <div id="bouquets" className="scroll-mt-32 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">{items.map((p, i) => <ProductCard key={p.slug} p={p} priority={i < 4} />)}</div>
         {seo ? (
           <CollectionGuide name={c.name} html={seo.html} faqTitle={seo.faqTitle} faqs={seo.faqs} />
