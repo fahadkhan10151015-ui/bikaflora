@@ -8,7 +8,7 @@ import { loadSupabase } from "@/lib/supabase-config";
 import { card } from "./ui";
 
 /** Overview: key numbers and quick actions. */
-export default function Dashboard({ go }: { go: (tab: string, action?: string) => void }) {
+export default function Dashboard({ go, full = true }: { go: (tab: string, action?: string) => void; full?: boolean }) {
   const [n, setN] = useState({ reviews: 0, avg: 0, newMsgs: 0, customers: 0 });
   useEffect(() => {
     (async () => {
@@ -32,8 +32,8 @@ export default function Dashboard({ go }: { go: (tab: string, action?: string) =
   ];
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        {stats.map(({ label, value, icon: Icon, tab, tone }) => (
+      <div className={`grid grid-cols-2 ${full ? "lg:grid-cols-5" : "lg:grid-cols-4"} gap-4`}>
+        {stats.filter((s) => full || s.tab !== "customers").map(({ label, value, icon: Icon, tab, tone }) => (
           <button key={label} onClick={() => go(tab)} className={`${card} p-4 text-left hover:shadow-lg hover:-translate-y-0.5 transition`}>
             <span className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tone} text-white grid place-items-center`}><Icon className="w-5 h-5" /></span>
             <div className="mt-3 text-2xl font-semibold text-ink">{value}</div>

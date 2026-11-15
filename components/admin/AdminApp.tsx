@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut, UserCog, Eye } from "lucide-react";
+import UsersTab, { ROLES } from "./UsersTab";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
 import Dashboard from "./Dashboard";
@@ -22,13 +23,17 @@ const nav = [
   { id: "seo", label: "SEO", icon: Search, help: "Meta title and description for any page, plus sitemap and Google settings." },
   { id: "customers", label: "Customers", icon: Users, help: "People with an account on your website." },
   { id: "messages", label: "Messages", icon: Mail, help: "Messages sent through the contact forms." },
+  { id: "users", label: "Users", icon: UserCog, help: "Add admin users, change their permission or remove them." },
 ] as const;
+/** Sections only full admins see. */
+const FULL_ONLY = ["customers", "users"];
 type TabId = (typeof nav)[number]["id"];
 
 /** Private admin panel. Only accounts in the Supabase `admins` table can use it. */
 export default function AdminApp() {
   const { user, loading, signOut } = useAuth();
   const [allowed, setAllowed] = useState<boolean | null>(null);
+  const [role, setRole] = useState<"full" | "editor" | "viewer" | null>(null);
   const [tab, setTab] = useState<TabId>("dashboard");
   const [action, setAction] = useState("");
   const [menu, setMenu] = useState(false);
@@ -39,7 +44,8 @@ export default function AdminApp() {
     if (!user) { setAllowed(false); return; }
     (async () => {
       const sb = await loadSupabase();
-      const { data } = (await sb?.rpc("is_admin")) ?? { data: false };
+      const { data } = (await sb?.rpc("my_admin_role")) ?? { data: null };
+      setRole((data as "full" | "editor" | "viewer" | null) ?? null);
       setAllowed(Boolean(data));
     })();
   }, [user, loading]);
@@ -80,7 +86,7 @@ export default function AdminApp() {
           <button className="lg:hidden p-1" onClick={() => setMenu(false)} aria-label="Close menu"><X className="w-5 h-5" /></button>
         </div>
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {nav.map(({ id, label, icon: Icon }) => (
+          {nav.filter((n) => role === "full" || !FULL_ONLY.includes(n.id)).map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => go(id)}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[15px] transition ${tab === id ? "bg-white text-[#1f2a44] font-semibold shadow" : "text-white/75 hover:bg-white/10 hover:text-white"}`}>
               <Icon className="w-[18px] h-[18px]" /> {label}
@@ -103,12 +109,13 @@ export default function AdminApp() {
             <p className="hidden sm:block text-xs text-muted truncate">{cur.help}</p>
           </div>
           <div className="ml-auto flex items-center gap-3">
-            <span className="hidden md:block text-sm text-muted">Hi, {displayName(user)}</span>
-            <button onClick={publish} disabled={pub.state === "busy"} className="btn btn-primary !py-2 !px-4 text-sm disabled:opacity-60">
+            <span className="hidden md:block text-sm text-muted">Hi, {displayName(user)} · <span className="font-semibold text-ink">{ROLES.find((r) => r.id === role)?.label}</span></span>
+            {role !== "viewer" && <button onClick={publish} disabled={pub.state === "busy"} className="btn btn-primary !py-2 !px-4 text-sm disabled:opacity-60">
               {pub.state === "busy" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />} <span className="hidden sm:inline">Publish changes</span><span className="sm:hidden">Publish</span>
-            </button>
+            </button>}
           </div>
         </header>
+        {role === "viewer" && <div className="px-6 py-2.5 text-sm bg-sky-50 text-sky-800 flex items-center gap-2"><Eye className="w-4 h-4" /> You have view-only access. You can look around, but changes are not saved.</div>}
         {pub.msg && <div className={`px-6 py-2.5 text-sm ${pub.state === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{pub.msg}</div>}
 
         <main className="flex-1 overflow-y-auto">
@@ -120,7 +127,7 @@ export default function AdminApp() {
                     <li key={n} className="flex gap-3 rounded-2xl bg-white border border-[#ebe7df] p-4"><span className="w-8 h-8 rounded-full bg-brand text-white grid place-items-center font-semibold shrink-0">{n}</span><span><b className="text-ink">{t}</b><br /><span className="text-muted">{d}</span></span></li>
                   ))}
                 </ol>
-                <Dashboard go={go} />
+                <Dashboard go={go} full={role === "full"} />
               </>
             )}
             {tab === "products" && <ProductsTab key={action} startNew={action === "new"} />}
@@ -129,8 +136,9 @@ export default function AdminApp() {
             {tab === "pages" && <PagesTab kinds={["page", "location"]} />}
             {tab === "reviews" && <ReviewsTab />}
             {tab === "seo" && <SeoTab />}
-            {tab === "customers" && <CustomersTab />}
+            {tab === "customers" && role === "full" && <CustomersTab />}
             {tab === "messages" && <MessagesTab />}
+            {tab === "users" && role === "full" && <UsersTab />}
           </div>
         </main>
       </div>

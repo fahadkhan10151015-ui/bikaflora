@@ -1,8 +1,10 @@
 "use client";
 /** Small shared bits for the admin panel. */
 export const card = "bg-white rounded-3xl border border-blush-2/70";
+// Database "not allowed" errors are shown in plain words.
+const friendly = (c: React.ReactNode) => typeof c === "string" && /row-level security|permission denied|not allowed/i.test(c) ? "Your account has view-only access, so this was not saved. Ask a full admin for editor access." : c;
 export const Note = ({ kind = "ok", children }: { kind?: "ok" | "err"; children: React.ReactNode }) => (
-  <div className={`rounded-2xl px-4 py-3 text-sm ${kind === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{children}</div>
+  <div className={`rounded-2xl px-4 py-3 text-sm ${kind === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{friendly(children)}</div>
 );
 export const Toggle = ({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) => (
   <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)}
