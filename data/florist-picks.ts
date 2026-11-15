@@ -3,7 +3,6 @@
 // and it is NOT added to Google review data (schema).
 export const floristScore: Record<string, number> = {
   "hearts-desire": 4.5,
-  "graduation-signature": 4.5,
   "pinky-promise": 4.5,
   "365-days-of-love": 4.5,
 };
