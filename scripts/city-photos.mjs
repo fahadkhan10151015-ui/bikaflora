@@ -60,21 +60,23 @@ async function get(url) {
   return r;
 }
 
+const why = (page, msg) => { console.log(`[city-photos] skip ${page}: ${msg}`); return null; };
+
 async function candidate(page) {
   const sum = await (await get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(page)}`)).json();
   const orig = sum.originalimage;
-  if (!orig?.source) return null;
+  if (!orig?.source) return why(page, 'no lead image');
   const file = decodeURIComponent(orig.source.split("/").pop());
-  if (BAD.test(file) || orig.width < 1000 || orig.width < orig.height * 1.15) return null;
+  if (BAD.test(file) || orig.width < 1000 || orig.width < orig.height * 1.15) return why(page, `rejected ${file} ${orig.width}x${orig.height}`);
   // Licence + credit from Commons (files only on en.wikipedia are often non-free: skip them).
   const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent("File:" + file)}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1600`;
   const j = await (await get(api)).json();
   const p = Object.values(j.query?.pages ?? {})[0];
   const info = p?.imageinfo?.[0];
-  if (!info || p.missing !== undefined) return null;
+  if (!info || p.missing !== undefined) return why(page, `not on Commons: ${file}`);
   const m = info.extmetadata ?? {};
   const license = strip(m.LicenseShortName?.value);
-  if (!FREE.test(license)) return null;
+  if (!FREE.test(license)) return why(page, `licence ${license}`);
   return {
     file,
     title: sum.title,
@@ -104,7 +106,7 @@ async function main() {
   for (const [slug, [name, pages]] of Object.entries(AREAS)) {
     try {
       for (const page of pages) {
-        const c = await candidate(page).catch(() => null);
+        const c = await candidate(page).catch((e) => why(page, e.message));
         if (!c || used.has(c.file)) continue;
         const img = await compress(Buffer.from(await (await get(c.url)).arrayBuffer()));
         if (!img) continue;
