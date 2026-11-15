@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import FillImage from "@/components/ui/FillImage";
 import Link from "next/link";
-import { MapPin, Zap, Clock, Camera } from "lucide-react";
+import { MapPin, Zap, Clock, Camera, Map } from "lucide-react";
 import { siteImages } from "@/lib/images";
 import { locations, getLocation } from "@/data/locations";
 import { products } from "@/data/products";
@@ -40,6 +40,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const seo = locationSeo[l.slug];
   const idx = locations.indexOf(l);
   const photo = cityPhotos[l.slug];
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${l.name}, ${l.state}, Malaysia`)}`;
   const picks = seo
     ? seo.featured.map((slug) => products.find((p) => p.slug === slug)).filter((p): p is (typeof products)[number] => Boolean(p))
     : [...products.slice(idx % products.length), ...products].slice(0, 4);
@@ -61,8 +62,17 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           : <FillImage src={idx % 2 ? siteImages.klTowers : siteImages.klCity} alt={`Flower delivery in ${l.name}, ${l.state}`} w={1080} h={540} quality={70} priority className="object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-r from-deep/90 via-deep/60 to-deep/15" />
         <div className="relative container-x pb-14 md:pb-16 [&_nav]:text-white/70 [&_nav_span]:text-white">
-          <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
-          <div className="eyebrow !text-petal mb-3 flex items-center gap-1"><MapPin className="w-4 h-4" /> {l.state}</div>
+          <div className="flex flex-wrap items-center justify-between gap-x-4">
+            <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }, { name: l.name, path: `/flower-delivery/${l.slug}` }]} />
+            <a href={mapUrl} target="_blank" rel="noopener" aria-label={`View ${l.name} on Google Maps`}
+              className="mb-4 md:mb-0 inline-flex items-center gap-2 glass !bg-white/15 border border-white/30 hover:!bg-white hover:text-brand transition px-4 py-2 rounded-full text-sm font-semibold">
+              <Map className="w-4 h-4" /> View on map
+            </a>
+          </div>
+          <a href={mapUrl} target="_blank" rel="noopener" title={`See ${l.name} on Google Maps`}
+            className="eyebrow !text-petal mb-3 inline-flex items-center gap-1 hover:!text-white hover:underline underline-offset-4">
+            <MapPin className="w-4 h-4" /> {l.name}, {l.state}
+          </a>
           <h1 className="text-4xl md:text-6xl font-semibold leading-tight">{seo?.h1 ?? `Flower Delivery in ${l.name}`}</h1>
           {seo
             ? <div className="mt-5 max-w-3xl text-lg md:text-xl leading-relaxed text-white/90 location-intro" dangerouslySetInnerHTML={{ __html: seo.intro }} />
