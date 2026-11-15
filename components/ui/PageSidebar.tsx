@@ -44,7 +44,7 @@ export default function PageSidebar({ path, image = "florist", src, alt }: { pat
         <ul className="space-y-3 text-[15px]">
           <li className="flex gap-3"><span className="w-9 h-9 rounded-xl bg-blush text-brand grid place-items-center shrink-0"><Zap className="w-4 h-4" /></span><span><b className="text-ink">Same-day delivery</b><br /><span className="text-muted text-sm">Across KL &amp; Selangor, no cut-off</span></span></li>
           <li className="flex gap-3"><span className="w-9 h-9 rounded-xl bg-blush text-brand grid place-items-center shrink-0"><Camera className="w-4 h-4" /></span><span><b className="text-ink">Photo first</b><br /><span className="text-muted text-sm">See your bouquet before it goes out</span></span></li>
-          <li className="flex gap-3"><span className="w-9 h-9 rounded-xl bg-blush text-brand grid place-items-center shrink-0"><Wallet className="w-4 h-4" /></span><span><b className="text-ink">Easy payment</b><br /><span className="text-muted text-sm">FPX, DuitNow or Touch &apos;n Go</span></span></li>
+          <li className="flex gap-3"><span className="w-9 h-9 rounded-xl bg-blush text-brand grid place-items-center shrink-0"><Wallet className="w-4 h-4" /></span><span><b className="text-ink">Easy payment</b><br /><span className="text-muted text-sm">Bank transfer, DuitNow QR or Touch &apos;n Go</span></span></li>
         </ul>
       </div>
 

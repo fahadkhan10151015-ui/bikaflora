@@ -46,7 +46,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     "q": "How do I pay?",
-    "a": "Payment is made in full first. FPX, DuitNow and Touch 'n Go e-wallet all work."
+    "a": "Payment is made in full first. Bank transfer, DuitNow QR and Touch 'n Go eWallet all work."
   },
   {
     "q": "When do I pay?",

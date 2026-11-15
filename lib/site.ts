@@ -114,7 +114,7 @@ export const deliveryPartners = [
 
 /** Payment policy shown across the site. */
 export const paymentNote = "Full payment in advance. We start preparing once payment is received.";
-export const paymentMethods = "Online bank transfer (FPX / DuitNow) or e-wallet (Touch 'n Go)";
+export const paymentMethods = "Bank transfer, DuitNow QR or Touch 'n Go eWallet";
 
 export type DeliveryMethodId = (typeof deliveryMethods)[number]["id"];
 

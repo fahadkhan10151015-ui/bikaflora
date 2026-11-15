@@ -70,7 +70,7 @@ export default function Footer() {
           {[
             [Zap, "Same-day delivery, no cut-off"],
             [Camera, "Photo before delivery"],
-            [Wallet, "FPX · DuitNow · Touch 'n Go"],
+            [Wallet, "Bank transfer · DuitNow QR · Touch 'n Go"],
           ].map(([Icon, t]) => {
             const I = Icon as typeof Zap;
             return <div key={t as string} className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"><I className="w-4 h-4 text-gold shrink-0" />{t as string}</div>;
