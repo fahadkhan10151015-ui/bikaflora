@@ -54,3 +54,20 @@ for await (const file of walk(APP)) {
   } catch (e) { skipped++; console.warn("[critical-css]", path.relative(APP, file), e.message); }
 }
 console.log(`[critical-css] ${done} pages with inlined first-screen CSS, ${skipped} skipped`);
+if (!done) {
+  // Debug: show where this build put its pre-rendered pages.
+  const found = [];
+  async function scan(dir, depth = 0) {
+    if (depth > 6 || found.length > 40) return;
+    let entries = [];
+    try { entries = await fs.readdir(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { if (!/node_modules|cache|\.git$/.test(e.name)) await scan(p, depth + 1); }
+      else if (/terms/.test(e.name)) found.push(path.relative(ROOT, p) + " " + (await fs.stat(p)).size);
+    }
+  }
+  await scan(path.join(ROOT, ".next"));
+  await scan(path.join(ROOT, ".vercel"));
+  console.log("[critical-css] files named *terms*:\n" + found.join("\n"));
+}
