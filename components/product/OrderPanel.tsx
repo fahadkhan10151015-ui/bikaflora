@@ -5,6 +5,7 @@ import { Zap, CalendarClock, Check, Plus, Palette, Mail, ShoppingBag } from "luc
 import { useOrderList } from "@/components/order/OrderListProvider";
 import Stars from "./Stars";
 import StockBadge from "./StockBadge";
+import FloristPick from "./FloristPick";
 import { useVariant } from "./VariantProvider";
 import { isAddOn, type Product } from "@/data/products";
 import { deliveryMethods, formatPrice, paymentNote, type DeliveryMethodId } from "@/lib/site";
@@ -75,6 +76,7 @@ export default function OrderPanel({ p }: { p: Product }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-5 border-b border-blush-2/70">
         <Stars slug={p.slug} size="lg" />
+        <FloristPick slug={p.slug} size="lg" />
         <StockBadge slug={p.slug} size="lg" />
       </div>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">

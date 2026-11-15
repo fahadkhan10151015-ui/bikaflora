@@ -5,6 +5,8 @@ import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
 import Stars from "./Stars";
 import StockBadge from "./StockBadge";
+import FloristPick from "./FloristPick";
+import { floristScore } from "@/data/florist-picks";
 import CardActions from "./CardActions";
 import HeartButton from "@/components/favourites/HeartButton";
 
@@ -30,7 +32,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
           <h3 className="font-serif text-[15px] sm:text-lg leading-snug hover:text-brand line-clamp-2 min-h-[2.5em]">{p.name}</h3>
         </Link>
         <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-          <Stars slug={p.slug} />
+          {floristScore[p.slug] !== undefined ? <FloristPick slug={p.slug} /> : <Stars slug={p.slug} />}
           <StockBadge slug={p.slug} />
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-muted">
