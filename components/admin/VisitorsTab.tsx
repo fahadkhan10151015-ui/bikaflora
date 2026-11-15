@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Eye, Users, MessageCircle, Percent, RefreshCw, Smartphone, Tablet, Monitor } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
+import OwnDevice from "./OwnDevice";
 import { card, Note } from "./ui";
 import { TopList } from "./WhatsAppTab";
 
@@ -33,6 +34,7 @@ export default function VisitorsTab() {
 
   return (
     <div className="space-y-5">
+      <OwnDevice />
       <div className="flex flex-wrap items-center gap-2">
         {RANGES.map((r) => <button key={r.d} onClick={() => setDays(r.d)} className={`btn !py-2 !px-4 text-sm ${days === r.d ? "btn-primary" : "btn-outline"}`}>{r.l}</button>)}
         <button onClick={load} className="btn btn-outline !py-2 !px-4 text-sm ml-auto"><RefreshCw className="w-4 h-4" /> Refresh</button>

@@ -40,8 +40,13 @@ export function visitSource() {
   } catch { return "Direct"; }
 }
 
+/** Admin devices are marked when the admin panel is opened, so your own visits and clicks are not counted. */
+export const STAFF_KEY = "bf-staff";
+export function isStaffDevice() { try { return localStorage.getItem(STAFF_KEY) === "1"; } catch { return false; } }
+export function setStaffDevice(on: boolean) { try { if (on) localStorage.setItem(STAFF_KEY, "1"); else localStorage.removeItem(STAFF_KEY); } catch {} }
+
 function skip() {
-  return window.location.pathname.startsWith("/admin") || navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent);
+  return window.location.pathname.startsWith("/admin") || isStaffDevice() || navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent);
 }
 
 function send(table: string, body: Record<string, unknown>) {

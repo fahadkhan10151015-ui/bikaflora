@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, MousePointerClick, ShoppingBag, CalendarDays, Globe2, Smartphone, Monitor, Tablet, RefreshCw } from "lucide-react";
+import { Loader2, MousePointerClick, ShoppingBag, CalendarDays, Globe2, Smartphone, Monitor, Tablet, RefreshCw, Trash2 } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
 import { products } from "@/data/products";
+import OwnDevice from "./OwnDevice";
 import { card, Note, fmtDate } from "./ui";
 
 type Click = { id: number; created_at: string; page: string; kind: string; button: string | null; product: string | null; device: string | null; source: string | null };
@@ -58,6 +59,13 @@ export default function WhatsAppTab() {
     }
     setRows(all);
   };
+  const remove = async (id: number) => {
+    if (!window.confirm("Delete this click? Use this for your own test clicks.")) return;
+    const sb = await loadSupabase();
+    const { error } = (await sb?.from("wa_clicks").delete().eq("id", id)) ?? { error: null };
+    if (error) return setErr(error.message);
+    setRows((r) => r?.filter((x) => x.id !== id) ?? null);
+  };
   useEffect(() => { load(); }, [days]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const s = useMemo(() => {
@@ -75,6 +83,7 @@ export default function WhatsAppTab() {
 
   return (
     <div className="space-y-5">
+      <OwnDevice />
       <div className="flex flex-wrap items-center gap-2">
         {RANGES.map((r) => <button key={r.d} onClick={() => setDays(r.d)} className={`btn !py-2 !px-4 text-sm ${days === r.d ? "btn-primary" : "btn-outline"}`}>{r.l}</button>)}
         <button onClick={load} className="btn btn-outline !py-2 !px-4 text-sm ml-auto"><RefreshCw className="w-4 h-4" /> Refresh</button>
@@ -137,7 +146,7 @@ export default function WhatsAppTab() {
               <div className={`${card} p-5 overflow-x-auto`}>
                 <h3 className="font-semibold text-ink">Latest clicks</h3>
                 <table className="mt-3 w-full text-sm">
-                  <thead><tr className="text-left text-muted"><th className="py-2 pr-3 font-medium">Time</th><th className="py-2 pr-3 font-medium">Type</th><th className="py-2 pr-3 font-medium">Page / product</th><th className="py-2 pr-3 font-medium">Source</th><th className="py-2 font-medium">Device</th></tr></thead>
+                  <thead><tr className="text-left text-muted"><th className="py-2 pr-3 font-medium">Time</th><th className="py-2 pr-3 font-medium">Type</th><th className="py-2 pr-3 font-medium">Page / product</th><th className="py-2 pr-3 font-medium">Source</th><th className="py-2 pr-3 font-medium">Device</th><th /></tr></thead>
                   <tbody>
                     {rows!.slice(0, 25).map((r) => (
                       <tr key={r.id} className="border-t border-[#f1ece4]">
@@ -145,7 +154,8 @@ export default function WhatsAppTab() {
                         <td className="py-2 pr-3"><span className="rounded-full bg-emerald-50 text-emerald-700 px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap">{r.kind}</span></td>
                         <td className="py-2 pr-3 text-ink">{r.product ? productName(r.product) : pageName(r.page)}</td>
                         <td className="py-2 pr-3">{r.source || "Direct"}</td>
-                        <td className="py-2 capitalize">{r.device}</td>
+                        <td className="py-2 pr-3 capitalize">{r.device}</td>
+                        <td className="py-2 text-right"><button title="Delete this click (e.g. your own test)" onClick={() => remove(r.id)} className="p-1.5 rounded-lg text-muted hover:text-red-600 hover:bg-red-50"><Trash2 className="w-4 h-4" /></button></td>
                       </tr>
                     ))}
                   </tbody>

@@ -20,9 +20,9 @@ export const site = {
   addressRegion: "Kuala Lumpur & Selangor, Malaysia",
 
   social: {
-    instagram: "",
-    facebook: "",
-    tiktok: "",
+    instagram: "https://www.instagram.com/bikaflora",
+    facebook: "https://www.facebook.com/share/1Dvac528Fg/",
+    tiktok: "https://www.tiktok.com/@bikaflora",
   } as Record<"instagram" | "facebook" | "tiktok", string>,
 };
 

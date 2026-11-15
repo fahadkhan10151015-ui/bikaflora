@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Mail, Phone, Clock, MapPin, ArrowRight, Zap, Camera, Wallet } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
-import { site, footerShopLinks, footerHelpLinks, footerAreaSlugs, socialLinks } from "@/lib/site";
+import { site, footerShopLinks, footerHelpLinks, footerAreaSlugs } from "@/lib/site";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { locations } from "@/data/locations";
 
 const shop = footerShopLinks.map((l) => [l.href, l.label] as [string, string]);
@@ -40,6 +41,7 @@ export default function Footer() {
             <li className="flex gap-2.5"><Mail className="w-4 h-4 mt-0.5 text-gold" /><a href={`mailto:${site.email}`} className={`${link} break-all`}>{site.email}</a></li>
             <li className="flex gap-2.5"><Clock className="w-4 h-4 mt-0.5 text-gold" />{site.openingHours}</li>
           </ul>
+          <SocialLinks className="mt-5" />
         </div>
         <div>
           <h3 className={col}>Shop Bouquets</h3>
@@ -79,11 +81,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-x py-5 text-xs flex flex-col sm:flex-row gap-2 justify-between">
           <span>© {new Date().getFullYear()} {site.name}. All rights reserved.</span>
-          {socialLinks().length > 0 && (
-            <span className="flex items-center gap-3">
-              {socialLinks().map((s) => <a key={s.name} href={s.url} target="_blank" rel="noopener" className="capitalize hover:text-white">{s.name === "tiktok" ? "TikTok" : s.name}</a>)}
-            </span>
-          )}
+
           <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Online florist delivering in Kuala Lumpur &amp; Selangor, Malaysia</span>
         </div>
       </div>

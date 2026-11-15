@@ -1,3 +1,4 @@
+import SocialLinks from "@/components/ui/SocialLinks";
 import { notFound } from "next/navigation";
 import Photo from "@/components/ui/Photo";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -27,6 +28,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {p.html
           ? <article className="prose-location mt-8" dangerouslySetInnerHTML={{ __html: p.html }} />
           : <div className="prose-bf mt-8"><p className="text-lg">{p.description}</p>{p.sections.map((s) => <div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>)}</div>}
+        <SocialLinks variant="card" className="mt-12" />
       </article>
       <WaCta />
     </>

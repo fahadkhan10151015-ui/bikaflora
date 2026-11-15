@@ -228,3 +228,10 @@ html.dark ::selection { background: #34477a; color: #fff; }
 
 /* Below-the-fold home sections: skip layout/paint until near the screen (faster first load on phones). */
 .home-lazy > :not(section.container-x) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+/* Category & shop buying guide */
+.prose-guide > :first-child { margin-top: 0; }
+.prose-guide h3 { margin-top: 1.5rem; }
+.prose-guide table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 1.25rem 0; font-size: .97rem; border: 1px solid var(--color-blush-2, #f3d9e1); border-radius: 1rem; overflow: hidden; background: #fff; }
+.prose-guide th { background: #fbeef2; color: var(--color-ink); text-align: left; padding: .7rem .9rem; font-weight: 600; }
+.prose-guide td { padding: .7rem .9rem; border-top: 1px solid #f3e7eb; }
+.prose-guide a { color: var(--color-brand); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

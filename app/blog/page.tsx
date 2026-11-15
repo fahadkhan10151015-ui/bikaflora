@@ -1,3 +1,4 @@
+import SocialLinks from "@/components/ui/SocialLinks";
 import Link from "next/link";
 import Photo from "@/components/ui/Photo";
 import PageShell from "@/components/ui/PageShell";
@@ -18,6 +19,7 @@ export default function Blog() {
           </Link>
         ))}
       </div>
+      <SocialLinks variant="card" className="mt-12" />
     </PageShell>
   );
 }

@@ -5,6 +5,7 @@ import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldChec
 import UsersTab, { ROLES } from "./UsersTab";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
+import { setStaffDevice } from "@/lib/wa-track";
 import Dashboard from "./Dashboard";
 import ProductsTab from "./ProductsTab";
 import PagesTab from "./PagesTab";
@@ -57,6 +58,8 @@ export default function AdminApp() {
       const { data } = (await sb?.rpc("my_admin_role")) ?? { data: null };
       setRole((data as "full" | "editor" | "viewer" | null) ?? null);
       setAllowed(Boolean(data));
+      // Don't count this device's own visits and WhatsApp clicks (can be turned back on in Visitors / WhatsApp clicks).
+      if (data && localStorage.getItem("bf-staff-set") !== "1") { setStaffDevice(true); localStorage.setItem("bf-staff-set", "1"); }
     })();
   }, [user, loading]);
 
