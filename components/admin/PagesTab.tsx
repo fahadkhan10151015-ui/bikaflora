@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Save, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { allCategories } from "@/data/categories";
 import { collectionSeo } from "@/data/collection-seo";
-import { locations } from "@/data/locations";
+import { allLocations as locations } from "@/data/locations";
 import { locationSeo } from "@/data/location-seo";
 import { pageCopy } from "@/data/page-copy";
 import { posts } from "@/data/posts";

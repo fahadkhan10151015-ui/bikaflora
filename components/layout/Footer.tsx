@@ -2,30 +2,12 @@ import Link from "next/link";
 import { Mail, Phone, Clock, MapPin, ArrowRight, Zap, Camera, Wallet } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
-import { site } from "@/lib/site";
+import { site, footerShopLinks, footerHelpLinks, footerAreaSlugs, socialLinks } from "@/lib/site";
 import { locations } from "@/data/locations";
 
-const shop: [string, string][] = [
-  ["/category/best-seller", "Best Seller Bouquets"],
-  ["/category/birthday-flowers", "Birthday Flowers"],
-  ["/category/anniversary-valentine-bouquets", "Anniversary Bouquets"],
-  ["/category/graduation-bouquets", "Graduation Bouquets"],
-  ["/category/chocolate-flower-bouquets", "Ferrero & Chocolate Bouquets"],
-  ["/category/below-100", "Bouquets Below RM100"],
-  ["/category/crochet-bouquets", "Crochet Bouquets"],
-];
-
-const help: [string, string][] = [
-  ["/about", "About Us"],
-  ["/faq", "FAQ"],
-  ["/delivery-information", "Delivery Information"],
-  ["/refund-policy", "Refund Policy"],
-  ["/terms", "Terms & Conditions"],
-  ["/privacy-policy", "Privacy Policy"],
-  ["/contact", "Contact"],
-];
-
-const areaSlugs = ["kuala-lumpur", "shah-alam", "petaling-jaya", "subang-jaya", "cheras", "puchong", "klang"];
+const shop = footerShopLinks.map((l) => [l.href, l.label] as [string, string]);
+const help = footerHelpLinks.map((l) => [l.href, l.label] as [string, string]);
+const areaSlugs = footerAreaSlugs;
 
 export default function Footer() {
   const areas = areaSlugs.map((s) => locations.find((l) => l.slug === s)!).filter(Boolean);
@@ -97,6 +79,11 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-x py-5 text-xs flex flex-col sm:flex-row gap-2 justify-between">
           <span>© {new Date().getFullYear()} {site.name}. All rights reserved.</span>
+          {socialLinks().length > 0 && (
+            <span className="flex items-center gap-3">
+              {socialLinks().map((s) => <a key={s.name} href={s.url} target="_blank" rel="noopener" className="capitalize hover:text-white">{s.name === "tiktok" ? "TikTok" : s.name}</a>)}
+            </span>
+          )}
           <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Online florist delivering in Kuala Lumpur &amp; Selangor, Malaysia</span>
         </div>
       </div>

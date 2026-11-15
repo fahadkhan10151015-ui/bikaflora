@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut, UserCog, Eye, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut, UserCog, Eye, MessageCircle, BarChart3, MapPinned, Settings, Shuffle } from "lucide-react";
 import UsersTab, { ROLES } from "./UsersTab";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
@@ -13,19 +13,27 @@ import SeoTab from "./SeoTab";
 import CustomersTab from "./CustomersTab";
 import MessagesTab from "./MessagesTab";
 import WhatsAppTab from "./WhatsAppTab";
+import VisitorsTab from "./VisitorsTab";
+import SettingsTab from "./SettingsTab";
+import AreasTab from "./AreasTab";
+import RedirectsTab from "./RedirectsTab";
 
 const nav = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, help: "Your shop at a glance." },
-  { id: "products", label: "Products", icon: Package, help: "Edit prices, stock and product pages, or add a new product." },
-  { id: "categories", label: "Categories", icon: Tags, help: "Add, rename or remove product categories and edit their pages." },
-  { id: "blog", label: "Blog", icon: PenSquare, help: "Write, schedule and edit blog posts." },
-  { id: "pages", label: "Pages", icon: FileText, help: "Edit the homepage, About, FAQ, Terms, Privacy and city pages." },
-  { id: "whatsapp", label: "WhatsApp clicks", icon: MessageCircle, help: "How many people tapped WhatsApp, from which page and product." },
-  { id: "reviews", label: "Reviews", icon: Star, help: "Add, edit, hide or delete reviews. Changes are live straight away." },
-  { id: "seo", label: "SEO", icon: Search, help: "Meta title and description for any page, plus sitemap and Google settings." },
-  { id: "customers", label: "Customers", icon: Users, help: "People with an account on your website." },
-  { id: "messages", label: "Messages", icon: Mail, help: "Messages sent through the contact forms." },
-  { id: "users", label: "Users", icon: UserCog, help: "Add admin users, change their permission or remove them." },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, help: "Your shop at a glance.", group: "" },
+  { id: "products", label: "Products", icon: Package, help: "Edit prices, stock and product pages, or add a new product.", group: "Content" },
+  { id: "categories", label: "Categories", icon: Tags, help: "Add, rename or remove product categories and edit their pages.", group: "Content" },
+  { id: "blog", label: "Blog", icon: PenSquare, help: "Write, schedule and edit blog posts.", group: "Content" },
+  { id: "pages", label: "Pages", icon: FileText, help: "Edit the homepage, About, FAQ, Terms, Privacy and city pages.", group: "Content" },
+  { id: "areas", label: "Delivery areas", icon: MapPinned, help: "Add or hide areas, delivery fee and same-day cut-off time.", group: "Content" },
+  { id: "reviews", label: "Reviews", icon: Star, help: "Add, edit, hide or delete reviews. Changes are live straight away.", group: "Content" },
+  { id: "visitors", label: "Visitors", icon: BarChart3, help: "Visitors, page views and where people come from.", group: "Insights" },
+  { id: "whatsapp", label: "WhatsApp clicks", icon: MessageCircle, help: "How many people tapped WhatsApp, from which page and product.", group: "Insights" },
+  { id: "messages", label: "Messages", icon: Mail, help: "Messages sent through the contact forms.", group: "Insights" },
+  { id: "customers", label: "Customers", icon: Users, help: "People with an account on your website.", group: "Insights" },
+  { id: "seo", label: "SEO", icon: Search, help: "Meta title and description for any page, plus sitemap and Google settings.", group: "Setup" },
+  { id: "redirects", label: "Redirects", icon: Shuffle, help: "Send old or deleted page links to a new page.", group: "Setup" },
+  { id: "settings", label: "Site settings", icon: Settings, help: "Phone, email, social links, top bar, menu and footer.", group: "Setup" },
+  { id: "users", label: "Users", icon: UserCog, help: "Add admin users, change their permission or remove them.", group: "Setup" },
 ] as const;
 /** Sections only full admins see. */
 const FULL_ONLY = ["customers", "users"];
@@ -88,11 +96,14 @@ export default function AdminApp() {
           <button className="lg:hidden p-1" onClick={() => setMenu(false)} aria-label="Close menu"><X className="w-5 h-5" /></button>
         </div>
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {nav.filter((n) => role === "full" || !FULL_ONLY.includes(n.id)).map(({ id, label, icon: Icon }) => (
-            <button key={id} onClick={() => go(id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[15px] transition ${tab === id ? "bg-white text-[#1f2a44] font-semibold shadow" : "text-white/75 hover:bg-white/10 hover:text-white"}`}>
+          {nav.filter((n) => role === "full" || !FULL_ONLY.includes(n.id)).map(({ id, label, icon: Icon, group }, i, arr) => (
+            <div key={id}>
+            {group && arr[i - 1]?.group !== group && <div className="px-3.5 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">{group}</div>}
+            <button onClick={() => go(id)}
+              className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-[15px] transition ${tab === id ? "bg-white text-[#1f2a44] font-semibold shadow" : "text-white/75 hover:bg-white/10 hover:text-white"}`}>
               <Icon className="w-[18px] h-[18px]" /> {label}
             </button>
+            </div>
           ))}
         </nav>
         <div className="p-3 border-t border-white/10 space-y-1 text-sm">
@@ -136,7 +147,11 @@ export default function AdminApp() {
             {tab === "categories" && <PagesTab kinds={["collection"]} />}
             {tab === "blog" && <PagesTab key={action} kinds={["post"]} startNew={action === "new"} />}
             {tab === "pages" && <PagesTab kinds={["page", "location"]} />}
+            {tab === "visitors" && <VisitorsTab />}
             {tab === "whatsapp" && <WhatsAppTab />}
+            {tab === "areas" && <AreasTab />}
+            {tab === "redirects" && <RedirectsTab />}
+            {tab === "settings" && <SettingsTab />}
             {tab === "reviews" && <ReviewsTab />}
             {tab === "seo" && <SeoTab />}
             {tab === "customers" && role === "full" && <CustomersTab />}

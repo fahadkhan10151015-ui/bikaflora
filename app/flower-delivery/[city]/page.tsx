@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import FillImage from "@/components/ui/FillImage";
 import Link from "next/link";
-import { MapPin, Zap, Clock, Camera, Map } from "lucide-react";
+import { MapPin, Zap, Clock, Camera, Map, Truck } from "lucide-react";
 import { siteImages } from "@/lib/images";
 import { locations, getLocation } from "@/data/locations";
 import { products } from "@/data/products";
@@ -18,7 +18,7 @@ import cityPhotosJson from "@/data/city-photos.json";
 
 type CityPhoto = { src: string; alt: string; credit: string; source: string };
 const cityPhotos = cityPhotosJson as Record<string, CityPhoto>;
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, defaultCutoff } from "@/lib/site";
 
 export function generateStaticParams() { return locations.map((l) => ({ city: l.slug })); }
 
@@ -47,9 +47,10 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const nearbyLinks = l.nearby.map((n) => locations.find((x) => x.name === n)).filter(Boolean);
   const sameState = locations.filter((x) => x.state === l.state && x.slug !== l.slug);
 
+  const cutoff = l.cutoff || defaultCutoff;
   const faqs = seo?.faqs ?? [
-    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: `Yes. Ready bouquets are delivered to ${l.name} the same day, any time.` },
-    { q: `How much is delivery to ${l.name}?`, a: `The fee depends on the exact address in ${l.name}. We confirm the total on WhatsApp first, and payment is made in advance.` },
+    { q: `Do you offer same-day flower delivery in ${l.name}?`, a: cutoff ? `Yes. Order ready bouquets before ${cutoff} and we deliver to ${l.name} the same day.` : `Yes. Ready bouquets are delivered to ${l.name} the same day, any time.` },
+    { q: `How much is delivery to ${l.name}?`, a: l.fee ? `Delivery to ${l.name} starts from RM${l.fee}. The exact fee depends on the address, and we confirm the total on WhatsApp before you pay.` : `The fee depends on the exact address in ${l.name}. We confirm the total on WhatsApp first, and payment is made in advance.` },
   ];
 
   return (
@@ -78,7 +79,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             ? <div className="mt-5 max-w-3xl text-lg md:text-xl leading-relaxed text-white/90 location-intro" dangerouslySetInnerHTML={{ __html: seo.intro }} />
             : <p className="mt-4 text-white/85 max-w-3xl leading-relaxed">{l.blurb}</p>}
           <div className="mt-7 flex flex-wrap gap-3 text-sm md:text-base">
-            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Zap className="w-4 h-4" /> Same-day delivery</span>
+            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Zap className="w-4 h-4" /> {cutoff ? `Same-day: order by ${cutoff}` : "Same-day delivery"}</span>
+            {l.fee ? <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Truck className="w-4 h-4" /> Delivery from RM{l.fee}</span> : null}
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Clock className="w-4 h-4" /> Pre-order any date</span>
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Camera className="w-4 h-4" /> Photo before delivery</span>
           </div>

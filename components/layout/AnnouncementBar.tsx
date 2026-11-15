@@ -1,24 +1,22 @@
-import { Wallet, Phone, Zap, CalendarClock, Truck, MapPin } from "lucide-react";
-import { site } from "@/lib/site";
+import { Wallet, Phone, Zap, CalendarClock, Truck, MapPin, Gift, Star, Heart, Clock, Sparkles, Tag } from "lucide-react";
+import { site, announcement } from "@/lib/site";
 
-const waLink = `https://wa.me/${site.whatsapp}`;
+/** Icons the admin panel can choose for each announcement line. */
+export const announcementIcons = { wallet: Wallet, phone: Phone, zap: Zap, calendar: CalendarClock, truck: Truck, pin: MapPin, gift: Gift, star: Star, heart: Heart, clock: Clock, sparkles: Sparkles, tag: Tag };
 
-/** Thin scrolling bar above the menu: payment, number and the two ways to order. */
+/** Thin scrolling bar above the menu (text is edited in Admin → Site settings). */
 export default function AnnouncementBar() {
-  const items = [
-    { icon: Wallet, text: "Full payment in advance" },
-    { icon: Phone, text: `WhatsApp ${site.phoneDisplay}`, href: waLink },
-    { icon: Zap, text: "Same-day delivery, any time" },
-    { icon: CalendarClock, text: "Pre-order & custom bouquets: send us a photo" },
-    { icon: Truck, text: "Grab Express · Lalamove · J&T Express" },
-    { icon: MapPin, text: "Delivering across KL & Selangor" },
-  ];
+  const items = announcement.map((a) => ({
+    icon: announcementIcons[a.icon as keyof typeof announcementIcons] ?? Sparkles,
+    text: a.text.replace("{phone}", site.phoneDisplay),
+    href: a.href === "whatsapp" ? `https://wa.me/${site.whatsapp}` : a.href?.trim() || undefined,
+  }));
   const row = (hidden: boolean) => (
     <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-      {items.map(({ icon: Icon, text, href }) => (
-        <li key={text} className="flex items-center gap-2 px-6 sm:px-8 whitespace-nowrap">
+      {items.map(({ icon: Icon, text, href }, i) => (
+        <li key={i} className="flex items-center gap-2 px-6 sm:px-8 whitespace-nowrap">
           <Icon className="w-3.5 h-3.5 text-gold shrink-0" />
-          {href ? <a href={href} target="_blank" rel="noopener" tabIndex={hidden ? -1 : undefined} className="font-semibold hover:text-gold">{text}</a> : <span>{text}</span>}
+          {href ? <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" tabIndex={hidden ? -1 : undefined} className="font-semibold hover:text-gold">{text}</a> : <span>{text}</span>}
           <span className="ml-6 sm:ml-8 text-gold/60" aria-hidden>✦</span>
         </li>
       ))}

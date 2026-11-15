@@ -1,3 +1,4 @@
+import { content } from "@/lib/content";
 // ============================================================
 //  DELIVERY AREAS — each becomes an SEO page: /flower-delivery/<slug>
 // ============================================================
@@ -9,9 +10,17 @@ export type Location = {
   nearby: string[];
   landmarks: string[];
   blurb: string;
+  /** Delivery fee from (RM). Empty = "confirmed on WhatsApp". */
+  fee?: number;
+  /** Same-day cut-off time, e.g. "6:00 PM". Empty = no cut-off. */
+  cutoff?: string;
+  /** Hidden areas have no page and are left out of menus and the sitemap. */
+  hidden?: boolean;
+  /** Added in the admin panel (not one of the original areas). */
+  added?: boolean;
 };
 
-export const locations: Location[] = [
+const baseLocations: Location[] = [
   // ---------------- SELANGOR ----------------
   { slug: "shah-alam", name: "Shah Alam", state: "Selangor", nearby: ["Klang", "Subang Jaya", "Setia Alam"],
     landmarks: ["UiTM Shah Alam", "i-City", "Masjid Sultan Salahuddin Abdul Aziz Shah", "Hospital Shah Alam"],
@@ -112,6 +121,33 @@ export const locations: Location[] = [
     landmarks: ["Embassy Row", "Great Eastern Mall", "Ampang Park"],
     blurb: "Ampang Hilir is a leafy area with embassies, luxury homes and Great Eastern Mall. We deliver elegant bouquets for corporate gifts and private celebrations." },
 ];
+
+// ---- Edits from the admin panel ("Delivery areas") ----
+type AreaEdit = Partial<Location>;
+const edits = (((content.page as Record<string, { list?: Record<string, AreaEdit> }>)?.areas?.list) ?? {}) as Record<string, AreaEdit>;
+const merged = baseLocations.map((l) => ({ ...l, ...clean(edits[l.slug]) }));
+for (const [slug, e] of Object.entries(edits)) {
+  if (merged.some((l) => l.slug === slug) || !e.name?.trim()) continue;
+  merged.push({ slug, name: e.name.trim(), state: e.state === "Kuala Lumpur" ? "Kuala Lumpur" : "Selangor", nearby: e.nearby ?? [], landmarks: e.landmarks ?? [], blurb: e.blurb ?? "", ...clean(e), added: true });
+}
+function clean(e?: AreaEdit): AreaEdit {
+  if (!e) return {};
+  const out: AreaEdit = {};
+  if (e.name?.trim()) out.name = e.name.trim();
+  if (e.state === "Selangor" || e.state === "Kuala Lumpur") out.state = e.state;
+  if (e.nearby?.length) out.nearby = e.nearby.filter(Boolean);
+  if (e.landmarks?.length) out.landmarks = e.landmarks.filter(Boolean);
+  if (e.blurb?.trim()) out.blurb = e.blurb.trim();
+  if (e.fee !== undefined && e.fee !== null && !isNaN(Number(e.fee)) && String(e.fee) !== "") out.fee = Number(e.fee);
+  if (e.cutoff?.trim()) out.cutoff = e.cutoff.trim();
+  if (e.hidden) out.hidden = true;
+  return out;
+}
+
+/** Every area, hidden ones included (for the admin panel). */
+export const allLocations: Location[] = merged;
+/** Areas shown on the website. */
+export const locations: Location[] = merged.filter((l) => !l.hidden);
 
 export const getLocation = (slug: string) => locations.find((l) => l.slug === slug);
 export const selangor = locations.filter((l) => l.state === "Selangor");

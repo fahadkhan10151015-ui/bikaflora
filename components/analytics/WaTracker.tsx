@@ -1,9 +1,12 @@
 "use client";
 import { useEffect } from "react";
-import { trackWa, visitSource } from "@/lib/wa-track";
+import { usePathname } from "next/navigation";
+import { trackWa, trackView, visitSource } from "@/lib/wa-track";
 
-/** Watches every click on a WhatsApp link on the site and logs it. */
+/** Counts page views and every click on a WhatsApp link on the site. */
 export default function WaTracker() {
+  const path = usePathname();
+  useEffect(() => { if (path) trackView(path); }, [path]);
   useEffect(() => {
     visitSource();
     const onClick = (e: MouseEvent) => {

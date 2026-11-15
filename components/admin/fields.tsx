@@ -18,8 +18,8 @@ export function Field({ label, value, onChange, max, rows, hint, placeholder }: 
   );
 }
 
-const move = <T,>(a: T[], i: number, d: number) => { const b = [...a]; const j = i + d; if (j < 0 || j >= b.length) return b; [b[i], b[j]] = [b[j], b[i]]; return b; };
-const IconBtn = ({ title, onClick, children, danger }: { title: string; onClick: () => void; children: React.ReactNode; danger?: boolean }) => (
+export const move = <T,>(a: T[], i: number, d: number) => { const b = [...a]; const j = i + d; if (j < 0 || j >= b.length) return b; [b[i], b[j]] = [b[j], b[i]]; return b; };
+export const IconBtn = ({ title, onClick, children, danger }: { title: string; onClick: () => void; children: React.ReactNode; danger?: boolean }) => (
   <button type="button" title={title} aria-label={title} onClick={onClick} className={`w-8 h-8 grid place-items-center rounded-lg ${danger ? "text-red-600 hover:bg-red-50" : "hover:bg-blush"}`}>{children}</button>
 );
 

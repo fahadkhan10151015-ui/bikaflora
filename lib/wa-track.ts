@@ -1,5 +1,5 @@
 "use client";
-/** Logs WhatsApp button clicks (no personal data) so the admin panel can show them. */
+/** Logs page views and WhatsApp button clicks (no personal data) so the admin panel can show them. */
 
 const KINDS: [RegExp, string][] = [
   [/order these items/i, "Order list"],
@@ -40,17 +40,41 @@ export function visitSource() {
   } catch { return "Direct"; }
 }
 
+function skip() {
+  return window.location.pathname.startsWith("/admin") || navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent);
+}
+
+function send(table: string, body: Record<string, unknown>) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return;
+  fetch(`${url}/rest/v1/${table}`, {
+    method: "POST", keepalive: true,
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+    body: JSON.stringify(body),
+  }).catch(() => {});
+}
+
+/** A random id kept on this browser, so we can count unique visitors without knowing who they are. */
+function visitorId() {
+  try {
+    let v = localStorage.getItem("bf-vid");
+    if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem("bf-vid", v); }
+    return v.slice(0, 40);
+  } catch { return "anon"; }
+}
+
 export function trackWa(text: string, button?: string) {
   try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (skip()) return;
     const page = window.location.pathname;
-    if (!url || !key || page.startsWith("/admin")) return;
     const product = (text.match(/\/product\/([a-z0-9-]+)/i)?.[1] ?? page.match(/^\/product\/([a-z0-9-]+)/)?.[1]) || null;
-    const body = { page: page.slice(0, 300), kind: waKind(text), button: button?.trim().replace(/\s+/g, " ").slice(0, 80) || null, product, device: device(), source: visitSource() };
-    fetch(`${url}/rest/v1/wa_clicks`, {
-      method: "POST", keepalive: true,
-      headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=minimal" },
-      body: JSON.stringify(body),
-    }).catch(() => {});
+    send("wa_clicks", { page: page.slice(0, 300), kind: waKind(text), button: button?.trim().replace(/\s+/g, " ").slice(0, 80) || null, product, device: device(), source: visitSource() });
+  } catch {}
+}
+
+export function trackView(path: string) {
+  try {
+    if (skip()) return;
+    send("page_views", { path: path.slice(0, 300), visitor: visitorId(), source: visitSource(), device: device() });
   } catch {}
 }

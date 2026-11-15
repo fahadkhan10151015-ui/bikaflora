@@ -1,4 +1,10 @@
 import imageRedirects from "./data/image-redirects.json" with { type: "json" };
+import content from "./data/content.json" with { type: "json" };
+
+// Redirects added in the admin panel (Admin → Redirects).
+const adminRedirects = (content.page?.redirects?.list ?? [])
+  .filter((r) => typeof r.from === "string" && /^\/[A-Za-z0-9._~%/-]+$/.test(r.from.trim()) && r.from.trim() !== "/" && typeof r.to === "string" && r.to.trim() && r.from !== r.to)
+  .map((r) => ({ source: r.from.trim().replace(/\/$/, ""), destination: r.to.trim(), permanent: r.type !== "302" }));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -27,6 +33,7 @@ const nextConfig = {
     return [
       // Product photos were renamed to SEO-friendly file names
       ...imageRedirects,
+      ...adminRedirects,
       // One address only: the old Vercel address sends everyone to bikaflora.my
       { source: "/:path*", has: [{ type: "host", value: "bikaflora.vercel.app" }], destination: "https://bikaflora.my/:path*", permanent: true },
       { source: "/product/ferrero-rocher-soap-rose-bouquet", destination: "/product/ferrero-rocher-pink-roses", permanent: true },

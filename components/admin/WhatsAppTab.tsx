@@ -13,13 +13,13 @@ const dayKey = (iso: string) => new Date(new Date(iso).getTime() + MYT).toISOStr
 const productName = (slug: string) => products.find((p) => p.slug === slug)?.name ?? slug;
 const pageName = (p: string) => (p === "/" ? "Homepage" : p);
 
-function count<T>(rows: T[], key: (r: T) => string | null | undefined) {
+export function count<T>(rows: T[], key: (r: T) => string | null | undefined) {
   const m = new Map<string, number>();
   for (const r of rows) { const k = key(r); if (k) m.set(k, (m.get(k) ?? 0) + 1); }
   return [...m.entries()].sort((a, b) => b[1] - a[1]);
 }
 
-function TopList({ title, rows, total, label = (k: string) => k, empty = "No clicks yet." }: { title: string; rows: [string, number][]; total: number; label?: (k: string) => string; empty?: string }) {
+export function TopList({ title, rows, total, label = (k: string) => k, empty = "No clicks yet." }: { title: string; rows: [string, number][]; total: number; label?: (k: string) => string; empty?: string }) {
   return (
     <div className={`${card} p-5`}>
       <h3 className="font-semibold text-ink">{title}</h3>
@@ -48,9 +48,15 @@ export default function WhatsAppTab() {
     const sb = await loadSupabase();
     const todayStart = new Date(new Date(Date.now() + MYT).toISOString().slice(0, 10) + "T00:00:00+08:00");
     const since = new Date(todayStart.getTime() - (days - 1) * 86400e3).toISOString();
-    const { data, error } = (await sb?.from("wa_clicks").select("*").gte("created_at", since).order("created_at", { ascending: false }).limit(10000)) ?? { data: null, error: null };
-    if (error) setErr(error.message);
-    setRows((data as Click[]) ?? []);
+    // Read in pages of 1,000 (the database sends at most 1,000 rows at a time).
+    const all: Click[] = [];
+    for (let from = 0; from < 20000; from += 1000) {
+      const { data, error } = (await sb?.from("wa_clicks").select("*").gte("created_at", since).order("created_at", { ascending: false }).range(from, from + 999)) ?? { data: null, error: null };
+      if (error) { setErr(error.message); break; }
+      all.push(...((data as Click[]) ?? []));
+      if (!data || data.length < 1000) break;
+    }
+    setRows(all);
   };
   useEffect(() => { load(); }, [days]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -1,4 +1,5 @@
 "use client";
+import { menuLinks, menuAreaSlugs } from "@/lib/site";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, User, ChevronDown, MapPin, ArrowRight } from "lucide-react";
@@ -13,15 +14,9 @@ import FavouritesLink from "@/components/favourites/FavouritesLink";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 /** Popular areas shown in the "Delivery Areas" dropdown (the full list is on /flower-delivery). */
-const topAreas = ["kuala-lumpur", "shah-alam", "petaling-jaya", "subang-jaya", "cheras", "klang", "puchong", "cyberjaya", "bangsar", "mont-kiara"]
-  .map((s) => getLocation(s)!).filter(Boolean);
+const topAreas = menuAreaSlugs.map((s) => getLocation(s)!).filter(Boolean);
 
-const nav = [
-  { href: "/shop", label: "Shop All" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-];
+const nav = menuLinks;
 
 export default function Header() {
   const [open, setOpen] = useState(false);
