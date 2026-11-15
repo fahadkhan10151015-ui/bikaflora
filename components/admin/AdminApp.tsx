@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2 } from "lucide-react";
+import { Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
 import ProductsTab from "./ProductsTab";
+import PagesTab from "./PagesTab";
 import ReviewsTab from "./ReviewsTab";
 import SeoTab from "./SeoTab";
 import CustomersTab from "./CustomersTab";
@@ -12,6 +13,7 @@ import MessagesTab from "./MessagesTab";
 
 const tabs = [
   { id: "products", label: "Products", icon: Package },
+  { id: "pages", label: "Pages & Blog", icon: FileText },
   { id: "reviews", label: "Reviews", icon: Star },
   { id: "seo", label: "SEO", icon: Search },
   { id: "customers", label: "Customers", icon: Users },
@@ -85,6 +87,7 @@ export default function AdminApp() {
 
       <div className="mt-6">
         {tab === "products" && <ProductsTab />}
+        {tab === "pages" && <PagesTab />}
         {tab === "reviews" && <ReviewsTab />}
         {tab === "seo" && <SeoTab />}
         {tab === "customers" && <CustomersTab />}

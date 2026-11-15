@@ -1,3 +1,4 @@
+import { content } from "@/lib/content";
 // Blog posts for SEO. Add more posts by copying an entry.
 export type Post = {
   slug: string;
@@ -7,6 +8,8 @@ export type Post = {
   image: string;
   tone?: string;
   sections: { heading: string; body: string }[];
+  /** Full article HTML written in the admin panel (used instead of `sections` when set). */
+  html?: string;
 };
 
 export const posts: Post[] = [
@@ -48,5 +51,15 @@ export const posts: Post[] = [
     ],
   },
 ];
+
+// Blog edits from the admin panel: edit, add or delete posts.
+for (const [slug, doc] of Object.entries(content.post)) {
+  const i = posts.findIndex((p) => p.slug === slug);
+  if (doc.deleted) { if (i >= 0) posts.splice(i, 1); continue; }
+  const d = doc as Partial<Post>;
+  if (i >= 0) posts[i] = { ...posts[i], ...Object.fromEntries(Object.entries(d).filter(([, v]) => v !== undefined && v !== null)), slug };
+  else if (d.title && d.html) posts.push({ slug, title: d.title, description: d.description ?? "", date: d.date ?? new Date().toISOString().slice(0, 10), image: d.image ?? "/images/site/cover.webp", sections: [], html: d.html });
+}
+posts.sort((a, b) => b.date.localeCompare(a.date));
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug);

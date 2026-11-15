@@ -50,14 +50,14 @@ export default function OrderPanel({ p }: { p: Product }) {
   const [card, setCard] = useState<CardId>("handwritten");
   const [cardMsg, setCardMsg] = useState("");
   const [bag, setBag] = useState(false);
-  const price = p.price + (extrasOn && bag ? BAG_PRICE : 0);
+  const showCard = extrasOn && p.giftCard !== false;
+  const showBag = extrasOn && p.protectionBag !== false;
+  const price = p.price + (showBag && bag ? BAG_PRICE : 0);
   const cardLabel = cardOptions.find((c) => c.id === card)!.label;
-  const extras = extrasOn
-    ? [
-        `Card: ${cardLabel}${card === "handwritten" && cardMsg.trim() ? ` – "${cardMsg.trim()}"` : ""}`,
-        bag ? `Protection bag: Yes (+${formatPrice(BAG_PRICE)})` : "Protection bag: No",
-      ]
-    : [];
+  const extras = [
+    ...(showCard ? [`Card: ${cardLabel}${card === "handwritten" && cardMsg.trim() ? ` – "${cardMsg.trim()}"` : ""}`] : []),
+    ...(showBag ? [bag ? `Protection bag: Yes (+${formatPrice(BAG_PRICE)})` : "Protection bag: No"] : []),
+  ];
   const method = deliveryMethods.find((d) => d.id === delivery)!;
   const colour = variant?.label;
 
@@ -154,9 +154,9 @@ export default function OrderPanel({ p }: { p: Product }) {
         </div>
       </fieldset>
 
-      {extrasOn && (
+      {(showCard || showBag) && (
         <>
-          <fieldset>
+          {showCard && <fieldset>
             <legend className="label"><span className="inline-flex items-center gap-1.5"><Mail className="w-4 h-4 text-gold" /> Gift card</span></legend>
             <div className="grid grid-cols-3 gap-2">
               {cardOptions.map((c) => <Choice key={c.id} on={card === c.id} onClick={() => setCard(c.id)} title={c.label} note={c.note} />)}
@@ -165,14 +165,14 @@ export default function OrderPanel({ p }: { p: Product }) {
               <textarea value={cardMsg} onChange={(e) => setCardMsg(e.target.value)} maxLength={200} rows={2} className="input mt-2.5 text-sm"
                 placeholder="Your card message, e.g. Happy birthday sayang! Love, Adam" aria-label="Card message" />
             )}
-          </fieldset>
-          <fieldset>
+          </fieldset>}
+          {showBag && <fieldset>
             <legend className="label"><span className="inline-flex items-center gap-1.5"><ShoppingBag className="w-4 h-4 text-gold" /> Bouquet protection bag</span></legend>
             <div className="grid grid-cols-2 gap-2">
               <Choice on={bag} onClick={() => setBag(true)} title={`Add bag (+${formatPrice(BAG_PRICE)})`} note="Clear bag with handles, keeps it safe" />
               <Choice on={!bag} onClick={() => setBag(false)} title="No bag" note="Risky: bouquet may get damaged" warn />
             </div>
-          </fieldset>
+          </fieldset>}
         </>
       )}
 

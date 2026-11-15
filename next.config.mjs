@@ -4,6 +4,8 @@ import imageRedirects from "./data/image-redirects.json" with { type: "json" };
 const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    // Photos uploaded in the admin panel are stored in Supabase Storage.
+    remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],
     qualities: [60, 70, 75, 80], // 75 for photos: sharp and small (under 100 KB)
     minimumCacheTTL: 60 * 60 * 24 * 30, // keep optimised images for 30 days
     deviceSizes: [390, 640, 828, 1080, 1440, 1920],

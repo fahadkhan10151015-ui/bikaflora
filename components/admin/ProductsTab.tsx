@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Plus, Pencil } from "lucide-react";
+import ProductEditor from "./ProductEditor";
 import { products } from "@/data/products";
 import { stock as liveStock } from "@/data/stock";
 import { loadSupabase } from "@/lib/supabase-config";
@@ -20,6 +21,7 @@ export default function ProductsTab() {
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
 
   // Show edits saved but not yet published.
   useEffect(() => {
@@ -60,20 +62,24 @@ export default function ProductsTab() {
   };
 
   const list = products.filter((p) => (p.name + p.sku).toLowerCase().includes(q.toLowerCase()));
+  if (editing !== null) return <ProductEditor slug={editing} onClose={() => setEditing(null)} />;
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3 justify-between">
         <input className="input max-w-xs" placeholder="Search products…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div className="flex gap-2">
+        <button onClick={() => setEditing("")} className="btn btn-outline"><Plus className="w-4 h-4" /> Add product</button>
         <button onClick={save} disabled={!changed.length || busy} className="btn btn-primary disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save {changed.length ? `(${changed.length})` : ""}
         </button>
+        </div>
       </div>
       {msg && <Note kind={msg.kind}>{msg.text}</Note>}
       <p className="text-sm text-muted">“Before price” shows crossed out (leave empty for no sale). Products without a stock number show “Made to order”.</p>
       <div className={`${card} overflow-x-auto`}>
-        <table className="w-full text-sm min-w-[760px]">
+        <table className="w-full text-sm min-w-[840px]">
           <thead className="bg-blush/60 text-left">
-            <tr><th className="p-3">Product</th><th className="p-3 w-28">Price (RM)</th><th className="p-3 w-28">Before price</th><th className="p-3 w-24">Stock</th><th className="p-3 w-28">Best seller</th></tr>
+            <tr><th className="p-3">Product</th><th className="p-3 w-28">Price (RM)</th><th className="p-3 w-28">Before price</th><th className="p-3 w-24">Stock</th><th className="p-3 w-28">Best seller</th><th className="p-3 w-20"></th></tr>
           </thead>
           <tbody>
             {list.map((p) => {
@@ -90,6 +96,7 @@ export default function ProductsTab() {
                   <td className="p-3"><input className="input !py-2" inputMode="decimal" value={r.compareAt} placeholder="–" onChange={(e) => set(p.slug, { compareAt: e.target.value })} /></td>
                   <td className="p-3"><input className="input !py-2" inputMode="numeric" value={r.stock} placeholder="Made to order" onChange={(e) => set(p.slug, { stock: e.target.value })} /></td>
                   <td className="p-3"><Toggle on={r.bestSeller} onChange={(v) => set(p.slug, { bestSeller: v })} label={`Best seller: ${p.name}`} /></td>
+                  <td className="p-3"><button onClick={() => setEditing(p.slug)} className="inline-flex items-center gap-1 text-brand font-semibold text-sm"><Pencil className="w-4 h-4" /> Edit</button></td>
                 </tr>
               );
             })}

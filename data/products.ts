@@ -1,4 +1,5 @@
 import { overrides } from "@/lib/overrides";
+import { content } from "@/lib/content";
 // ============================================================
 //  PRODUCTS — BikaFlora's real catalogue.
 //
@@ -60,6 +61,10 @@ export type Product = {
   paperColours?: PaperColour[];
   /** Extra words that help search and the chat assistant */
   tags?: string[];
+  /** Show the gift card choice when ordering (default yes) */
+  giftCard?: boolean;
+  /** Show the protection bag choice when ordering (default yes) */
+  protectionBag?: boolean;
 };
 
 const pics = (folder: string, n: number) => Array.from({ length: n }, (_, i) => `/products/${folder}/${String(i + 1).padStart(2, "0")}.webp`);
@@ -680,6 +685,24 @@ export const products: Product[] = [
     tags: ["bag", "add on", "protection"],
   },
 ];
+
+// Apply full product edits from the admin panel: edit, add or delete products.
+const editable = ["name", "nameZh", "sku", "badge", "short", "description", "design", "durability", "occasions", "care", "includes", "size", "instant", "preorder", "categories", "images", "tags", "giftCard", "protectionBag"] as const;
+for (const [slug, doc] of Object.entries(content.product)) {
+  const i = products.findIndex((p) => p.slug === slug);
+  if (doc.deleted) { if (i >= 0) products.splice(i, 1); continue; }
+  const d = doc as Partial<Product>;
+  if (i >= 0) {
+    for (const k of editable) if (d[k] !== undefined && d[k] !== null) (products[i] as Record<string, unknown>)[k] = d[k];
+  } else if (d.name && d.price !== undefined && Array.isArray(d.images) && d.images.length) {
+    products.push({
+      slug, sku: d.sku ?? "", name: d.name, price: Number(d.price), compareAt: d.compareAt, categories: d.categories ?? [], images: d.images,
+      short: d.short ?? "", description: d.description ?? "", design: d.design ?? "", durability: d.durability ?? "", occasions: d.occasions ?? "",
+      care: d.care ?? [], includes: d.includes ?? [], size: d.size, instant: d.instant ?? true, preorder: d.preorder ?? true, badge: d.badge,
+      nameZh: d.nameZh, tags: d.tags, giftCard: d.giftCard, protectionBag: d.protectionBag,
+    });
+  }
+}
 
 // Apply edits saved in the admin panel (price, sale price, best seller on/off).
 for (const p of products) {
