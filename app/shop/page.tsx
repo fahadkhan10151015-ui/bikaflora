@@ -5,6 +5,8 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import WaCta from "@/components/sections/WaCta";
 import { pageMeta } from "@/lib/seo";
 import { collectionSeo } from "@/data/collection-seo";
+import JsonLd from "@/components/ui/JsonLd";
+import { absoluteUrl } from "@/lib/site";
 import CollectionGuide from "@/components/sections/CollectionGuide";
 
 const seo = collectionSeo.shop;
@@ -14,6 +16,8 @@ export const metadata = pageMeta({ title: seo.title, description: seo.descriptio
 export default function Shop() {
   return (
     <>
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: seo.h1, description: seo.description, url: absoluteUrl("/shop"),
+        mainEntity: { "@type": "ItemList", numberOfItems: products.length, itemListElement: products.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: absoluteUrl(`/product/${p.slug}`), name: p.name })) } }} />
       <div className="bg-gradient-to-br from-blush via-[#fbf3ee] to-cream border-b border-blush-2">
         <div className="container-x pb-10 md:pb-12">
           <Breadcrumbs items={[{ name: "Shop", path: "/shop" }]} />

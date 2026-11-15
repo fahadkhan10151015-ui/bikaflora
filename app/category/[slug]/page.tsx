@@ -51,7 +51,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </div>
           {c.image && (
             <div className="relative hidden md:block aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl shadow-brand/15 rotate-1">
-              <FillImage src={c.image} alt={`${c.name} by BikaFlora`} w={440} h={550} sizes="440px" quality={75} priority className="object-cover" />
+              <FillImage src={c.image} alt={`${c.name} by BikaFlora`} w={440} h={550} sizes="440px" quality={75} loading="eager" className="object-cover" />
             </div>
           )}
         </div>
