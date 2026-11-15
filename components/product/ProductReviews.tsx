@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Star, Loader2, Trash2, PenLine } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
+import { restGet } from "@/lib/rest";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useRatings } from "./RatingsProvider";
 import { siteReviews } from "@/lib/reviews-data";
@@ -36,10 +37,9 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
   const [guestName, setGuestName] = useState("");
 
   const load = useCallback(async () => {
-    const sb = await loadSupabase();
-    if (!sb) return;
-    const { data, error } = await sb.from("reviews").select("id,user_id,name,rating,comment,created_at").eq("product_slug", slug).order("created_at", { ascending: false }).limit(50);
-    if (!error && data) setReviews(data as Review[]);
+    // Plain fetch: the full Supabase library only loads when someone posts or deletes a review.
+    const data = await restGet<Review[]>(`reviews?select=id,user_id,name,rating,comment,created_at&product_slug=eq.${encodeURIComponent(slug)}&order=created_at.desc&limit=50`);
+    if (data) setReviews(data);
   }, [slug]);
   useEffect(() => { load(); }, [load]);
 

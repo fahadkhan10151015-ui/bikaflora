@@ -1,4 +1,3 @@
-import { preload } from "react-dom";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
@@ -39,9 +38,8 @@ const reasons = [
 ];
 
 export default function Home() {
-  // Fetch the first hero picture before anything else (it is the first thing visitors see).
-  preload("/video/hero-vertical-poster-v2.avif", { as: "image", type: "image/avif", fetchPriority: "high", media: "(max-width: 767px)" } as Parameters<typeof preload>[1]);
-  preload("/video/hero-making-poster.avif", { as: "image", type: "image/avif", fetchPriority: "high", media: "(min-width: 768px)" } as Parameters<typeof preload>[1]);
+  // The hero picture is a plain <picture> with fetchpriority="high" in the page HTML, so the browser finds it at once.
+  // (No preload() here: it leaked into every other page through link prefetching and wasted bandwidth there.)
   const popular = featuredProducts().slice(0, 4);
   return (
     <>

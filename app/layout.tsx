@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-// Fonts: self-hosted in /public/fonts (see globals.css), the two used above the fold are preloaded.
+// Fonts: self-hosted and trimmed in /public/fonts (see globals.css). The two main ones are preloaded; all use
+// font-display: optional, so text never jumps (a slow first visit keeps the size-matched backup font).
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";

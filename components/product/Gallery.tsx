@@ -74,7 +74,7 @@ export default function Gallery({ alt, alts }: { alt: string; alts?: Record<stri
         }}>
         {/* Every photo is in the page already (only the current one is visible), so swiping is instant. */}
         {images.map((im, idx) => (idx === 0 || rest || idx === i) && (
-          <FillImage key={im} src={im} alt={alts?.[im] ?? `${alt} – photo ${idx + 1}`} w={540} h={540} sizes="(max-width: 1024px) 92vw, 540px" priority={idx === 0} loading="eager"
+          <FillImage key={im} src={im} alt={alts?.[im] ?? `${alt} – photo ${idx + 1}`} w={540} h={540} sizes="(max-width: 1024px) 92vw, 540px" quality={72} priority={idx === 0} loading="eager"
             className={`object-cover transition-opacity duration-300 ${!previewing && idx === Math.min(i, images.length - 1) ? "opacity-100" : "opacity-0"}`} />
         ))}
         {previewing && <FillImage key={src} src={src} alt={`${alt} – ${paper!.label} wrapping preview`} w={540} h={540} className="object-cover gallery-in" />}
