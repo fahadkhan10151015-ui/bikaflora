@@ -44,8 +44,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> {read} min read</span>
               </div>
             </div>
-            <div className="relative aspect-[4/3] w-full max-w-xl lg:ml-auto rounded-[2rem] overflow-hidden shadow-[0_24px_60px_-28px_rgba(16,23,42,.45)] ring-1 ring-blush-2/60">
-              <Photo src={p.image} tone={p.tone} alt={p.imageAlt || p.title} priority w={576} h={432} quality={72} sizes="(max-width: 1024px) 92vw, 560px" />
+            <div className="relative aspect-[3/2] w-full max-w-xl lg:ml-auto rounded-[2rem] overflow-hidden shadow-[0_24px_60px_-28px_rgba(16,23,42,.45)] ring-1 ring-blush-2/60">
+              <Photo src={p.image} tone={p.tone} alt={p.imageAlt || p.title} priority w={600} h={400} quality={72} sizes="(max-width: 1024px) 92vw, 560px" />
             </div>
           </div>
         </div>
@@ -56,10 +56,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {p.html
             ? <article className="prose-location prose-blog" dangerouslySetInnerHTML={{ __html: p.html }} />
             : <article className="prose-location prose-blog"><p>{p.description}</p>{p.sections.map((s) => <div key={s.heading}><h2>{s.heading}</h2><p>{s.body}</p></div>)}</article>}
-          <div className="mt-12 rounded-3xl bg-cream border border-blush-2/70 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-5">
-            <div className="flex-1"><p className="font-semibold text-lg text-ink">Liked this guide?</p><p className="text-sm text-muted mt-1">Follow @bikaflora for new bouquets, gift ideas and behind-the-scenes photos.</p></div>
-            <SocialLinks variant="pills" />
-          </div>
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-28 self-start" aria-label="Contact our florist">

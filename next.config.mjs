@@ -45,6 +45,10 @@ const nextConfig = {
       // One address only: the old Vercel address sends everyone to bikaflora.my
       { source: "/:path*", has: [{ type: "host", value: "bikaflora.vercel.app" }], destination: "https://bikaflora.my/:path*", permanent: true },
       { source: "/product/ferrero-rocher-soap-rose-bouquet", destination: "/product/ferrero-rocher-pink-roses", permanent: true },
+      // Old blog posts (replaced by the new guides)
+      { source: "/blog/convocation-flowers-guide-malaysia", destination: "/category/graduation-bouquets", permanent: true },
+      { source: "/blog/soap-flowers-vs-fresh-flowers", destination: "/blog", permanent: true },
+      { source: "/blog/flower-colour-meanings-malaysia", destination: "/blog", permanent: true },
       { source: "/product/soap-rose-heart-large", destination: "/product/red-soap-rose-heart-large", permanent: true },
     ];
   },

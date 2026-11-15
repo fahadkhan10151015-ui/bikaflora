@@ -36,8 +36,8 @@ export default function BlogList({ items, categories }: { items: BlogCard[]; cat
           const hidden = !shown.has(p.slug);
           if (isFeatured)
             return (
-              <Link key={p.slug} href={`/blog/${p.slug}`} className={`${hidden ? "hidden" : ""} group sm:col-span-2 lg:col-span-3 grid lg:grid-cols-2 bg-white rounded-[2rem] overflow-hidden border border-blush-2/70 card-hover`}>
-                <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[340px]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={640} h={420} priority /></div>
+              <Link key={p.slug} href={`/blog/${p.slug}`} className={`${hidden ? "hidden" : ""} group sm:col-span-2 lg:col-span-3 grid lg:grid-cols-2 items-center bg-white rounded-[2rem] overflow-hidden border border-blush-2/70 card-hover`}>
+                <div className="relative aspect-[3/2]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={640} h={427} priority /></div>
                 <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
                   <span className="eyebrow">Latest post</span>
                   <Meta p={p} className="mt-3" />
