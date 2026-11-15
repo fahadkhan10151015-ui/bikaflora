@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut, UserCog, Eye } from "lucide-react";
+import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut, UserCog, Eye, MessageCircle } from "lucide-react";
 import UsersTab, { ROLES } from "./UsersTab";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
@@ -12,6 +12,7 @@ import ReviewsTab from "./ReviewsTab";
 import SeoTab from "./SeoTab";
 import CustomersTab from "./CustomersTab";
 import MessagesTab from "./MessagesTab";
+import WhatsAppTab from "./WhatsAppTab";
 
 const nav = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, help: "Your shop at a glance." },
@@ -19,6 +20,7 @@ const nav = [
   { id: "categories", label: "Categories", icon: Tags, help: "Add, rename or remove product categories and edit their pages." },
   { id: "blog", label: "Blog", icon: PenSquare, help: "Write, schedule and edit blog posts." },
   { id: "pages", label: "Pages", icon: FileText, help: "Edit the homepage, About, FAQ, Terms, Privacy and city pages." },
+  { id: "whatsapp", label: "WhatsApp clicks", icon: MessageCircle, help: "How many people tapped WhatsApp, from which page and product." },
   { id: "reviews", label: "Reviews", icon: Star, help: "Add, edit, hide or delete reviews. Changes are live straight away." },
   { id: "seo", label: "SEO", icon: Search, help: "Meta title and description for any page, plus sitemap and Google settings." },
   { id: "customers", label: "Customers", icon: Users, help: "People with an account on your website." },
@@ -134,6 +136,7 @@ export default function AdminApp() {
             {tab === "categories" && <PagesTab kinds={["collection"]} />}
             {tab === "blog" && <PagesTab key={action} kinds={["post"]} startNew={action === "new"} />}
             {tab === "pages" && <PagesTab kinds={["page", "location"]} />}
+            {tab === "whatsapp" && <WhatsAppTab />}
             {tab === "reviews" && <ReviewsTab />}
             {tab === "seo" && <SeoTab />}
             {tab === "customers" && role === "full" && <CustomersTab />}

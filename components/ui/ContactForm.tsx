@@ -1,6 +1,7 @@
 "use client";
 import { useId, useState } from "react";
 import { waLink } from "@/lib/whatsapp";
+import { trackWa } from "@/lib/wa-track";
 import { site } from "@/lib/site";
 import { loadSupabase } from "@/lib/supabase-config";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
@@ -13,6 +14,7 @@ export default function ContactForm({ area }: { area?: string } = {}) {
     e.preventDefault();
     const text = `Hi ${site.name}, my name is ${f.name}${f.phone ? ` (${f.phone})` : ""}.\n\nTopic: ${f.topic}${area ? `\nDelivery area: ${area}` : ""}\n\n${f.msg}`;
     window.open(waLink(text), "_blank");
+    trackWa(text, "Contact form");
     // Also keep a copy for the admin panel (Messages). Never blocks the WhatsApp message.
     loadSupabase().then((sb) => sb?.from("contact_messages").insert({
       name: f.name.trim().slice(0, 80), phone: f.phone.trim().slice(0, 30) || null, topic: f.topic, area: area ?? null,

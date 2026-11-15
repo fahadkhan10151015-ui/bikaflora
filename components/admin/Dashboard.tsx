@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Package, Star, Mail, Users, FileText, Plus, PenSquare, ArrowRight } from "lucide-react";
+import { Package, Star, Mail, Users, FileText, Plus, PenSquare, ArrowRight, MessageCircle } from "lucide-react";
 import { products } from "@/data/products";
 import { posts } from "@/data/posts";
 import { stock } from "@/data/stock";
@@ -9,30 +9,33 @@ import { card } from "./ui";
 
 /** Overview: key numbers and quick actions. */
 export default function Dashboard({ go, full = true }: { go: (tab: string, action?: string) => void; full?: boolean }) {
-  const [n, setN] = useState({ reviews: 0, avg: 0, newMsgs: 0, customers: 0 });
+  const [n, setN] = useState({ reviews: 0, avg: 0, newMsgs: 0, customers: 0, wa: 0 });
   useEffect(() => {
     (async () => {
       const sb = await loadSupabase();
-      const [r, m, c] = await Promise.all([
+      const since = new Date(Date.now() - 7 * 86400e3).toISOString();
+      const [r, m, c, w] = await Promise.all([
         sb!.from("reviews").select("rating"),
         sb!.from("contact_messages").select("id", { count: "exact", head: true }).eq("done", false),
         sb!.rpc("admin_customers"),
+        sb!.from("wa_clicks").select("id", { count: "exact", head: true }).gte("created_at", since),
       ]);
       const ratings = ((r.data ?? []) as { rating: number }[]).map((x) => Number(x.rating));
-      setN({ reviews: ratings.length, avg: ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0, newMsgs: m.count ?? 0, customers: ((c.data ?? []) as unknown[]).length });
+      setN({ reviews: ratings.length, avg: ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0, newMsgs: m.count ?? 0, customers: ((c.data ?? []) as unknown[]).length, wa: w.count ?? 0 });
     })();
   }, []);
   const low = products.filter((p) => stock[p.slug] !== undefined && stock[p.slug] <= 10);
   const stats = [
     { label: "Products", value: products.length, icon: Package, tab: "products", tone: "from-brand to-deep" },
     { label: "Reviews", value: `${n.reviews}${n.avg ? ` · ${n.avg.toFixed(1)}★` : ""}`, icon: Star, tab: "reviews", tone: "from-amber-500 to-amber-600" },
+    { label: "WhatsApp · 7 days", value: n.wa, icon: MessageCircle, tab: "whatsapp", tone: "from-green-500 to-green-600" },
     { label: "New messages", value: n.newMsgs, icon: Mail, tab: "messages", tone: "from-emerald-500 to-emerald-600" },
     { label: "Customers", value: n.customers, icon: Users, tab: "customers", tone: "from-sky-500 to-sky-600" },
     { label: "Blog posts", value: posts.length, icon: FileText, tab: "blog", tone: "from-rose-400 to-rose-500" },
   ];
   return (
     <div className="space-y-6">
-      <div className={`grid grid-cols-2 ${full ? "lg:grid-cols-5" : "lg:grid-cols-4"} gap-4`}>
+      <div className={`grid grid-cols-2 ${full ? "lg:grid-cols-6" : "lg:grid-cols-5"} gap-4`}>
         {stats.filter((s) => full || s.tab !== "customers").map(({ label, value, icon: Icon, tab, tone }) => (
           <button key={label} onClick={() => go(tab)} className={`${card} p-4 text-left hover:shadow-lg hover:-translate-y-0.5 transition`}>
             <span className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tone} text-white grid place-items-center`}><Icon className="w-5 h-5" /></span>

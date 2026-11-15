@@ -11,6 +11,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingWhatsApp from "@/components/whatsapp/FloatingWhatsApp";
 import BackToTop from "@/components/ui/BackToTop";
+import WaTracker from "@/components/analytics/WaTracker";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { WhatsAppChooserProvider } from "@/components/whatsapp/WhatsAppChooser";
 import { OrderListProvider } from "@/components/order/OrderListProvider";
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <BackToTop />
               <OrderListDrawer />
               <ChatBot />
+              <WaTracker />
             </OrderListProvider>
             </FavouritesProvider>
             </RatingsProvider>

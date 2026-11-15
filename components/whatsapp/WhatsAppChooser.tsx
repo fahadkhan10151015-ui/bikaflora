@@ -48,7 +48,7 @@ export function WhatsAppChooserProvider({ children }: { children: React.ReactNod
                 const Icon = icons[o.id] || HelpCircle;
                 return (
                   <li key={o.id}>
-                    <a href={waLink(o.text)} target="_blank" rel="noopener" onClick={close}
+                    <a href={waLink(o.text)} data-wa={o.title} target="_blank" rel="noopener" onClick={close}
                       className="flex items-center gap-4 p-3 rounded-2xl hover:bg-blush transition group">
                       <span className="w-11 h-11 rounded-xl bg-blush text-brand grid place-items-center group-hover:bg-white"><Icon className="w-5 h-5" /></span>
                       <span className="flex-1">
