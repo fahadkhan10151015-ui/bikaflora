@@ -1,3 +1,4 @@
+import DeliveryFeeNote from "@/components/ui/DeliveryFeeNote";
 import { products, toCard } from "@/data/products";
 import ShopGrid from "@/components/product/ShopGrid";
 import CategoryCircles from "@/components/sections/CategoryCircles";
@@ -28,6 +29,7 @@ export default function Shop() {
       </div>
       <CategoryCircles compact />
       <div className="container-x mt-10">
+        <DeliveryFeeNote className="mb-5" />
         <ShopGrid items={products.map(toCard)} showChips={false} />
         <CollectionGuide name="Shop" html={seo.html} faqTitle={seo.faqTitle} faqs={seo.faqs} />
       </div>

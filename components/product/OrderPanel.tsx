@@ -1,4 +1,5 @@
 "use client";
+import DeliveryFeeNote from "@/components/ui/DeliveryFeeNote";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Zap, CalendarClock, Check, Plus, Palette, Mail, ShoppingBag } from "lucide-react";
@@ -91,6 +92,7 @@ export default function OrderPanel({ p }: { p: Product }) {
           </>
         )}
       </div>
+      <DeliveryFeeNote className="-mt-1 rounded-xl bg-blush/70 px-3 py-2.5" />
 
       {p.variants && (
         <fieldset>

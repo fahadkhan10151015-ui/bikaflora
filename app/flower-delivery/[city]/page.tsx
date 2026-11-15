@@ -80,7 +80,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             : <p className="mt-4 text-white/85 max-w-3xl leading-relaxed">{l.blurb}</p>}
           <div className="mt-7 flex flex-wrap gap-3 text-sm md:text-base">
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Zap className="w-4 h-4" /> {cutoff ? `Same-day: order by ${cutoff}` : "Same-day delivery"}</span>
-            {l.fee ? <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Truck className="w-4 h-4" /> Delivery from RM{l.fee}</span> : null}
+            <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Truck className="w-4 h-4" /> {l.fee ? `Delivery from RM${l.fee}, exact fee on WhatsApp` : `Delivery fee for ${l.name}: confirmed on WhatsApp`}</span>
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Clock className="w-4 h-4" /> Pre-order any date</span>
             <span className="flex items-center gap-2 glass !bg-white/15 border border-white/25 px-4 py-2 rounded-full"><Camera className="w-4 h-4" /> Photo before delivery</span>
           </div>

@@ -29,7 +29,7 @@ export function productMessages(p: WaProduct, delivery: string, c?: WaCustomer):
       id: "order",
       title: "Order this bouquet",
       hint: "Place an order for this item",
-      text: `Hi ${site.name}, I would like to order:\n\n${header}\nDelivery: ${delivery}\n\nPlease confirm availability and the total price.${signOff(c)}`,
+      text: `Hi ${site.name}, I would like to order:\n\n${header}\nDelivery: ${delivery}\nMy delivery area: \n\nPlease confirm availability and the delivery fee for my area.${signOff(c)}`,
     },
     {
       id: "info",
@@ -94,5 +94,5 @@ export function multiOrderMessage(items: ListItem[], delivery: string, c?: WaCus
     ]),
   );
   const total = items.reduce((n, it) => n + it.qty * it.price, 0);
-  return `Hi ${site.name}, I would like to order these items:\n\n${lines.join("\n\n")}\n\nSubtotal: ${formatPrice(total)}\nDelivery: ${delivery}\n\nPlease confirm availability and the total with delivery. I understand payment is made in advance.${signOff(c)}`;
+  return `Hi ${site.name}, I would like to order these items:\n\n${lines.join("\n\n")}\n\nSubtotal: ${formatPrice(total)}\nDelivery: ${delivery}\n\nMy delivery area: \n\nPlease confirm availability and the delivery fee for my area. I understand payment is made in advance.${signOff(c)}`;
 }

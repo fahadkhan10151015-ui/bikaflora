@@ -1,4 +1,5 @@
 "use client";
+import DeliveryFeeNote from "@/components/ui/DeliveryFeeNote";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X, Minus, Plus, Trash2, ShoppingBag, Zap, CalendarClock } from "lucide-react";
@@ -97,11 +98,12 @@ export default function OrderListDrawer() {
                 <span className="text-muted">Subtotal ({list.count} item{list.count > 1 ? "s" : ""})</span>
                 <span className="text-xl font-semibold text-brand">{formatPrice(list.total)}</span>
               </div>
+              <DeliveryFeeNote className="!text-xs rounded-xl bg-blush/70 px-3 py-2" text="Delivery fee is not included yet. It depends on your area, and we tell you the exact fee on WhatsApp before you pay." />
               <a href={waLink(message)} target="_blank" rel="noopener" className="btn btn-wa w-full !py-4 text-base shadow-lg shadow-wa/25">
                 <WhatsAppIcon className="w-6 h-6" /> Send order on WhatsApp
               </a>
               <div className="flex justify-between text-xs text-muted">
-                <span>We confirm the total with delivery. {paymentNote}</span>
+                <span>We confirm the final total on WhatsApp. {paymentNote}</span>
                 <button onClick={list.clear} className="underline shrink-0 ml-2">Clear list</button>
               </div>
             </div>
