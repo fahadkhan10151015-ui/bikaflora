@@ -42,6 +42,23 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .prose-product > h2:first-child { margin-top: 0; }
 .prose-product h2 { font-size: 1.6rem; line-height: 1.25; }
 .prose-product h3 { font-family: var(--font-sans, inherit); font-size: 1.05rem; font-weight: 600; margin-top: 1.25rem; color: var(--color-ink); }
+.location-intro p { margin: 0; }
+.location-intro a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.prose-location { color: var(--color-muted); font-size: 1.0625rem; line-height: 1.85; }
+@media (min-width: 768px) { .prose-location { font-size: 1.125rem; } }
+.prose-location > h2:first-child { margin-top: 0; }
+.prose-location h2 { font-size: 1.75rem; line-height: 1.25; margin: 2.5rem 0 .75rem; color: var(--color-ink); }
+@media (min-width: 768px) { .prose-location h2 { font-size: 2.1rem; } }
+.prose-location h3 { font-family: var(--font-sans, inherit); font-size: 1.2rem; font-weight: 600; margin: 1.75rem 0 .5rem; color: var(--color-ink); }
+.prose-location p { margin: .85rem 0; }
+.prose-location ul { list-style: disc; margin: .85rem 0 .85rem 1.4rem; }
+.prose-location li { margin: .35rem 0; }
+.prose-location strong { color: var(--color-ink); font-weight: 600; }
+.prose-location a { color: var(--color-brand); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
+.prose-location table { width: 100%; margin: 1.25rem 0; border-collapse: separate; border-spacing: 0; font-size: 1rem; border: 1px solid var(--color-blush-2, #f3dfe5); border-radius: 1rem; overflow: hidden; }
+.prose-location th, .prose-location td { padding: .75rem 1rem; border-bottom: 1px solid var(--color-blush-2, #f3dfe5); text-align: left; vertical-align: top; }
+.prose-location th { background: var(--color-blush, #fbeef2); color: var(--color-ink); font-weight: 600; }
+.prose-location tr:last-child td { border-bottom: 0; }
 .prose-intro a, .prose-product a { color: var(--color-brand); text-decoration: underline; text-underline-offset: 2px; }
 .prose-product ul, .prose-product ol { margin: .75rem 0 .75rem 1.25rem; color: var(--color-muted); line-height: 1.8; }
 .prose-product ul { list-style: disc; } .prose-product ol { list-style: decimal; }
