@@ -29,7 +29,7 @@ async function main() {
     if (!r.ok) throw new Error(`${table}: ${r.status}`);
     return r.json();
   };
-  const [prod, seo] = await Promise.all([get("product_overrides"), get("seo_overrides")]);
+  const [prod, seo, content] = await Promise.all([get("product_overrides"), get("seo_overrides"), get("content")]);
   const out = { products: {}, seo: {} };
   for (const p of prod) out.products[p.slug] = {
     ...(p.price != null && { price: Number(p.price) }),
@@ -44,7 +44,15 @@ async function main() {
     inSitemap: s.in_sitemap !== false,
   };
   await fs.writeFile(OUT, JSON.stringify(out, null, 2) + "\n");
-  console.log(`[overrides] ${prod.length} product edits, ${seo.length} SEO edits applied`);
+  // Full content edits (products, categories, area pages, site pages, blog) from the admin panel.
+  const c = { product: {}, collection: {}, location: {}, page: {}, post: {} };
+  for (const row of content) {
+    const slug = row.key.slice(row.kind.length + 1);
+    if (!c[row.kind]) continue;
+    c[row.kind][slug] = row.deleted ? { deleted: true } : row.data;
+  }
+  await fs.writeFile(path.join(ROOT, "data/content.json"), JSON.stringify(c) + "\n");
+  console.log(`[overrides] ${prod.length} product edits, ${seo.length} SEO edits, ${content.length} content edits applied`);
 }
 
 main().catch((e) => console.warn("[overrides] kept previous file:", e.message));
