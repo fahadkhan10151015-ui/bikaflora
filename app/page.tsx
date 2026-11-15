@@ -38,11 +38,13 @@ const reasons = [
 ];
 
 export default function Home() {
-  // The hero picture is a plain <picture> with fetchpriority="high" in the page HTML, so the browser finds it at once.
-  // (No preload() here: it leaked into every other page through link prefetching and wasted bandwidth there.)
+  // Hero picture hints: React lifts these <link> tags into <head>, so the picture starts downloading straight away
+  // (before the inline styles). Plain <link> elements (not preload()) only apply on this page, not on prefetches.
   const popular = featuredProducts().slice(0, 4);
   return (
     <>
+      <link rel="preload" as="image" href="/video/hero-vertical-poster-v2.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/video/hero-making-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
       <HeroSlider />
 
