@@ -15,14 +15,14 @@ const MAX = 100 * 1024 - 2048;
 
 /** Area slug -> [area name, Wikipedia pages to try, in order]. */
 const AREAS = {
-  "kuala-lumpur": ["Kuala Lumpur", ["Kuala_Lumpur_Tower", "Petronas_Towers", "Merdeka_Square,_Kuala_Lumpur"]],
+  "kuala-lumpur": ["Kuala Lumpur", ["Merdeka_Square,_Kuala_Lumpur", "Merdeka_118", "Kuala_Lumpur_City_Centre"]],
   "shah-alam": ["Shah Alam", ["Sultan_Salahuddin_Abdul_Aziz_Mosque", "Shah_Alam"]],
   "petaling-jaya": ["Petaling Jaya", ["Petaling_Jaya", "1_Utama"]],
   "subang-jaya": ["Subang Jaya", ["Subang_Jaya", "Subang_Parade"]],
   "klang": ["Klang", ["Klang_(city)", "Sultan_Abdul_Aziz_Royal_Gallery", "Istana_Alam_Shah"]],
   "kajang": ["Kajang", ["Kajang", "Kajang_railway_station"]],
-  "cyberjaya": ["Cyberjaya", ["Cyberjaya", "Multimedia_University"]],
-  "sepang": ["Sepang", ["Sepang", "Sepang_International_Circuit"]],
+  "cyberjaya": ["Cyberjaya", ["Cyberjaya", "Cyberjaya_Lake_Gardens"]],
+  "sepang": ["Sepang", ["Sepang", "Kuala_Lumpur_International_Airport", "Sepang_District"]],
   "puchong": ["Puchong", ["Puchong", "IOI_Mall_Puchong"]],
   "rawang": ["Rawang", ["Rawang", "Rawang,_Selangor"]],
   "ampang": ["Ampang", ["Ampang_Jaya", "Ampang,_Selangor"]],
@@ -66,8 +66,10 @@ async function candidate(page) {
   const sum = await (await get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(page)}`)).json();
   const orig = sum.originalimage;
   if (!orig?.source) return why(page, 'no lead image');
-  const file = decodeURIComponent(orig.source.split("/").pop());
-  if (BAD.test(file) || orig.width < 1000 || orig.width < orig.height * 1.15) return why(page, `rejected ${file} ${orig.width}x${orig.height}`);
+  // URL is either .../commons/a/ab/File.jpg or .../commons/thumb/a/ab/File.jpg/3840px-File.jpg, plus ?utm_ params.
+  const parts = orig.source.split("?")[0].split("/");
+  const file = decodeURIComponent(parts.includes("thumb") ? parts[parts.length - 2] : parts[parts.length - 1]);
+  if (BAD.test(file) || orig.width < 900 || orig.width < orig.height * 1.15) return why(page, `rejected ${file} ${orig.width}x${orig.height}`);
   // Licence + credit from Commons (files only on en.wikipedia are often non-free: skip them).
   const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent("File:" + file)}&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1600`;
   const j = await (await get(api)).json();
