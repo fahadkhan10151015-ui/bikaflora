@@ -67,7 +67,9 @@ export default function Home() {
           items.forEach((p) => used.add(p.slug));
           return { items, total: all.length };
         };
-        return [["premium-bouquets", "Long-lasting & elegant", "Premium Soap Flower Bouquets"], ...["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((s) => [s])].map(([slug, eyebrow, title]) => {
+        // Only 3 product rows on the homepage (Best Sellers + these 2) to keep the page small and fast on phones.
+        // Every other category is one tap away in "Shop by category" above and in the menu.
+        return ["below-100", "chocolate-flower-bouquets"].map((s) => [s]).map(([slug, eyebrow, title]) => {
           const c = getCategory(slug);
           if (!c) return null;
           const { items, total } = pick(slug);
