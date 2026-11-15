@@ -2,7 +2,7 @@ import PageShell from "@/components/ui/PageShell";
 import { pageMeta } from "@/lib/seo";
 import { site, paymentNote, paymentMethods } from "@/lib/site";
 
-export const metadata = pageMeta({ title: "Delivery Information", description: "Instant flower delivery and pre-orders across Kuala Lumpur and Selangor by Grab Express, Lalamove and J&T Express. Cut-off times, fees, payment and tips.", path: "/delivery-information" });
+export const metadata = pageMeta({ title: "Delivery Information", description: "How BikaFlora delivers soap flower bouquets in KL and Selangor: same-day delivery with no cut-off, pre-orders, delivery fees, payment and address tips.", path: "/delivery-information" });
 
 export default function Page() {
   return (
@@ -11,15 +11,19 @@ export default function Page() {
         <h2 className="!mt-0">Where we deliver</h2>
         <p>We deliver to 32 areas across Kuala Lumpur and Selangor. See the full list on our <a className="text-brand underline" href="/flower-delivery">Delivery Areas</a> page.</p>
         <h2>Instant Delivery</h2>
-        <p>Ready-made bouquets are delivered the same day, any time, by <strong>Grab Express</strong> or <strong>Lalamove</strong>. Orders after the cut-off go out the next day. During peak seasons (Valentine&apos;s Day, Mother&apos;s Day, convocation season) please order early.</p>
+        <p>Ready-made bouquets can be delivered the same day, any time, with no cut-off. During peak seasons (Valentine&apos;s Day, Mother&apos;s Day, convocation season) please order early.</p>
         <h2>Pre-order</h2>
         <p>Tell us what you want and the date you need it. We prepare your bouquet exactly to your requirement and deliver it on your date. Premium, crochet and custom designs are usually pre-order.</p>
         <h2>Customise with a photo</h2>
         <p>Send us a reference photo on WhatsApp and tell us &ldquo;I want this type&rdquo;. We confirm the design and price, then build it for you.</p>
+        <h2>Photo before delivery</h2>
+        <p>Once your bouquet is ready, our florist sends you a photo on WhatsApp. Then it heads straight to the door.</p>
         <h2>Delivery partners</h2>
-        <p>Grab Express and Lalamove for same-day delivery across KL &amp; Selangor. J&amp;T Express for crochet bouquets and gifts sent further away.</p>
+        <p>We send same-day orders in KL &amp; Selangor with <strong>Grab Express</strong> or <strong>Lalamove</strong>. Crochet bouquets and gifts going further travel by <strong>J&amp;T Express</strong>.</p>
+        <h2>Sending further</h2>
+        <p>Crochet bouquets and gifts can also be sent outside KL and Selangor. Message us the address, and we confirm the cost first.</p>
         <h2>Delivery fee</h2>
-        <p>The delivery fee depends on the address and courier. We confirm the total on WhatsApp first.</p>
+        <p>The delivery fee depends on the delivery address. We confirm the total on WhatsApp first.</p>
         <h2>Payment</h2>
         <p>{paymentNote} We accept {paymentMethods}.</p>
         <h2>Condos, offices and hospitals</h2>

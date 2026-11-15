@@ -13,6 +13,19 @@ import JsonLd from "@/components/ui/JsonLd";
 import SectionTitle from "@/components/sections/SectionTitle";
 import { pageMeta } from "@/lib/seo";
 import { locationSeo } from "@/data/location-seo";
+import { locationImages } from "@/data/location-images";
+
+/** Put the area's bouquet photo just before the second H2 of the content. */
+function withAreaImage(html: string, slug: string) {
+  const img = locationImages[slug];
+  if (!img) return html;
+  const p = products.find((x) => x.slug === img.product);
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  const fig = `<figure class="area-figure"><img src="${img.src}" alt="${esc(img.alt)}" width="${img.w}" height="${img.h}" loading="lazy" decoding="async" /><figcaption>${esc(img.caption)}${p ? ` <a href="/product/${p.slug}">See this bouquet</a>` : ""}</figcaption></figure>`;
+  const first = html.indexOf("<h2");
+  const second = first < 0 ? -1 : html.indexOf("<h2", first + 3);
+  return second > 0 ? html.slice(0, second) + fig + html.slice(second) : html + fig;
+}
 import { absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() { return locations.map((l) => ({ city: l.slug })); }
@@ -73,7 +86,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <div className="text-center mt-8"><Link href="/shop" className="btn btn-outline">See all bouquets</Link></div>
 
         {seo ? (
-          <article className="prose-location mt-16 md:mt-20 max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: seo.html }} />
+          <article className="prose-location mt-16 md:mt-20 max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: withAreaImage(seo.html, l.slug) }} />
         ) : (
           <div className="mt-16 prose-bf max-w-3xl mx-auto">
             <h2 className="!mt-0">Your florist for {l.name}</h2>

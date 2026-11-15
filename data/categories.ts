@@ -76,7 +76,7 @@ export const allCategories: Category[] = [
     short: "Handmade flowers that last forever",
     image: "/products/crochet-pink-paradise/crochet-pink-paradise-table.webp",
     seoTitle: "Crochet Flower Bouquet Malaysia | Handmade Forever Flowers",
-    seoDescription: "Handmade crochet flower bouquets that never wilt. Crochet tulips, sunflowers and roses. Delivered in KL & Selangor or shipped by J&T Express.",
+    seoDescription: "Handmade crochet flower bouquets that never wilt. Crochet tulips, sunflowers and roses. Delivered in KL & Selangor or sent across Malaysia.",
     intro: "Every crochet flower is knitted by hand, so it never wilts. A keepsake gift that lasts forever.",
     content: [{ heading: "Made by hand, made to last", body: "Crochet bouquets take time to make, so many designs are made to order. Pre-order for colours or flowers of your choice." }],
   },

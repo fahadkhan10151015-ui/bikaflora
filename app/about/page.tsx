@@ -3,23 +3,20 @@ import { siteImages } from "@/lib/images";
 import PageShell from "@/components/ui/PageShell";
 import WaCta from "@/components/sections/WaCta";
 import { pageMeta } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { pageCopy } from "@/data/page-copy";
 
-export const metadata = pageMeta({ title: "About Us – Handmade Florist in KL & Selangor", description: `Meet ${site.name}, a Klang Valley florist creating handmade soap, crochet and dried flower bouquets with same-day delivery across KL & Selangor.`, path: "/about" });
+const c = pageCopy.about;
+export const metadata = pageMeta({ title: c.title, description: c.description, path: "/about", absoluteTitle: true });
 
 export default function About() {
   return (
     <>
-      <PageShell title="About BikaFlora" path="/about" intro="Handmade bouquets, made with love in the Klang Valley.">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="prose-bf">
-            <p>{site.name} started with a simple idea: flowers should keep making someone smile long after the day they arrive. That is why every bouquet — from classic roses and tulips to flower boxes and long-lasting soap roses — is hand-tied with care.</p>
-            <p>Every bouquet is wrapped by hand, checked carefully and photographed before delivery, so you always know what your loved one will receive. We deliver to 32 areas across Kuala Lumpur and Selangor, including homes, offices, hospitals and university campuses.</p>
-            <p>We keep ordering personal. Instead of a long checkout, you chat directly with our florist on WhatsApp. Tell us the occasion, your budget and any special requests, and we will take care of the rest.</p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden"><Photo src={siteImages.florist} alt="BikaFlora florist arranging flowers" sizes="25vw" /></div>
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden mt-10"><Photo src={siteImages.holdingBouquet} alt="Bouquet ready for delivery" sizes="25vw" /></div>
+      <PageShell title={c.h1} path="/about" introHtml={c.intro}>
+        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+          <article className="lg:col-span-3 prose-location bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: c.html! }} />
+          <div className="lg:col-span-2 grid grid-cols-2 gap-4 lg:sticky lg:top-28">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden"><Photo src={siteImages.florist} alt="BikaFlora florist wrapping a handmade soap flower bouquet" sizes="(min-width:1024px) 20vw, 50vw" /></div>
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden mt-10"><Photo src={siteImages.holdingBouquet} alt="Handmade bouquet ready for delivery in KL" sizes="(min-width:1024px) 20vw, 50vw" /></div>
           </div>
         </div>
       </PageShell>

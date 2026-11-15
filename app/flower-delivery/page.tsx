@@ -21,7 +21,7 @@ export default function Areas() {
       <div className="container-x">
         <Breadcrumbs items={[{ name: "Delivery Areas", path: "/flower-delivery" }]} />
         <h1 className="text-4xl md:text-5xl font-semibold">Flower delivery areas</h1>
-        <p className="mt-3 text-muted max-w-2xl">We deliver across Kuala Lumpur and Selangor. Ready bouquets are delivered the same day at any time by Grab Express or Lalamove, or pre-order for your date. Choose your area for local delivery details.</p>
+        <p className="mt-3 text-muted max-w-2xl">We deliver across Kuala Lumpur and Selangor. Ready bouquets are delivered the same day at any time, or pre-order for your date. Choose your area for local delivery details.</p>
         <div className="relative mt-8 h-56 md:h-80 rounded-[2rem] overflow-hidden">
           <FillImage src={siteImages.klNight} alt="Kuala Lumpur skyline at night" w={1080} h={480} quality={70} priority className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-deep/70 to-transparent" />

@@ -177,7 +177,6 @@ export default function HeroSlider() {
         <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
           <Sparkles className="w-4 h-4 text-gold" /> Florist in Kuala Lumpur & Selangor, Malaysia
         </div>
-        <h1 className="sr-only">BikaFlora – soap flower bouquet delivery in Kuala Lumpur & Selangor</h1>
 
         <div key={active} className="hero-text-in" aria-live="polite">
           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{s.eyebrow}</p>

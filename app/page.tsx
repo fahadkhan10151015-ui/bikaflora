@@ -8,7 +8,7 @@ import CategoryCircles from "@/components/sections/CategoryCircles";
 import { getCategory } from "@/data/categories";
 import DeliveryWays from "@/components/sections/DeliveryWays";
 import { selangor, kl } from "@/data/locations";
-import { faqs } from "@/data/faqs";
+import { pageCopy } from "@/data/page-copy";
 import ProductRow from "@/components/product/ProductRow";
 import HeroSlider from "@/components/sections/HeroSlider";
 import Petals from "@/components/sections/Petals";
@@ -24,17 +24,13 @@ import { site } from "@/lib/site";
 import { siteImages } from "@/lib/images";
 import { pageMeta } from "@/lib/seo";
 
-export const metadata = pageMeta({
-  title: `${site.name} | Florist & Flower Delivery in KL & Selangor`,
-  description:
-    "Long-lasting soap rose bouquets, Ferrero Rocher bouquets, heart bouquets and graduation bouquets. Same-day delivery or pre-order across Kuala Lumpur & Selangor. Order on WhatsApp in 1 minute.",
-  path: "/",
-});
+const c = pageCopy.home;
+export const metadata = pageMeta({ title: c.title, description: c.description, path: "/", absoluteTitle: true });
 
 const steps = [
   { icon: MousePointerClick, title: "Tap “Order now”", text: "Tap Order now on any bouquet. Want several? Tap + to add them to your order list." },
   { icon: MessageCircle, title: "Confirm & pay in advance", text: "WhatsApp opens with everything typed. We confirm the total with delivery, then you pay in advance." },
-  { icon: Truck, title: "We prepare & deliver", text: "We send a photo of your bouquet, then deliver it by Grab Express, Lalamove or J&T Express." },
+  { icon: Truck, title: "We prepare & deliver", text: "We send a photo of your bouquet, then deliver it to the door." },
 ];
 
 const reasons = [
@@ -55,6 +51,12 @@ export default function Home() {
       <HeroSlider />
 
       <section className="bg-white border-b border-blush-2"><div className="container-x py-8"><TrustBar /></div></section>
+
+      {/* H1 + intro */}
+      <section className="container-x mt-12 md:mt-16 text-center">
+        <h1 className="text-3xl md:text-5xl font-semibold leading-tight max-w-4xl mx-auto">{c.h1}</h1>
+        <div className="mt-4 text-muted text-lg md:text-xl leading-relaxed max-w-3xl mx-auto prose-intro" dangerouslySetInnerHTML={{ __html: c.intro }} />
+      </section>
 
       <CategoryCircles />
 
@@ -153,29 +155,13 @@ export default function Home() {
 
       {/* SEO CONTENT */}
       <section className="container-x mt-24">
-        <div className="max-w-4xl mx-auto prose-bf">
-          <h2 className="text-3xl font-semibold text-center">Online florist in Kuala Lumpur & Selangor</h2>
-          <p>
-            Looking for a florist near you in the Klang Valley? {site.name} delivers premium soap flower bouquets to homes, offices, hospitals and campuses across Kuala Lumpur and Selangor, from Shah Alam, Petaling Jaya and Subang Jaya to Cheras, Bangsar and Mont Kiara.
-          </p>
-          <p>
-            Shop our best-selling Soap Rose Heart bouquet, Ferrero Rocher soap rose bouquets in pink or red, Blue Noir for him, Bestie Blossoms for your best friend and The Graduation Signature for convocation day. Soap flowers look real, smell lovely and last for months without water.
-          </p>
-          <h2>Instant delivery or pre-order</h2>
-          <p>
-            Need flowers today? Choose Instant Delivery and we send it the same day, any time by Grab Express or Lalamove. Planning ahead? Pre-order and tell us exactly what you want and the date. You can even send us a photo and we will make it for you. Payment is made in advance once we confirm your order on WhatsApp.
-          </p>
-          <h2>Flowers for every Malaysian celebration</h2>
-          <p>
-            From Hari Raya open houses and Chinese New Year visits to Deepavali, convocations, Mother&apos;s Day, Valentine&apos;s Day and 520, we prepare bouquets in the colours and styles each celebration calls for.
-          </p>
-        </div>
+        <article className="prose-location max-w-3xl mx-auto bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: c.html! }} />
       </section>
 
       {/* FAQ */}
       <section className="container-x mt-20">
-        <SectionTitle eyebrow="FAQ" title="Frequently asked questions" />
-        <Faq items={faqs.slice(0, 6)} />
+        <SectionTitle eyebrow="FAQ" title={c.faqTitle!} />
+        <Faq items={c.faqs!} />
       </section>
 
       <MomentsCarousel />
