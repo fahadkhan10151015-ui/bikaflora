@@ -16,7 +16,7 @@ export default function Stars({ slug, size = "sm", className = "" }: { slug: str
       aria-label={r ? `Rated ${r.avg.toFixed(1)} out of 5 from ${r.count} review${r.count > 1 ? "s" : ""}` : "No reviews yet"}>
       <span className="flex gap-px" aria-hidden>
         {[0, 1, 2, 3, 4].map((i) => (
-          <Star key={i} className={`${star} ${i < full ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-300"}`} />
+          <Star key={i} className={`${star} ${i < full ? "fill-amber-400 text-amber-400" : r ? "fill-gray-200 text-gray-300" : "fill-transparent text-amber-400"}`} />
         ))}
       </span>
       {r ? (
