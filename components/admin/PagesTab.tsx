@@ -107,7 +107,7 @@ export default function PagesTab({ kinds = ["collection", "location", "page", "p
               <span><span className="font-semibold text-ink">{i.name}</span><span className="block text-xs text-muted">{i.path}{i.kind === "collection" ? ` · ${products.filter((p) => p.categories.includes(i.slug)).length} products` : ""}</span></span>
             </span>
             <span className="flex items-center gap-3 shrink-0">
-              {i.slug !== "hero" && i.kind !== "post" && (() => { const d = current(i.kind, i.slug); return <ScorePill score={seoChecks({ keyword: d.keyword ?? "", title: d.title, description: d.description, slug: i.path.replace(/^\//, ""), h1: d.h1 ?? d.name ?? "", html: `${d.intro ?? ""}${d.html ?? ""}` }).score} />; })()}
+              {i.slug !== "hero" && i.kind !== "post" && (() => { const d = current(i.kind, i.slug); return <ScorePill score={seoChecks({ keyword: d.keyword ?? "", title: d.title, description: d.description, slug: i.path.replace(/^\//, ""), h1: d.h1 ?? d.name ?? "", html: `${d.intro ?? ""}${d.html ?? ""}`, faqs: [...(d.faqs ?? []), ...(d.groups ?? []).flatMap((g) => g.faqs)] }).score} />; })()}
               <Pencil className="w-4 h-4 text-brand" />
             </span>
           </button>
@@ -239,7 +239,7 @@ export function PageEditor({ item, onClose }: { item: Item; onClose: () => void 
         <Field label="Meta title" value={d.title} max={60} onChange={(v) => set({ title: v })} hint={item.kind === "collection" ? "Auto if empty." : undefined} />
         <Field label="Meta description" value={d.description} max={160} rows={2} onChange={(v) => set({ description: v })} />
         <KeywordsField value={d.keyword ?? ""} onChange={(v) => set({ keyword: v })} />
-        <div className="pt-2 border-t border-blush-2/60"><SeoScore keyword={d.keyword ?? ""} title={d.title} description={d.description} slug={item.slug || slug} h1={d.h1 ?? d.name ?? ""} html={`${d.intro ?? ""}${d.html ?? ""}`} /></div>
+        <div className="pt-2 border-t border-blush-2/60"><SeoScore keyword={d.keyword ?? ""} title={d.title} description={d.description} slug={item.slug || slug} h1={d.h1 ?? d.name ?? ""} html={`${d.intro ?? ""}${d.html ?? ""}`} faqs={[...(d.faqs ?? []), ...(d.groups ?? []).flatMap((g) => g.faqs)]} /></div>
       </section>
 
       {item.kind === "post" ? (

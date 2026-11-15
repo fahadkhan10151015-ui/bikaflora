@@ -1,4 +1,4 @@
-// Build step: download the admin panel's saved edits (product prices/stock/best seller, SEO meta/sitemap)
+// Build step: download the admin panel's saved edits (product prices/sold/best seller, SEO meta/sitemap)
 // from Supabase into data/overrides.json, so every page is built with them.
 // If Supabase can't be reached, the last saved file is kept and the build continues.
 import fs from "node:fs/promises";
@@ -34,7 +34,7 @@ async function main() {
   for (const p of prod) out.products[p.slug] = {
     ...(p.price != null && { price: Number(p.price) }),
     ...(p.compare_at != null && { compareAt: Number(p.compare_at) }),
-    ...(p.stock != null && { stock: p.stock }),
+    ...(p.sold != null && { sold: p.sold }),
     ...(p.best_seller != null && { bestSeller: p.best_seller }),
   };
   for (const s of seo) out.seo[s.path] = {

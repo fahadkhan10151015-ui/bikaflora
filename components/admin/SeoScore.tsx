@@ -1,12 +1,19 @@
 "use client";
 import { CheckCircle2, AlertCircle, XCircle } from "lucide-react";
 
-export type SeoInput = { keyword: string; title: string; description: string; slug: string; h1: string; html: string; alts?: string[]; minWords?: number };
+export type SeoInput = { keyword: string; title: string; description: string; slug: string; h1: string; html: string; alts?: string[]; minWords?: number; faqs?: { q: string; a: string }[] };
+/** The FAQ questions and answers are on the page too, so they count as content. */
+const withFaqs = (i: SeoInput): SeoInput => (i.faqs?.length ? { ...i, html: i.html + i.faqs.map((f) => `<p>${f.q}</p><p>${f.a}</p>`).join("") } : i);
 type Check = { ok: 0 | 1 | 2; text: string; w: number }; // 2 = good, 1 = so-so, 0 = bad
 
 const plain = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ").trim();
-const norm = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
-const has = (hay: string, kw: string) => norm(hay).includes(norm(kw));
+// Small linking words are ignored when matching, like Google does:
+// "flower delivery Shah Alam" matches "flower delivery in Shah Alam".
+// Singular and plural count as the same word: "roses" = "rose", "bouquets" = "bouquet".
+const stem = (w: string) => (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w);
+const STOP = new Set(["in", "at", "to", "for", "the", "a", "an", "of", "on", "with", "from", "by", "your", "our"]);
+const norm = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter((w) => w && !STOP.has(w)).map(stem).join(" ");
+const has = (hay: string, kw: string) => { const k = norm(kw); return !!k && ` ${norm(hay)} `.includes(` ${k} `); };
 
 /** Rank Math-style checks for one page. Returns the checks and a 0–100 score. */
 /** Keywords are stored comma separated; the first one is the main (focus) keyword. */
@@ -14,13 +21,15 @@ export const splitKeywords = (s: string) => s.split(",").map((k) => k.trim()).fi
 const countIn = (text: string, kw: string) => { const k = norm(kw); if (!k) return 0; return (norm(text).match(new RegExp(`\\b${k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g")) ?? []).length; };
 
 /** Where each keyword is used (for the keyword table). */
-export function keywordReport(i: SeoInput) {
+export function keywordReport(input: SeoInput) {
+  const i = withFaqs(input);
   const text = plain(i.html);
   const heads = [...i.html.matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/gi)].map((m) => m[1]).join(" ");
   return splitKeywords(i.keyword).map((k, n) => ({ k, main: n === 0, title: has(i.title, k), desc: has(i.description, k), heading: has(heads, k) || has(i.h1, k), count: countIn(text, k) }));
 }
 
-export function seoChecks(i: SeoInput): { checks: Check[]; score: number } {
+export function seoChecks(input: SeoInput): { checks: Check[]; score: number } {
+  const i = withFaqs(input);
   const all = splitKeywords(i.keyword);
   const kw = all[0] ?? "";
   const text = plain(i.html);
@@ -34,7 +43,7 @@ export function seoChecks(i: SeoInput): { checks: Check[]; score: number } {
     const first = norm(text).split(" ").slice(0, Math.max(30, Math.round(words * 0.1))).join(" ");
     const heads = [...i.html.matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/gi)].map((m) => m[1]).join(" ");
     const count = words ? (norm(text).match(new RegExp(`\\b${norm(kw).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g")) ?? []).length : 0;
-    const density = words ? (count * norm(kw).split(" ").length * 100) / words : 0;
+    const density = words ? (count * 100) / words : 0; // Rank Math formula: times used ÷ total words
     checks.push(has(i.title, kw) ? { ok: norm(i.title).startsWith(norm(kw)) || norm(i.title).indexOf(norm(kw)) < 20 ? 2 : 1, w: 14, text: norm(i.title).indexOf(norm(kw)) < 20 ? "Focus keyword is at the start of the meta title." : "Focus keyword is in the meta title (better near the start)." } : { ok: 0, w: 14, text: "Add the focus keyword to the meta title." });
     checks.push(has(i.description, kw) ? { ok: 2, w: 10, text: "Focus keyword is in the meta description." } : { ok: 0, w: 10, text: "Add the focus keyword to the meta description." });
     checks.push(has(i.slug.replace(/-/g, " "), kw) ? { ok: 2, w: 8, text: "Focus keyword is in the web address." } : { ok: 1, w: 8, text: "Tip: use the focus keyword in the web address." });

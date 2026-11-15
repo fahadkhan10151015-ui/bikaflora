@@ -4,7 +4,7 @@ import { ArrowLeft, Save, Trash2, Loader2 } from "lucide-react";
 import { products, type Product } from "@/data/products";
 import { productSeo } from "@/data/product-seo";
 import { allCategories } from "@/data/categories";
-import { stock as liveStock } from "@/data/stock";
+import { sold as liveSold } from "@/data/sold";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
 import { Field, LinesEditor, FaqEditor, PhotosEditor, NumberField, BadgeField, KeywordsField, type QA } from "./fields";
@@ -12,7 +12,7 @@ import { card, Note, Toggle } from "./ui";
 import SeoScore from "./SeoScore";
 
 type Form = {
-  slug: string; name: string; nameZh: string; sku: string; badge: string; price: string; compareAt: string; stock: string; bestSeller: boolean;
+  slug: string; name: string; nameZh: string; sku: string; badge: string; price: string; compareAt: string; sold: string; bestSeller: boolean;
   categories: string[]; instant: boolean; preorder: boolean; giftCard: boolean; protectionBag: boolean;
   short: string; description: string; design: string; durability: string; occasions: string; size: string; care: string[]; includes: string[]; tags: string;
   images: string[]; alts: Record<string, string>;
@@ -26,7 +26,7 @@ function fromProduct(p?: Product): Form {
   const s = p ? productSeo[p.slug] : undefined;
   return {
     slug: p?.slug ?? "", name: p?.name ?? "", nameZh: p?.nameZh ?? "", sku: p?.sku ?? nextSku(), badge: p ? p.badge ?? "" : "auto",
-    price: p ? String(p.price) : "", compareAt: p?.compareAt ? String(p.compareAt) : "", stock: p && liveStock[p.slug] !== undefined ? String(liveStock[p.slug]) : "",
+    price: p ? String(p.price) : "", compareAt: p?.compareAt ? String(p.compareAt) : "", sold: p && liveSold[p.slug] !== undefined ? String(liveSold[p.slug]) : "",
     bestSeller: p?.categories.includes("best-seller") ?? false, categories: (p?.categories ?? []).filter((c) => c !== "best-seller"),
     instant: p?.instant ?? true, preorder: p?.preorder ?? true, giftCard: p?.giftCard !== false, protectionBag: p?.protectionBag !== false,
     short: p?.short ?? "", description: p?.description ?? "", design: p?.design ?? "", durability: p?.durability ?? "", occasions: p?.occasions ?? "", size: p?.size ?? "",
@@ -98,7 +98,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
           ...(typeof s.keyword === "string" && { keyword: s.keyword }), ...(typeof s.short === "string" && { seoShort: s.short }), ...(typeof s.html === "string" && { html: s.html }),
           ...(Array.isArray(s.faqs) && { faqs: s.faqs as QA[] }), ...(typeof s.alts === "object" && s.alts !== null ? { alts: s.alts as Record<string, string> } : {}),
           ...(o?.price != null && { price: String(o.price) }), ...(o?.compare_at != null && { compareAt: String(o.compare_at) }),
-          ...(o?.stock != null && { stock: String(o.stock) }), ...(o?.best_seller != null && { bestSeller: o.best_seller }),
+          ...(o?.sold != null && { sold: String(o.sold) }), ...(o?.best_seller != null && { bestSeller: o.best_seller }),
         };
       });
     })();
@@ -127,7 +127,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
     const num = (v: string) => (v.trim() === "" ? null : Number(v));
     const [a, b] = await Promise.all([
       sb!.from("content").upsert({ key: `product:${s}`, kind: "product", data, deleted: false, updated_at: new Date().toISOString() }),
-      sb!.from("product_overrides").upsert({ slug: s, price: Number(f.price), compare_at: num(f.compareAt), stock: num(f.stock), best_seller: f.bestSeller, updated_at: new Date().toISOString() }),
+      sb!.from("product_overrides").upsert({ slug: s, price: Number(f.price), compare_at: num(f.compareAt), sold: num(f.sold), best_seller: f.bestSeller, updated_at: new Date().toISOString() }),
     ]);
     setBusy(false);
     const err = a.error || b.error;
@@ -207,10 +207,10 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
 
         <aside className="space-y-4">
           <div className={box}>
-            <h3 className="font-semibold">Price and stock</h3>
+            <h3 className="font-semibold">Price and sales</h3>
             <NumberField label="Price (RM)" required value={f.price} step={1} onChange={(v) => set({ price: v })} />
             <NumberField label="Before price (RM)" optional value={f.compareAt} step={1} placeholder="No sale" onChange={(v) => set({ compareAt: v })} hint="Shown crossed out. Leave empty for no sale." />
-            <NumberField label="Stock" optional value={f.stock} step={1} placeholder="Made to order" onChange={(v) => set({ stock: v })} hint="Leave empty for “Made to order”." />
+            <NumberField label="Sold" optional value={f.sold} step={1} placeholder="Not shown" onChange={(v) => set({ sold: v })} hint="Total sold (all channels). Shows as “58 sold”. Leave empty to hide." />
             <div><span className="label">Product code</span><div className="input bg-cream text-muted cursor-not-allowed" aria-readonly>{f.sku}</div><span className="mt-1 block text-xs text-muted">Made automatically and can't be changed.</span></div>
           </div>
 
@@ -245,7 +245,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
               <div className="text-[12px] text-gray-600 line-clamp-2">{autoDesc || "Short description appears here."}</div>
             </div>
             <div className="pt-2 border-t border-blush-2/60">
-              <SeoScore keyword={f.keyword} title={autoTitle} description={autoDesc} slug={webSlug} h1={f.name} html={`<p>${f.seoShort || f.short}</p>${f.html}`} alts={f.images.map((s) => f.alts[s] ?? "")} minWords={200} />
+              <SeoScore keyword={f.keyword} title={autoTitle} description={autoDesc} slug={webSlug} h1={f.name} html={`<p>${f.seoShort || f.short}</p>${f.html}`} alts={f.images.map((s) => f.alts[s] ?? "")} minWords={200} faqs={f.faqs} />
             </div>
           </div>
         </aside>

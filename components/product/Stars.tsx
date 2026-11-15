@@ -22,7 +22,7 @@ export default function Stars({ slug, size = "sm", className = "" }: { slug: str
       {r ? (
         <>
           <span className="font-semibold text-ink">{r.avg.toFixed(1)}</span>
-          {lg ? <a href="#reviews" className="text-muted underline underline-offset-2 hover:text-brand">{r.count} review{r.count > 1 ? "s" : ""}</a> : <span className="text-muted">({r.count})</span>}
+          {lg ? <a href="#reviews" className="text-muted underline underline-offset-2 hover:text-brand">{r.count} review{r.count > 1 ? "s" : ""}</a> : null}
         </>
       ) : lg ? (
         <a href="#reviews" className="text-muted underline underline-offset-2 hover:text-brand">No reviews yet. Be the first to review</a>

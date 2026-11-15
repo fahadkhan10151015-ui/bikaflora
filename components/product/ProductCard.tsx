@@ -4,7 +4,7 @@ import type { CardItem } from "@/data/products";
 import { formatPrice } from "@/lib/site";
 import Photo from "@/components/ui/Photo";
 import Stars from "./Stars";
-import StockBadge from "./StockBadge";
+import SoldBadge from "./SoldBadge";
 import FloristPick from "./FloristPick";
 import { floristScore } from "@/data/florist-picks";
 import CardActions from "./CardActions";
@@ -33,7 +33,7 @@ export default function ProductCard({ p, priority = false }: { p: CardItem; prio
         </Link>
         <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
           {floristScore[p.slug] !== undefined ? <FloristPick slug={p.slug} /> : <Stars slug={p.slug} />}
-          <StockBadge slug={p.slug} />
+          <SoldBadge slug={p.slug} />
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs text-muted">
           {p.instant && <span className="inline-flex items-center gap-1 text-brand font-medium"><Zap className="w-3 h-3" /> Same-day delivery</span>}

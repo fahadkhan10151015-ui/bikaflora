@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Package, Star, Mail, Users, FileText, Plus, PenSquare, ArrowRight, MessageCircle } from "lucide-react";
 import { products } from "@/data/products";
 import { posts } from "@/data/posts";
-import { stock } from "@/data/stock";
+import { sold } from "@/data/sold";
 import { loadSupabase } from "@/lib/supabase-config";
 import { card } from "./ui";
 
@@ -24,7 +24,7 @@ export default function Dashboard({ go, full = true }: { go: (tab: string, actio
       setN({ reviews: ratings.length, avg: ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0, newMsgs: m.count ?? 0, customers: ((c.data ?? []) as unknown[]).length, wa: w.count ?? 0 });
     })();
   }, []);
-  const low = products.filter((p) => stock[p.slug] !== undefined && stock[p.slug] <= 10);
+  const top = [...products].filter((p) => sold[p.slug]).sort((a, b) => sold[b.slug] - sold[a.slug]).slice(0, 6);
   const stats = [
     { label: "Products", value: products.length, icon: Package, tab: "products", tone: "from-brand to-deep" },
     { label: "Reviews", value: `${n.reviews}${n.avg ? ` · ${n.avg.toFixed(1)}★` : ""}`, icon: Star, tab: "reviews", tone: "from-amber-500 to-amber-600" },
@@ -55,12 +55,12 @@ export default function Dashboard({ go, full = true }: { go: (tab: string, actio
           </div>
         </div>
         <div className={`${card} p-5`}>
-          <h3 className="font-semibold text-lg">Low stock <span className="text-sm font-normal text-muted">(10 or fewer)</span></h3>
-          {low.length ? (
+          <h3 className="font-semibold text-lg">Top sellers <span className="text-sm font-normal text-muted">(by number sold)</span></h3>
+          {top.length ? (
             <ul className="mt-3 divide-y divide-blush-2/60">
-              {low.map((p) => <li key={p.slug} className="py-2 flex justify-between text-sm"><span>{p.name}</span><span className="font-semibold text-amber-700">{stock[p.slug]} left</span></li>)}
+              {top.map((p, i) => <li key={p.slug} className="py-2 flex justify-between text-sm"><span><b className="text-muted mr-2">{i + 1}</b>{p.name}</span><span className="font-semibold text-orange-700">{sold[p.slug]} sold</span></li>)}
             </ul>
-          ) : <p className="mt-3 text-sm text-muted">All products have more than 10 in stock.</p>}
+          ) : <p className="mt-3 text-sm text-muted">No sold numbers yet. Add them in Products.</p>}
         </div>
       </div>
     </div>
