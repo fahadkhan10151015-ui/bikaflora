@@ -1,11 +1,5 @@
 import type { Metadata, Viewport } from "next";
-// Self-hosted fonts (no external requests = faster first paint)
-import "@fontsource/jost/latin-400.css";
-import "@fontsource/jost/latin-500.css";
-import "@fontsource/jost/latin-600.css";
-import "@fontsource/cormorant-garamond/latin-500.css";
-import "@fontsource/cormorant-garamond/latin-600.css";
-import "@fontsource/cormorant-garamond/latin-600-italic.css";
+// Fonts: self-hosted in /public/fonts (see globals.css), the two used above the fold are preloaded.
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -40,6 +34,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-MY" suppressHydrationWarning>
       <head>
+        <link rel="preload" href="/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/cormorant-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Apply the saved theme before the page paints (no white flash in dark mode). */}
         <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("bf-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}` }} />
         <JsonLd data={orgSchema()} />

@@ -45,7 +45,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </div>
             </div>
             <div className="relative aspect-[3/2] w-full max-w-xl lg:ml-auto rounded-[2rem] overflow-hidden shadow-[0_24px_60px_-28px_rgba(16,23,42,.45)] ring-1 ring-blush-2/60">
-              <Photo src={p.image} tone={p.tone} alt={p.imageAlt || p.title} priority w={600} h={400} quality={72} sizes="(max-width: 1024px) 92vw, 560px" />
+              <Photo src={p.image} tone={p.tone} alt={p.imageAlt || p.title} priority w={600} h={400} quality={70} sizes="(max-width: 1023px) 92vw, 560px" />
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((r) => (
                 <Link key={r.slug} href={`/blog/${r.slug}`} className="group bg-white rounded-3xl overflow-hidden border border-blush-2/70 card-hover">
-                  <div className="relative aspect-[3/2]"><Photo src={r.image} tone={r.tone} alt={r.imageAlt || r.title} w={400} h={267} /></div>
+                  <div className="relative aspect-[3/2]"><Photo src={r.image} tone={r.tone} alt={r.imageAlt || r.title} w={400} h={267} sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 380px" /></div>
                   <div className="p-5"><div className="text-xs text-muted">{r.category ? `${r.category} · ` : ""}{fmtDate(r.date)}</div><h3 className="mt-1.5 font-semibold leading-snug group-hover:text-brand transition">{r.title}</h3></div>
                 </Link>
               ))}

@@ -37,7 +37,7 @@ export default function BlogList({ items, categories }: { items: BlogCard[]; cat
           if (isFeatured)
             return (
               <Link key={p.slug} href={`/blog/${p.slug}`} className={`${hidden ? "hidden" : ""} group sm:col-span-2 lg:col-span-3 grid lg:grid-cols-2 items-center bg-white rounded-[2rem] overflow-hidden border border-blush-2/70 card-hover`}>
-                <div className="relative aspect-[3/2]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={640} h={427} priority /></div>
+                <div className="relative aspect-[3/2]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={640} h={427} priority sizes="(max-width: 1023px) 92vw, 600px" /></div>
                 <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
                   <span className="eyebrow">Latest post</span>
                   <Meta p={p} className="mt-3" />
@@ -49,7 +49,7 @@ export default function BlogList({ items, categories }: { items: BlogCard[]; cat
             );
           return (
             <Link key={p.slug} href={`/blog/${p.slug}`} className={`${hidden ? "hidden" : "flex"} group flex-col bg-white rounded-3xl overflow-hidden border border-blush-2/70 card-hover`}>
-              <div className="relative aspect-[3/2]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={400} h={267} /></div>
+              <div className="relative aspect-[3/2]"><Photo src={p.image} tone={p.tone} alt={p.imageAlt} w={400} h={267} sizes="(max-width: 639px) 92vw, (max-width: 1023px) 46vw, 380px" /></div>
               <div className="p-5 flex flex-col flex-1">
                 <Meta p={p} />
                 <h2 className="mt-2 text-lg font-semibold leading-snug group-hover:text-brand transition">{p.title}</h2>

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@font-face{font-family:'Jost';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/jost-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/jost-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/jost-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/cormorant-garamond-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/cormorant-garamond-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:600;font-display:swap;src:url(/fonts/cormorant-garamond-latin-600-italic.woff2) format('woff2')}
+/* Backup fonts sized to match, so text doesn't jump when the real fonts arrive (no layout shift). */
+@font-face{font-family:'Jost Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans'),local('Roboto');size-adjust:100.32%;ascent-override:106.66%;descent-override:37.38%;line-gap-override:0%}
+@font-face{font-family:'Cormorant Fallback';src:local('Times New Roman'),local('Times'),local('Liberation Serif'),local('Noto Serif');size-adjust:95.78%;ascent-override:96.48%;descent-override:29.97%;line-gap-override:0%}
+
 @theme {
   /* Royal Navy & Gold theme */
   --color-deep: #10172a;
@@ -15,8 +25,8 @@
   --color-ink: #1c2233;
   --color-muted: #626a7a;
   --color-wa: #168043; /* deeper WhatsApp green: white text readable (5:1) */
-  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-sans: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Cormorant Garamond", "Cormorant Fallback", Georgia, "Times New Roman", serif;
+  --font-sans: "Jost", "Jost Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 html { scroll-behavior: smooth; }

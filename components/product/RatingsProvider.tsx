@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { loadSupabase } from "@/lib/supabase-config";
+import { restGet } from "@/lib/rest";
 import { ratingMap } from "@/lib/reviews-data";
 
 /** Real star ratings from customer reviews (Supabase), shared by every card and product page. */
@@ -11,11 +11,10 @@ const RatingsCtx = createContext<Ctx>({ get: () => undefined, reload: () => {} }
 export function RatingsProvider({ children }: { children: React.ReactNode }) {
   const [map, setMap] = useState<Record<string, Agg>>(ratingMap); // in the HTML from the start, then refreshed
   const load = useCallback(async () => {
-    const sb = await loadSupabase();
-    if (!sb) return;
-    const { data } = await sb.from("reviews").select("product_slug,rating").limit(5000);
+    const data = await restGet<{ product_slug: string; rating: number }[]>("reviews?select=product_slug,rating&limit=5000");
+    if (!data) return;
     const m: Record<string, { sum: number; count: number }> = {};
-    (data || []).forEach((r: { product_slug: string; rating: number }) => {
+    data.forEach((r: { product_slug: string; rating: number }) => {
       m[r.product_slug] ??= { sum: 0, count: 0 };
       m[r.product_slug].sum += r.rating;
       m[r.product_slug].count += 1;

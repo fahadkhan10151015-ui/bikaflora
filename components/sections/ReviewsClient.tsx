@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Star, Quote, PenLine } from "lucide-react";
-import { loadSupabase } from "@/lib/supabase-config";
+import { restGet } from "@/lib/rest";
 import { waLink } from "@/lib/whatsapp";
 import { siteReviews } from "@/lib/reviews-data";
 
@@ -19,10 +19,8 @@ export default function ReviewsClient({ limit = 6, names }: { limit?: number; na
 
   useEffect(() => {
     const t = setTimeout(async () => {
-    const sb = await loadSupabase();
-    if (!sb) return;
-    sb.from("reviews").select("id,product_slug,name,rating,comment,created_at").order("created_at", { ascending: false }).limit(limit)
-      .then(({ data, error }) => { if (!error && data) setReviews(data as Review[]); });
+    const data = await restGet<Review[]>(`reviews?select=id,product_slug,name,rating,comment,created_at&order=created_at.desc&limit=${limit}`);
+    if (data) setReviews(data);
     }, 4000);
     return () => clearTimeout(t);
   }, [limit]);
