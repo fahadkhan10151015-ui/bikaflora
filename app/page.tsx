@@ -2,7 +2,7 @@ import { preload } from "react-dom";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
-import { ArrowRight, Sparkles, MousePointerClick, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin, Gift, Award, Clock, Wallet, Languages } from "lucide-react";
+import { ArrowRight, Sparkles, MessageCircle, Truck, Heart, Leaf, ShieldCheck, MapPin, Gift, Award, Clock, Wallet, Languages } from "lucide-react";
 import { featuredProducts, productsInCategory } from "@/data/products";
 import CategoryCircles from "@/components/sections/CategoryCircles";
 import { getCategory } from "@/data/categories";
@@ -30,11 +30,6 @@ export const metadata = pageMeta({ title: c.title, description: c.description, p
 
 const copyIcons = [Gift, Award, Leaf, Clock, MessageCircle, Wallet, Languages];
 
-const steps = [
-  { icon: MousePointerClick, title: "Tap “Order now”", text: "Tap Order now on any bouquet. Want several? Tap + to add them to your order list." },
-  { icon: MessageCircle, title: "Confirm & pay in advance", text: "WhatsApp opens with everything typed. We confirm the total with delivery, then you pay in advance." },
-  { icon: Truck, title: "We prepare & deliver", text: "We send a photo of your bouquet, then deliver it to the door." },
-];
 
 const reasons = [
   { icon: Heart, title: "Hand-tied with care", text: "Every bouquet is arranged by hand, never mass-produced." },
@@ -58,16 +53,27 @@ export default function Home() {
       <CategoryCircles />
 
       {/* PRODUCTS (like a shop front). Rows with fewer than 2 products hide themselves. */}
-      <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/shop" items={popular} />
+      <ProductRow eyebrow="Customer favourites" title="Best Sellers" href="/category/best-seller" items={popular} total={productsInCategory("best-seller").length} />
 
       {/* Everything below is drawn only when the visitor scrolls near it (much less work for phones on first load). */}
       <div className="home-lazy">
-      <ProductRow eyebrow="Long-lasting & elegant" title="Premium Soap Flower Bouquets" href="/category/premium-bouquets" items={productsInCategory("premium-bouquets")} />
-      {["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((slug) => {
-        const c = getCategory(slug);
-        const items = productsInCategory(slug);
-        return c && <ProductRow key={slug} eyebrow={c.short} title={c.name} href={`/category/${slug}`} items={items} />;
-      })}
+      {/* Each row shows 4 bouquets, preferring ones not already shown higher up (no repeats, smaller page). */}
+      {(() => {
+        const used = new Set(popular.map((p) => p.slug));
+        const pick = (slug: string) => {
+          const all = productsInCategory(slug);
+          const fresh = all.filter((p) => !used.has(p.slug));
+          const items = (fresh.length >= 2 ? [...fresh, ...all.filter((p) => used.has(p.slug))] : all).slice(0, 4);
+          items.forEach((p) => used.add(p.slug));
+          return { items, total: all.length };
+        };
+        return [["premium-bouquets", "Long-lasting & elegant", "Premium Soap Flower Bouquets"], ...["fresh-flowers", "flower-gift-box", "below-100", "crochet-bouquets", "chocolate-flower-bouquets", "mini-bouquets", "pre-order", "add-ons"].map((s) => [s])].map(([slug, eyebrow, title]) => {
+          const c = getCategory(slug);
+          if (!c) return null;
+          const { items, total } = pick(slug);
+          return <ProductRow key={slug} eyebrow={eyebrow ?? c.short} title={title ?? c.name} href={`/category/${slug}`} items={items} total={total} />;
+        });
+      })()}
 
       {/* HOW IT'S MADE: 3D build of a real bouquet (after all the products) */}
       <BouquetCraft />
@@ -75,21 +81,7 @@ export default function Home() {
       {/* INSTANT / PRE-ORDER / CUSTOM + PARTNERS + PAYMENT */}
       <DeliveryWays />
 
-      {/* HOW TO ORDER */}
-      <section className="mt-24 bg-white border-y border-blush-2 petal-bg">
-        <div className="container-x py-20">
-          <SectionTitle eyebrow="Easy ordering" title="Order in 3 simple steps" sub="No checkout and no account needed. Choose your flowers and chat with a real florist on WhatsApp." />
-          <div className="grid md:grid-cols-3 gap-6">
-            {steps.map(({ icon: Icon, title, text }, i) => (
-              <div key={title} className="tilt bg-cream rounded-3xl p-8 text-center border border-blush-2/70">
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-brand to-deep text-white grid place-items-center"><Icon className="w-6 h-6" /></div>
-                <h3 className="mt-5 text-xl font-semibold">{i + 1}. {title}</h3>
-                <p className="mt-2 text-muted text-[15px] leading-relaxed">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* How to order is covered by the "How to Order in 3 Easy Steps" card in the homepage copy below (no duplicate section). */}
 
       {/* WHY US */}
       <section className="container-x mt-24 grid lg:grid-cols-2 gap-12 items-center">
@@ -171,8 +163,8 @@ export default function Home() {
                       <span className={`home-card-icon w-12 h-12 rounded-2xl grid place-items-center shrink-0 ${dark ? "bg-white/15 text-gold" : "bg-blush text-brand"}`}><Icon className="w-6 h-6" /></span>
                       <span className={`text-xs font-semibold tracking-[0.2em] ${dark ? "text-gold" : "text-gold-deep"}`}>{String(i + 1).padStart(2, "0")}</span>
                     </div>
-                    <h2 className="relative mt-4 text-2xl md:text-[1.7rem] font-semibold leading-snug">{sec.title}</h2>
-                    <div className="relative mt-2" dangerouslySetInnerHTML={{ __html: sec.html }} />
+                    <h2 lang={/\b(kedai|bunga|dan|untuk|di)\b/i.test(sec.title) ? "ms" : undefined} className="relative mt-4 text-2xl md:text-[1.7rem] font-semibold leading-snug">{sec.title}</h2>
+                    <div lang={/\b(kedai|bunga|dan|untuk|di)\b/i.test(sec.title) ? "ms" : undefined} className="relative mt-2" dangerouslySetInnerHTML={{ __html: sec.html }} />
                   </div>
                 </Reveal>
               );

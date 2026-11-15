@@ -20,7 +20,7 @@ export default function LazyVideo({ src, mobileSrc, poster, className = "" }: { 
     v.play().catch(() => {});
   }, [load]);
   return (
-    <video ref={ref} className={className} muted loop playsInline preload="none" poster={load ? poster : undefined} autoPlay={load}>
+    <video ref={ref} className={className} muted loop playsInline preload="none" aria-hidden="true" disablePictureInPicture poster={load ? poster : undefined} autoPlay={load}>
       {load && mobileSrc && <source src={mobileSrc} type="video/mp4" media="(max-width: 767px)" />}
       {load && <source src={src} type="video/mp4" />}
     </video>

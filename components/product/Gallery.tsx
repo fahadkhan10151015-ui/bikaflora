@@ -106,7 +106,7 @@ export default function Gallery({ alt, alts }: { alt: string; alts?: Record<stri
           {images.map((s, idx) => (
             <button key={s} onClick={() => { setShowPaper(false); setI(idx); }} aria-label={`View photo ${idx + 1}`}
               className={`relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden border-2 transition ${idx === i && !previewing ? "border-brand" : "border-transparent opacity-75 hover:opacity-100"}`}>
-              <FillImage src={s} alt="" w={120} h={120} loading="eager" className="object-cover" />
+              <FillImage src={s} alt={alts?.[s] ?? `${alt} – photo ${idx + 1}`} w={120} h={120} loading="eager" className="object-cover" />
             </button>
           ))}
         </div>

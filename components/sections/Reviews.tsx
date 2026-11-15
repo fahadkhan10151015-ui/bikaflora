@@ -5,24 +5,27 @@ import { Star, Quote, PenLine } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
 import { getProduct } from "@/data/products";
 import { waLink } from "@/lib/whatsapp";
+import { siteReviews } from "@/lib/reviews-data";
 
 export function Stars({ n }: { n: number }) {
-  return <div className="flex gap-0.5" aria-label={`${n} out of 5 stars`}>{[1, 2, 3, 4, 5].map((i) => <Star key={i} className={`w-4 h-4 ${i <= n ? "fill-gold text-gold" : "text-blush-2"}`} />)}</div>;
+  return <div className="flex gap-0.5" role="img" aria-label={`${n} out of 5 stars`}>{[1, 2, 3, 4, 5].map((i) => <Star key={i} className={`w-4 h-4 ${i <= n ? "fill-gold text-gold" : "text-blush-2"}`} />)}</div>;
 }
 
 type Review = { id: string; product_slug: string; name: string; rating: number; comment: string; created_at: string };
 
 /** Real reviews written by signed-in customers on product pages (newest first). */
 export default function Reviews({ limit = 6 }: { limit?: number }) {
-  const [reviews, setReviews] = useState<Review[] | null>(null);
+  // Saved reviews are in the HTML from the start; fresh ones load a few seconds later.
+  const [reviews, setReviews] = useState<Review[] | null>(siteReviews.slice(0, limit));
 
   useEffect(() => {
-    (async () => {
+    const t = setTimeout(async () => {
     const sb = await loadSupabase();
-    if (!sb) return setReviews([]);
+    if (!sb) return;
     sb.from("reviews").select("id,product_slug,name,rating,comment,created_at").order("created_at", { ascending: false }).limit(limit)
-      .then(({ data }) => setReviews((data as Review[]) || []));
-    })();
+      .then(({ data, error }) => { if (!error && data) setReviews(data as Review[]); });
+    }, 4000);
+    return () => clearTimeout(t);
   }, [limit]);
 
   if (reviews === null) return <div className="h-40" />;

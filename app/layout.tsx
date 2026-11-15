@@ -29,7 +29,6 @@ export const metadata: Metadata = {
   title: { default: `${site.name} | Florist & Flower Delivery KL & Selangor`, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
-  keywords: ["florist KL", "flower delivery Kuala Lumpur", "flower delivery Selangor", "crochet bouquet Malaysia", "flower gift box KL", "chocolate bouquet KL", "same day flower delivery"],
   openGraph: { siteName: site.name, locale: "en_MY", type: "website", images: [siteImages.cover] },
   robots: { index: true, follow: true },
   icons: { icon: "/icon.svg" },

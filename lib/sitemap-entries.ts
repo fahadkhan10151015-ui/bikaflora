@@ -5,11 +5,16 @@ import { posts } from "@/data/posts";
 import { absoluteUrl } from "@/lib/site";
 import { overrides } from "@/lib/overrides";
 import { customPages } from "@/lib/custom-pages";
+import lastmodJson from "@/data/lastmod.json";
 
-export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number; images?: string[] };
+export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number; images?: string[]; lastmod: string };
 export type SitemapGroup = { file: string; title: string; entries: SitemapEntry[] };
 
-const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly"): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency, path } as SitemapEntry & { path: string });
+/** When the site content was last rebuilt by hand (pages not edited in the admin panel keep this date). */
+const SITE_UPDATED = "2026-11-15";
+const lastmods = lastmodJson as Record<string, string>;
+const lastmodFor = (path: string, fallback = SITE_UPDATED) => (lastmods[path] && lastmods[path] > fallback ? lastmods[path] : fallback);
+const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly", date?: string): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency, path, lastmod: lastmodFor(path, date) } as SitemapEntry & { path: string });
 
 /** Pages switched off in the admin panel (sitemap off or noindex) are left out. */
 const keep = (e: SitemapEntry) => { const o = overrides.seo[(e as SitemapEntry & { path: string }).path]; return !o || (o.inSitemap !== false && !o.noindex); };
@@ -26,7 +31,7 @@ export function allSitemapGroups(): SitemapGroup[] {
     ] },
     { file: "product-sitemap.xml", title: "Products", entries: products.map((p) => ({ ...s(`/product/${p.slug}`, 0.8), images: p.images.slice(0, 4).map((i) => (i.startsWith("http") ? i : absoluteUrl(i))) })) },
     { file: "category-sitemap.xml", title: "Categories", entries: categories.map((c) => s(`/category/${c.slug}`, 0.9)) },
-    { file: "post-sitemap.xml", title: "Blog posts", entries: [s("/blog", 0.6), ...posts.map((p) => s(`/blog/${p.slug}`, 0.6, "monthly"))] },
+    { file: "post-sitemap.xml", title: "Blog posts", entries: [s("/blog", 0.6), ...posts.map((p) => s(`/blog/${p.slug}`, 0.6, "monthly", p.date))] },
   ];
 }
 

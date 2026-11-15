@@ -5,6 +5,7 @@ import { Star, Loader2, Trash2, PenLine } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
 import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { useRatings } from "./RatingsProvider";
+import { siteReviews } from "@/lib/reviews-data";
 
 type Review = { id: string; user_id: string | null; name: string; rating: number; comment: string; created_at: string };
 
@@ -26,7 +27,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (n: number) 
 export default function ProductReviews({ slug, productName }: { slug: string; productName: string }) {
   const { user } = useAuth();
   const ratings = useRatings();
-  const [reviews, setReviews] = useState<Review[] | null>(null);
+  const [reviews, setReviews] = useState<Review[] | null>(siteReviews.filter((r) => r.product_slug === slug).map((r) => ({ ...r, user_id: null })));
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
@@ -36,9 +37,9 @@ export default function ProductReviews({ slug, productName }: { slug: string; pr
 
   const load = useCallback(async () => {
     const sb = await loadSupabase();
-    if (!sb) return setReviews([]);
-    const { data } = await sb.from("reviews").select("id,user_id,name,rating,comment,created_at").eq("product_slug", slug).order("created_at", { ascending: false }).limit(50);
-    setReviews((data as Review[]) || []);
+    if (!sb) return;
+    const { data, error } = await sb.from("reviews").select("id,user_id,name,rating,comment,created_at").eq("product_slug", slug).order("created_at", { ascending: false }).limit(50);
+    if (!error && data) setReviews(data as Review[]);
   }, [slug]);
   useEffect(() => { load(); }, [load]);
 

@@ -31,5 +31,13 @@
     "tailwindcss": "^4.3.5",
     "typescript": "^5.9.3"
   },
-  "private": true
+  "private": true,
+  "browserslist": [
+    "chrome >= 109",
+    "edge >= 109",
+    "firefox >= 115",
+    "safari >= 15.4",
+    "ios_saf >= 15.4",
+    "samsung >= 21"
+  ]
 }

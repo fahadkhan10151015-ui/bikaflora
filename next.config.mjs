@@ -21,7 +21,15 @@ const nextConfig = {
   // Let browsers and Vercel's CDN keep photos, videos and logos (they were sent with max-age=0 before).
   async headers() {
     const media = "public, max-age=31536000, immutable"; // 1 year (files get a new name whenever they change)
+    const security = [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+      { key: "Content-Security-Policy", value: "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self' https://wa.me https://api.whatsapp.com; upgrade-insecure-requests" },
+    ];
     return [
+      { source: "/:path*", headers: security },
       { source: "/video/:path*", headers: [{ key: "Cache-Control", value: media }] },
       { source: "/products/:path*", headers: [{ key: "Cache-Control", value: media }] },
       { source: "/images/:path*", headers: [{ key: "Cache-Control", value: media }] },

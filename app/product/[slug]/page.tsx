@@ -67,7 +67,23 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       itemCondition: "https://schema.org/NewCondition",
       url: absoluteUrl(`/product/${p.slug}`),
       areaServed: ["Kuala Lumpur", "Selangor"],
-      seller: { "@type": "Organization", name: site.name },
+      seller: { "@id": absoluteUrl("/#business") },
+      priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: [{ "@type": "DefinedRegion", addressCountry: "MY", addressRegion: "Kuala Lumpur" }, { "@type": "DefinedRegion", addressCountry: "MY", addressRegion: "Selangor" }],
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: p.instant ? 0 : 3, unitCode: "DAY" },
+          transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "MY",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+        merchantReturnLink: absoluteUrl("/refund-policy"),
+      },
     },
   };
 

@@ -19,7 +19,7 @@ export default function DeliveryWays() {
       icon: CalendarClock,
       title: "Pre-order",
       text: "Tell us what you want and the date you need it. We prepare it exactly to your requirement and deliver on the day.",
-      cta: { label: "Pre-order on WhatsApp", href: "/contact" },
+      cta: { label: "Pre-order on WhatsApp", href: waLink(`Hi ${site.name}, I would like to pre-order a bouquet.\n\nBouquet: \nDate needed: \nDelivery area: `) },
     },
     {
       icon: ImagePlus,
@@ -42,9 +42,9 @@ export default function DeliveryWays() {
             <h3 className="mt-4 text-2xl font-semibold">{title}</h3>
             <p className={`mt-2 text-[15px] leading-relaxed flex-1 ${dark ? "text-white/80" : "text-muted"}`}>{text}</p>
             {cta && (
-              <Link href={cta.href} className={`mt-5 inline-flex items-center gap-1.5 font-semibold ${dark ? "text-gold" : "text-brand"}`}>
-                {cta.label} <ArrowRight className="w-4 h-4" />
-              </Link>
+              cta.href.startsWith("http")
+                ? <a href={cta.href} target="_blank" rel="noopener" className="btn btn-wa mt-5 self-start"><WhatsAppIcon className="w-5 h-5" /> {cta.label}</a>
+                : <Link href={cta.href} className={`mt-5 inline-flex items-center gap-1.5 font-semibold ${dark ? "text-gold" : "text-brand"}`}>{cta.label} <ArrowRight className="w-4 h-4" /></Link>
             )}
             {wa && (
               <a href={waLink(customText)} target="_blank" rel="noopener" className="btn btn-wa mt-5 self-start">

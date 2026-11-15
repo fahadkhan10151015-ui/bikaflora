@@ -52,6 +52,23 @@ async function main() {
     c[row.kind][slug] = row.deleted ? { deleted: true } : row.data;
   }
   await fs.writeFile(path.join(ROOT, "data/content.json"), JSON.stringify(c) + "\n");
+  // Real "last changed" date per page for the sitemaps (from the admin edits).
+  const lm = {};
+  const bump = (p, d) => { if (p && d && (!lm[p] || d > lm[p])) lm[p] = d; };
+  const kindPath = { product: "/product/", collection: "/category/", location: "/flower-delivery/", post: "/blog/" };
+  const pagePath = { home: "/", about: "/about", terms: "/terms", "privacy-policy": "/privacy-policy", faq: "/faq", contact: "/contact", hero: "/" };
+  for (const row of content) {
+    const slug = row.key.slice(row.kind.length + 1);
+    bump(row.kind === "page" ? (pagePath[slug] ?? (row.data?.custom ? `/${slug}` : null)) : kindPath[row.kind] + slug, row.updated_at);
+  }
+  for (const p of prod) bump(`/product/${p.slug}`, p.updated_at);
+  for (const s of seo) bump(s.path, s.updated_at);
+  await fs.writeFile(path.join(ROOT, "data/lastmod.json"), JSON.stringify(lm) + "\n");
+  // Visible customer reviews, so they are in the page HTML (Google and AI tools can read them).
+  try {
+    const r = await fetch(`${url}/rest/v1/reviews?select=id,product_slug,name,rating,comment,created_at&hidden=eq.false&order=created_at.desc&limit=2000`, { headers: { apikey: key, Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(15000) });
+    if (r.ok) await fs.writeFile(path.join(ROOT, "data/reviews.json"), JSON.stringify(await r.json()) + "\n");
+  } catch (e) { console.warn("[overrides] reviews kept previous file:", e.message); }
   console.log(`[overrides] ${prod.length} product edits, ${seo.length} SEO edits, ${content.length} content edits applied`);
 }
 

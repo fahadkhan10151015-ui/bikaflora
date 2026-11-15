@@ -19,7 +19,7 @@ export default function ProductCard({ p, priority = false }: { p: Product; prior
           <Photo src={p.images[0]} alt={`${p.name} – soap flower bouquet delivery KL & Selangor`} w={320} h={320}
              imgClassName="transition duration-700 group-hover:scale-105" priority={priority} />
           {second && (
-            <Photo src={second} alt="" w={320} h={320}
+            <Photo src={second} alt={`${p.name} bouquet by BikaFlora, another view`} w={320} h={320}
               className="hidden [@media(hover:hover)]:block opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           )}
           {p.badge && <span className="absolute top-2 left-2 sm:top-3 sm:left-3 glass text-brand text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">{p.badge}</span>}

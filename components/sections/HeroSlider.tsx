@@ -92,15 +92,15 @@ export default function HeroSlider() {
   const [ready, setReady] = useState(false);
   const [changed, setChanged] = useState(false);
   useEffect(() => { if (active !== 0) { setReady(true); setChanged(true); } }, [active]);
-  // Phones (portrait) get a vertical edit that fills the screen; tablets 720p; desktop 1080p.
+  // Phones (portrait) get a small vertical edit (1.4 MB); tablets 960p (1.1 MB); desktop 1280p (1.7 MB). No sound track.
   const [src, setSrc] = useState<{ v: string; p: string } | null>(null);
   useEffect(() => {
     const pick = () => {
       const w = window.innerWidth, portrait = window.innerHeight > w;
       setSrc(w < 768 || (portrait && w < 1024)
-        ? { v: "/video/hero-making-vertical.mp4", p: "/video/hero-making-vertical-poster.webp" }
-        : w < 1280 ? { v: "/video/hero-making-720.mp4", p: "/video/hero-making-poster.webp" }
-        : { v: "/video/hero-making-1080.mp4", p: "/video/hero-making-poster.webp" });
+        ? { v: "/video/hero-v2-vertical.mp4", p: "/video/hero-making-vertical-poster.webp" }
+        : w < 1280 ? { v: "/video/hero-v2-960.mp4", p: "/video/hero-making-poster.webp" }
+        : { v: "/video/hero-v2-1280.mp4", p: "/video/hero-making-poster.webp" });
     };
     // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
     // The still poster image shows in the meantime.
@@ -180,7 +180,7 @@ export default function HeroSlider() {
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         </picture>
         {src && (
-          <video key={src.v} ref={video} src={src.v} muted playsInline autoPlay preload="auto" onEnded={() => setActive(1)}
+          <video key={src.v} ref={video} src={src.v} muted playsInline autoPlay preload="metadata" aria-hidden="true" disablePictureInPicture onEnded={() => setActive(1)}
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         )}
       </div>

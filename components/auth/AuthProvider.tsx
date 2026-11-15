@@ -13,15 +13,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let off = false;
     let unsub: (() => void) | undefined;
-    (async () => {
+    // Only load the login library straight away when this browser has a saved login.
+    // Otherwise wait until the page is idle, so it never slows down the first load.
+    let saved = false;
+    try { saved = Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token")); } catch {}
+    const needNow = saved || /^\/(admin|account|login|signup|reset-password|forgot-password|favourites)/.test(window.location.pathname);
+    const start = async () => {
       const sb = await loadSupabase();
       if (off) return;
       if (!sb) { setLoading(false); return; }
       sb.auth.getSession().then(({ data }) => { setUser(data.session?.user ?? null); setLoading(false); });
       const { data: sub } = sb.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
       unsub = () => sub.subscription.unsubscribe();
-    })();
-    return () => { off = true; unsub?.(); };
+    };
+    if (needNow) start();
+    else setLoading(false);
+    const t = needNow ? undefined : setTimeout(start, 6000);
+    return () => { off = true; if (t) clearTimeout(t); unsub?.(); };
   }, []);
 
   const signOut = async () => { await (await loadSupabase())?.auth.signOut(); setUser(null); };
