@@ -1,3 +1,4 @@
+import { overrides } from "@/lib/overrides";
 // ============================================================
 //  PRODUCTS — BikaFlora's real catalogue.
 //
@@ -679,6 +680,19 @@ export const products: Product[] = [
     tags: ["bag", "add on", "protection"],
   },
 ];
+
+// Apply edits saved in the admin panel (price, sale price, best seller on/off).
+for (const p of products) {
+  const o = overrides.products[p.slug];
+  if (!o) continue;
+  if (o.price !== undefined) p.price = o.price;
+  if (o.compareAt !== undefined) p.compareAt = o.compareAt > p.price ? o.compareAt : undefined;
+  if (o.bestSeller !== undefined) {
+    const has = p.categories.includes("best-seller");
+    if (o.bestSeller && !has) p.categories = ["best-seller", ...p.categories];
+    if (!o.bestSeller && has) p.categories = p.categories.filter((c) => c !== "best-seller");
+  }
+}
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 export const productsInCategory = (slug: string) => products.filter((p) => p.categories.includes(slug));

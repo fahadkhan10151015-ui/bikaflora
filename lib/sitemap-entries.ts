@@ -3,14 +3,18 @@ import { categories } from "@/data/categories";
 import { locations } from "@/data/locations";
 import { posts } from "@/data/posts";
 import { absoluteUrl } from "@/lib/site";
+import { overrides } from "@/lib/overrides";
 
 export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number };
 export type SitemapGroup = { file: string; title: string; entries: SitemapEntry[] };
 
-const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly"): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency });
+const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly"): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency, path } as SitemapEntry & { path: string });
+
+/** Pages switched off in the admin panel (sitemap off or noindex) are left out. */
+const keep = (e: SitemapEntry) => { const o = overrides.seo[(e as SitemapEntry & { path: string }).path]; return !o || (o.inSitemap !== false && !o.noindex); };
 
 /** The sub-sitemaps listed in /sitemap.xml (like Rank Math: page, product, category, post). */
-export function sitemapGroups(): SitemapGroup[] {
+export function allSitemapGroups(): SitemapGroup[] {
   return [
     { file: "page-sitemap.xml", title: "Pages", entries: [
       s("/", 1, "daily"), s("/shop", 0.9, "daily"),
@@ -22,4 +26,11 @@ export function sitemapGroups(): SitemapGroup[] {
     { file: "category-sitemap.xml", title: "Categories", entries: categories.map((c) => s(`/category/${c.slug}`, 0.9)) },
     { file: "post-sitemap.xml", title: "Blog posts", entries: [s("/blog", 0.6), ...posts.map((p) => s(`/blog/${p.slug}`, 0.6, "monthly"))] },
   ];
+}
+
+/** Every page, including ones switched off in the admin panel (used by the admin SEO list). */
+export const allPagePaths = () => allSitemapGroups().flatMap((g) => g.entries.map((e) => ({ group: g.title, path: (e as SitemapEntry & { path: string }).path })));
+
+export function sitemapGroups(): SitemapGroup[] {
+  return allSitemapGroups().map((g) => ({ ...g, entries: g.entries.filter(keep) }));
 }

@@ -1,6 +1,8 @@
 // Stock shown on product cards and product pages. Edit the numbers here when stock changes.
 // Products not listed (made-to-order designs) show "Made to order" instead of a number.
-export const stock: Record<string, number> = {
+import { overrides } from "@/lib/overrides";
+
+const base: Record<string, number> = {
   "pink-soap-rose-heart-large": 85,
   "red-soap-rose-heart-large": 78,
   "pink-white-rose-heart-large": 72,
@@ -30,3 +32,7 @@ export const stock: Record<string, number> = {
   "crochet-pink-paradise": 12,
   "chenille-stem-flowers": 15,
 };
+
+// Stock numbers saved in the admin panel win over the list above.
+export const stock: Record<string, number> = { ...base };
+for (const [slug, o] of Object.entries(overrides.products)) if (o.stock !== undefined) stock[slug] = o.stock;

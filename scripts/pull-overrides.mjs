@@ -1,0 +1,50 @@
+// Build step: download the admin panel's saved edits (product prices/stock/best seller, SEO meta/sitemap)
+// from Supabase into data/overrides.json, so every page is built with them.
+// If Supabase can't be reached, the last saved file is kept and the build continues.
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+const OUT = path.join(ROOT, "data/overrides.json");
+
+async function env() {
+  const e = { ...process.env };
+  if (!e.NEXT_PUBLIC_SUPABASE_URL) {
+    try {
+      for (const line of (await fs.readFile(path.join(ROOT, ".env.local"), "utf8")).split("\n")) {
+        const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
+        if (m && !e[m[1]]) e[m[1]] = m[2].replace(/^["']|["']$/g, "");
+      }
+    } catch {}
+  }
+  return e;
+}
+
+async function main() {
+  const e = await env();
+  const url = e.NEXT_PUBLIC_SUPABASE_URL, key = e.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return console.log("[overrides] Supabase not configured, skipped");
+  const get = async (table) => {
+    const r = await fetch(`${url}/rest/v1/${table}?select=*`, { headers: { apikey: key, Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error(`${table}: ${r.status}`);
+    return r.json();
+  };
+  const [prod, seo] = await Promise.all([get("product_overrides"), get("seo_overrides")]);
+  const out = { products: {}, seo: {} };
+  for (const p of prod) out.products[p.slug] = {
+    ...(p.price != null && { price: Number(p.price) }),
+    ...(p.compare_at != null && { compareAt: Number(p.compare_at) }),
+    ...(p.stock != null && { stock: p.stock }),
+    ...(p.best_seller != null && { bestSeller: p.best_seller }),
+  };
+  for (const s of seo) out.seo[s.path] = {
+    ...(s.title && { title: s.title }),
+    ...(s.description && { description: s.description }),
+    noindex: !!s.noindex,
+    inSitemap: s.in_sitemap !== false,
+  };
+  await fs.writeFile(OUT, JSON.stringify(out, null, 2) + "\n");
+  console.log(`[overrides] ${prod.length} product edits, ${seo.length} SEO edits applied`);
+}
+
+main().catch((e) => console.warn("[overrides] kept previous file:", e.message));

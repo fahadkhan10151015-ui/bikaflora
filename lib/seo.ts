@@ -1,8 +1,13 @@
+import { overrides } from "@/lib/overrides";
 import type { Metadata } from "next";
 import { site, absoluteUrl } from "./site";
 import { siteImages } from "./images";
 
 export function pageMeta({ title, description, path, image, absoluteTitle }: { title: string; description: string; path: string; image?: string; absoluteTitle?: boolean }): Metadata {
+  // Meta title / description / noindex saved in the admin panel win over the defaults.
+  const o = overrides.seo[path];
+  if (o?.title) { title = o.title; absoluteTitle = true; }
+  if (o?.description) description = o.description;
   const img = image || siteImages.cover;
   const imgUrl = img.startsWith("http") ? img : absoluteUrl(img);
   return {
@@ -11,6 +16,7 @@ export function pageMeta({ title, description, path, image, absoluteTitle }: { t
     alternates: { canonical: absoluteUrl(path) },
     openGraph: { title, description, url: absoluteUrl(path), siteName: site.name, images: [{ url: imgUrl }], locale: "en_MY", type: "website" },
     twitter: { card: "summary_large_image", title, description, images: [imgUrl] },
+    ...(o?.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

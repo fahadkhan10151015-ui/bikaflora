@@ -2,6 +2,7 @@
 import { useId, useState } from "react";
 import { waLink } from "@/lib/whatsapp";
 import { site } from "@/lib/site";
+import { loadSupabase } from "@/lib/supabase-config";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 
 export default function ContactForm({ area }: { area?: string } = {}) {
@@ -12,6 +13,11 @@ export default function ContactForm({ area }: { area?: string } = {}) {
     e.preventDefault();
     const text = `Hi ${site.name}, my name is ${f.name}${f.phone ? ` (${f.phone})` : ""}.\n\nTopic: ${f.topic}${area ? `\nDelivery area: ${area}` : ""}\n\n${f.msg}`;
     window.open(waLink(text), "_blank");
+    // Also keep a copy for the admin panel (Messages). Never blocks the WhatsApp message.
+    loadSupabase().then((sb) => sb?.from("contact_messages").insert({
+      name: f.name.trim().slice(0, 80), phone: f.phone.trim().slice(0, 30) || null, topic: f.topic, area: area ?? null,
+      message: f.msg.trim().slice(0, 2000), page: window.location.pathname.slice(0, 200),
+    })).catch(() => {});
   };
   return (
     <form onSubmit={send} className="grid gap-4">
