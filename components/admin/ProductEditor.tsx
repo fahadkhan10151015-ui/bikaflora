@@ -9,6 +9,7 @@ import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
 import { Field, LinesEditor, FaqEditor, PhotosEditor, NumberField, BadgeField, type QA } from "./fields";
 import { card, Note, Toggle } from "./ui";
+import SeoScore from "./SeoScore";
 
 type Form = {
   slug: string; name: string; nameZh: string; sku: string; badge: string; price: string; compareAt: string; stock: string; bestSeller: boolean;
@@ -204,7 +205,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
           </section>
         </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-32">
+        <aside className="space-y-4">
           <div className={box}>
             <h3 className="font-semibold">Price and stock</h3>
             <NumberField label="Price (RM)" required value={f.price} step={1} onChange={(v) => set({ price: v })} />
@@ -242,6 +243,9 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
               <div className="text-[12px] text-gray-700 truncate">bikaflora.my › product › {webSlug || "…"}</div>
               <div className="text-[16px] leading-snug text-[#1a0dab] line-clamp-1">{autoTitle || "Product name"}</div>
               <div className="text-[12px] text-gray-600 line-clamp-2">{autoDesc || "Short description appears here."}</div>
+            </div>
+            <div className="pt-2 border-t border-blush-2/60">
+              <SeoScore keyword={f.keyword} title={autoTitle} description={autoDesc} slug={webSlug} h1={f.name} html={`<p>${f.seoShort || f.short}</p>${f.html}`} alts={f.images.map((s) => f.alts[s] ?? "")} minWords={200} />
             </div>
           </div>
         </aside>

@@ -4,12 +4,16 @@ import ContactForm from "@/components/ui/ContactForm";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import { pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { content } from "@/lib/content";
 
-export const metadata = pageMeta({ title: "Contact Us – WhatsApp Our Florist", description: `Contact ${site.name} on WhatsApp ${site.phoneDisplay} or email ${site.email}. Florist serving Kuala Lumpur & Selangor.`, path: "/contact" });
+// Contact page text edited in the admin panel (Pages → Contact).
+const e = (content.page.contact ?? {}) as { title?: string; description?: string; h1?: string; intro?: string; formTitle?: string; formText?: string };
+
+export const metadata = pageMeta({ title: e.title || "Contact Us – WhatsApp Our Florist", description: e.description || `Contact ${site.name} on WhatsApp ${site.phoneDisplay} or email ${site.email}. Florist serving Kuala Lumpur & Selangor.`, path: "/contact", absoluteTitle: Boolean(e.title) });
 
 export default function Contact() {
   return (
-    <PageShell title="Contact us" path="/contact" intro="The fastest way to reach us is WhatsApp. We usually reply within minutes during opening hours.">
+    <PageShell title={e.h1 || "Contact us"} path="/contact" introHtml={e.intro?.includes("<") ? e.intro : undefined} intro={e.intro?.includes("<") ? undefined : e.intro || "The fastest way to reach us is WhatsApp. We usually reply within minutes during opening hours."}>
       <div className="grid lg:grid-cols-5 gap-8">
         <div className="lg:col-span-2 space-y-4">
           <WhatsAppButton label={`WhatsApp ${site.phoneDisplay}`} className="w-full flex items-center gap-3 sm:gap-4 bg-wa text-white rounded-3xl p-5 sm:p-6 text-lg sm:text-xl font-semibold hover:brightness-95" iconClassName="w-8 h-8 sm:w-10 sm:h-10 shrink-0" />
@@ -21,8 +25,8 @@ export default function Contact() {
           ))}
         </div>
         <div className="lg:col-span-3 bg-white rounded-3xl p-6 md:p-8 border border-blush-2/70">
-          <h2 className="text-2xl font-semibold mb-1">Send us a message</h2>
-          <p className="text-sm text-muted mb-6">Fill this in and tap send. It opens WhatsApp with your message ready.</p>
+          <h2 className="text-2xl font-semibold mb-1">{e.formTitle || "Send us a message"}</h2>
+          <p className="text-sm text-muted mb-6">{e.formText || "Fill this in and tap send. It opens WhatsApp with your message ready."}</p>
           <ContactForm />
         </div>
       </div>

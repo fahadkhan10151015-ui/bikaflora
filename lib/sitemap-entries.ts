@@ -4,6 +4,7 @@ import { locations } from "@/data/locations";
 import { posts } from "@/data/posts";
 import { absoluteUrl } from "@/lib/site";
 import { overrides } from "@/lib/overrides";
+import { customPages } from "@/lib/custom-pages";
 
 export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number; images?: string[] };
 export type SitemapGroup = { file: string; title: string; entries: SitemapEntry[] };
@@ -21,6 +22,7 @@ export function allSitemapGroups(): SitemapGroup[] {
       ...["/about", "/contact", "/faq", "/reviews", "/delivery-information"].map((p) => s(p, 0.5, "monthly")),
       ...["/privacy-policy", "/terms", "/refund-policy"].map((p) => s(p, 0.2, "monthly")),
       s("/flower-delivery", 0.8), ...locations.map((l) => s(`/flower-delivery/${l.slug}`, 0.7)),
+      ...customPages.map((p) => s(`/${p.slug}`, 0.5, "monthly")),
     ] },
     { file: "product-sitemap.xml", title: "Products", entries: products.map((p) => ({ ...s(`/product/${p.slug}`, 0.8), images: p.images.slice(0, 4).map((i) => (i.startsWith("http") ? i : absoluteUrl(i))) })) },
     { file: "category-sitemap.xml", title: "Categories", entries: categories.map((c) => s(`/category/${c.slug}`, 0.9)) },

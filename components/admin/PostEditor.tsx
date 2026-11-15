@@ -7,6 +7,7 @@ import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
 import { uploadPhoto } from "./fields";
 import { card, Note } from "./ui";
+import SeoScore from "./SeoScore";
 
 type P = { title: string; html: string; slug: string; date: string; author: string; category: string; image: string; imageAlt: string; keyword: string; seoTitle: string; description: string };
 
@@ -115,7 +116,7 @@ export default function PostEditor({ slug: startSlug, onClose }: { slug: string;
           <div><span className="label">Content <Req /></span><RichText value={p.html} onChange={(v) => set({ html: v })} /></div>
         </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-32">
+        <aside className="space-y-4">
           <div className={box}>
             <h3 className="font-semibold flex items-center gap-2"><CalendarClock className="w-4 h-4 text-gold" /> Publish</h3>
             <label className="block"><span className="label">Date</span><input type="date" className="input" value={p.date} onChange={(e) => set({ date: e.target.value })} /></label>
@@ -168,6 +169,9 @@ export default function PostEditor({ slug: startSlug, onClose }: { slug: string;
               <div className="text-[12px] text-gray-700 truncate">bikaflora.my › blog › {p.slug || "…"}</div>
               <div className="text-[16px] leading-snug text-[#1a0dab] line-clamp-1">{autoTitle || "Post title"}</div>
               <div className="text-[12px] text-gray-600 line-clamp-2">{autoDesc || "The start of your post appears here."}</div>
+            </div>
+            <div className="pt-2 border-t border-blush-2/60">
+              <SeoScore keyword={p.keyword} title={autoTitle} description={autoDesc} slug={p.slug} h1={p.title} html={p.html} alts={[p.imageAlt || p.title]} minWords={600} />
             </div>
           </div>
         </aside>

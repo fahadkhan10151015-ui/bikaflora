@@ -9,6 +9,7 @@ import { siteImages } from "@/lib/images";
 import HeroStage, { type StageSlide } from "./HeroStage";
 import { Rose, Daisy, Sunflower, GoldBall, Sprig, Orchid, Leaf } from "./Flowers";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
+import { content } from "@/lib/content";
 
 type Slide = StageSlide & { slug: string; bg: string; eyebrow: string; title: [string, string]; text: string };
 
@@ -56,10 +57,30 @@ const slides: Slide[] = [
   },
 ];
 
+// Hero text and photos edited in the admin panel (Pages → Homepage hero).
+type HeroEdit = { eyebrow?: string; title1?: string; title2?: string; text?: string; image?: string; alt?: string };
+const heroEdits = content.page.hero as { slides?: HeroEdit[]; video?: HeroEdit } | undefined;
+heroEdits?.slides?.forEach((e, i) => {
+  const sl = slides[i];
+  if (!sl || !e) return;
+  if (e.eyebrow) sl.eyebrow = e.eyebrow;
+  if (e.title1) sl.title = [e.title1, e.title2 ?? ""];
+  if (e.text) sl.text = e.text;
+  if (e.image) sl.image = e.image;
+  if (e.alt) sl.alt = e.alt;
+});
+
 const DURATION = 4000;
+
 /** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
 const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~15.6s)
-const videoSlide = { eyebrow: "Online florist in KL & Selangor", title: ["Soap flower bouquets", "that last for months"] as [string, string], text: "Handmade by our florists, then delivered the same day across Kuala Lumpur and Selangor. No cut-off time, and you see a photo before it goes out." };
+const videoSlide: { eyebrow: string; title: [string, string]; text: string } = { eyebrow: "Online florist in KL & Selangor", title: ["Soap flower bouquets", "that last for months"] as [string, string], text: "Handmade by our florists, then delivered the same day across Kuala Lumpur and Selangor. No cut-off time, and you see a photo before it goes out." };
+if (heroEdits?.video?.title1) videoSlide.title = [heroEdits.video.title1, heroEdits.video.title2 ?? ""];
+if (heroEdits?.video?.eyebrow) videoSlide.eyebrow = heroEdits.video.eyebrow;
+if (heroEdits?.video?.text) videoSlide.text = heroEdits.video.text;
+
+/** Default hero content (used by the admin hero editor). */
+export const heroDefaults = { video: { ...videoSlide }, slides: slides.map((s) => ({ eyebrow: s.eyebrow, title1: s.title[0], title2: s.title[1], text: s.text, image: s.image, alt: s.alt })) };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);

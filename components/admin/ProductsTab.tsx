@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Save, Loader2, Plus, Pencil } from "lucide-react";
 import ProductEditor from "./ProductEditor";
+import { productSeo } from "@/data/product-seo";
+import { seoChecks, ScorePill } from "./SeoScore";
 import { products } from "@/data/products";
 import { stock as liveStock } from "@/data/stock";
 import { loadSupabase } from "@/lib/supabase-config";
@@ -77,9 +79,9 @@ export default function ProductsTab({ startNew = false }: { startNew?: boolean }
       {msg && <Note kind={msg.kind}>{msg.text}</Note>}
       <p className="text-sm text-muted">“Before price” shows crossed out (leave empty for no sale). Products without a stock number show “Made to order”.</p>
       <div className={`${card} overflow-x-auto`}>
-        <table className="w-full text-sm min-w-[840px]">
+        <table className="w-full text-sm min-w-[920px]">
           <thead className="bg-blush/60 text-left">
-            <tr><th className="p-3">Product</th><th className="p-3 w-28">Price (RM)</th><th className="p-3 w-28">Before price</th><th className="p-3 w-24">Stock</th><th className="p-3 w-28">Best seller</th><th className="p-3 w-20"></th></tr>
+            <tr><th className="p-3">Product</th><th className="p-3 w-28">Price (RM)</th><th className="p-3 w-28">Before price</th><th className="p-3 w-24">Stock</th><th className="p-3 w-28">Best seller</th><th className="p-3 w-24">SEO</th><th className="p-3 w-20"></th></tr>
           </thead>
           <tbody>
             {list.map((p) => {
@@ -96,6 +98,7 @@ export default function ProductsTab({ startNew = false }: { startNew?: boolean }
                   <td className="p-3"><input type="number" min={0} className="input !py-2" value={r.compareAt} placeholder="–" onChange={(e) => set(p.slug, { compareAt: e.target.value })} /></td>
                   <td className="p-3"><input type="number" min={0} className="input !py-2" value={r.stock} placeholder="Made to order" onChange={(e) => set(p.slug, { stock: e.target.value })} /></td>
                   <td className="p-3"><Toggle on={r.bestSeller} onChange={(v) => set(p.slug, { bestSeller: v })} label={`Best seller: ${p.name}`} /></td>
+                  <td className="p-3">{(() => { const s = productSeo[p.slug]; return <ScorePill score={seoChecks({ keyword: s?.keyword ?? "", title: s?.title ?? p.name, description: s?.description ?? "", slug: p.slug, h1: p.name, html: `<p>${s?.short ?? p.short}</p>${s?.html ?? ""}`, alts: Object.values(s?.alts ?? {}), minWords: 200 }).score} />; })()}</td>
                   <td className="p-3"><button onClick={() => setEditing(p.slug)} className="inline-flex items-center gap-1 text-brand font-semibold text-sm"><Pencil className="w-4 h-4" /> Edit</button></td>
                 </tr>
               );
