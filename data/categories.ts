@@ -3,6 +3,7 @@
 //  The order here is the order on the website (menu, home slider).
 // ============================================================
 import { hasProducts } from "@/data/products";
+import { content } from "@/lib/content";
 
 export type Category = {
   slug: string;
@@ -173,6 +174,20 @@ export const allCategories: Category[] = [
     content: [{ heading: "How to add", body: "Add-ons are delivered together with a bouquet. Tap + on the add-on and on your bouquet, then send your order list on WhatsApp." }],
   },
 ];
+
+// Categories edited, added or removed in the admin panel.
+for (const [slug, doc] of Object.entries(content.collection)) {
+  const i = allCategories.findIndex((c) => c.slug === slug);
+  if (doc.deleted) { if (i >= 0) allCategories.splice(i, 1); continue; }
+  const d = doc as { name?: string; short?: string; image?: string; title?: string; description?: string };
+  if (i >= 0) {
+    if (d.name) allCategories[i].name = d.name;
+    if (d.short) allCategories[i].short = d.short;
+    if (d.image) allCategories[i].image = d.image;
+  } else if (d.name) {
+    allCategories.push({ slug, name: d.name, short: d.short ?? "", image: d.image || "/images/site/cover.webp", seoTitle: d.title || `${d.name} | BikaFlora`, seoDescription: d.description || "", intro: "", content: [] });
+  }
+}
 
 /** Categories that currently have products. Empty ones are hidden until you add a product to them. */
 export const categories = allCategories.filter((c) => hasProducts(c.slug));

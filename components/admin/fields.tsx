@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Plus, Trash2, ArrowUp, ArrowDown, Upload, Loader2 } from "lucide-react";
+import { Plus, Minus, Trash2, ArrowUp, ArrowDown, Upload, Loader2, ImageIcon } from "lucide-react";
 import { loadSupabase } from "@/lib/supabase-config";
 
 export type QA = { q: string; a: string };
@@ -113,7 +113,8 @@ export function PhotosEditor({ images, alts, onChange, folder, name }: { images:
               {i === 0 && <span className="absolute top-2 left-2 text-[10px] font-bold bg-brand text-white rounded-full px-2 py-0.5">MAIN</span>}
             </div>
             <div className="p-2">
-              <input className="input !py-1.5 !text-xs" placeholder="Alt text (describe the photo)" value={alts[src] ?? ""} onChange={(e) => onChange(images, { ...alts, [src]: e.target.value })} />
+              <label className="block"><span className="text-[11px] font-semibold text-ink">Alt text</span>
+                <input className="input !py-1.5 !text-xs mt-0.5" placeholder="Auto if empty" value={alts[src] ?? ""} onChange={(e) => onChange(images, { ...alts, [src]: e.target.value })} /></label>
               <div className="mt-1 flex justify-between">
                 <span className="flex">
                   <IconBtn title="Move left" onClick={() => onChange(move(images, i, -1), alts)}><ArrowUp className="w-4 h-4 -rotate-90" /></IconBtn>
@@ -131,6 +132,70 @@ export function PhotosEditor({ images, alts, onChange, folder, name }: { images:
       </div>
       {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
       <p className="mt-2 text-xs text-muted">The first photo is the main photo. Photos are compressed automatically.</p>
+    </div>
+  );
+}
+
+/** Number box with − / + buttons (price, stock…). Empty is allowed when `optional`. */
+export function NumberField({ label, value, onChange, step = 1, min = 0, required, optional, placeholder, hint }: { label: string; value: string; onChange: (v: string) => void; step?: number; min?: number; required?: boolean; optional?: boolean; placeholder?: string; hint?: string }) {
+  const n = Number(value);
+  const bump = (d: number) => { const base = value.trim() === "" || isNaN(n) ? 0 : n; onChange(String(Math.max(min, Math.round((base + d) * 100) / 100))); };
+  return (
+    <div>
+      <span className="label">{label} {required && <span className="text-red-600">*</span>}</span>
+      <div className="flex items-stretch rounded-[.8rem] border border-[#e6e1d8] bg-white overflow-hidden focus-within:border-brand">
+        <button type="button" aria-label={`Less ${label}`} onClick={() => bump(-step)} className="px-3 text-muted hover:bg-blush"><Minus className="w-4 h-4" /></button>
+        <input type="number" inputMode="decimal" min={min} step={step} className="w-full min-w-0 text-center py-2.5 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none" placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} />
+        {optional && value !== "" && <button type="button" aria-label="Clear" onClick={() => onChange("")} className="px-2 text-xs text-muted hover:text-red-600">✕</button>}
+        <button type="button" aria-label={`More ${label}`} onClick={() => bump(step)} className="px-3 text-muted hover:bg-blush"><Plus className="w-4 h-4" /></button>
+      </div>
+      {hint && <span className="mt-1 block text-xs text-muted">{hint}</span>}
+    </div>
+  );
+}
+
+/** One image with upload/replace/remove and alt text (category image, page photo, city photo…). */
+export function SingleImage({ label, src, alt, onChange, folder, name, hint }: { label: string; src: string; alt: string; onChange: (src: string, alt: string) => void; folder: string; name: string; hint?: string }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  return (
+    <div>
+      <span className="label">{label}</span>
+      <div className="flex gap-3 items-start">
+        <div className="relative w-28 h-28 shrink-0 rounded-2xl overflow-hidden bg-blush grid place-items-center">
+          {src ? <Image src={src} alt={alt} fill sizes="112px" className="object-cover" /> : <ImageIcon className="w-7 h-7 text-brand/40" />}
+        </div>
+        <div className="flex-1 space-y-2">
+          <div className="flex flex-wrap gap-2">
+            <label className="btn btn-outline !py-1.5 !px-3 text-sm cursor-pointer">
+              <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; e.target.value = ""; if (!f) return; setBusy(true); setErr(""); try { onChange(await uploadPhoto(f, folder, name), alt); } catch (x) { setErr(x instanceof Error ? x.message : "Upload failed"); } setBusy(false); }} />
+              {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />} {src ? "Replace" : "Upload"}
+            </label>
+            {src && <button type="button" onClick={() => onChange("", alt)} className="btn !py-1.5 !px-3 text-sm text-red-600 hover:bg-red-50"><Trash2 className="w-4 h-4" /> Remove</button>}
+          </div>
+          <label className="block"><span className="text-xs font-semibold">Alt text</span><input className="input !py-1.5 !text-sm mt-0.5" placeholder="Auto if empty" value={alt} onChange={(e) => onChange(src, e.target.value)} /></label>
+          {(hint || err) && <span className={`block text-xs ${err ? "text-red-600" : "text-muted"}`}>{err || hint}</span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export const BADGES = ["Top Seller", "Best Seller", "New", "Limited", "Handmade", "For Him", "For Her", "Graduation", "Pre-order", "Sweet & Romantic"];
+/** Badge picker: Auto (we choose), none, a ready-made badge, or your own words. */
+export function BadgeField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const mode = value === "auto" ? "auto" : value === "" ? "none" : BADGES.includes(value) ? value : "custom";
+  return (
+    <div>
+      <span className="label">Badge <span className="font-normal text-muted">(small label on the photo)</span></span>
+      <select className="input" value={mode} onChange={(e) => onChange(e.target.value === "auto" ? "auto" : e.target.value === "none" ? "" : e.target.value === "custom" ? "My badge" : e.target.value)}>
+        <option value="auto">Auto (we choose for you)</option>
+        <option value="none">No badge</option>
+        {BADGES.map((b) => <option key={b} value={b}>{b}</option>)}
+        <option value="custom">Write my own…</option>
+      </select>
+      {mode === "custom" && <input className="input mt-2" maxLength={22} value={value} onChange={(e) => onChange(e.target.value)} />}
+      {mode === "auto" && <span className="mt-1 block text-xs text-muted">Best seller → “Top Seller”, new product → “New”, pre-order only → “Pre-order”.</span>}
     </div>
   );
 }

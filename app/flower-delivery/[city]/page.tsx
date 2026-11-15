@@ -39,7 +39,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   if (!l) notFound();
   const seo = locationSeo[l.slug];
   const idx = locations.indexOf(l);
-  const photo = cityPhotos[l.slug];
+  const photo = seo?.image ? { src: seo.image, alt: seo.imageAlt || `Flower delivery in ${l.name}, ${l.state}` } : cityPhotos[l.slug];
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${l.name}, ${l.state}, Malaysia`)}`;
   const picks = seo
     ? seo.featured.map((slug) => products.find((p) => p.slug === slug)).filter((p): p is (typeof products)[number] => Boolean(p))

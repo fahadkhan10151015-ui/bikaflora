@@ -12,7 +12,7 @@ type Row = { price: string; compareAt: string; stock: string; bestSeller: boolea
 type Saved = { slug: string; price: number | null; compare_at: number | null; stock: number | null; best_seller: boolean | null };
 
 /** Edit price, sale ("before") price, stock and best seller for every product. */
-export default function ProductsTab() {
+export default function ProductsTab({ startNew = false }: { startNew?: boolean } = {}) {
   const base = useMemo(() => Object.fromEntries(products.map((p) => [p.slug, {
     price: String(p.price), compareAt: p.compareAt ? String(p.compareAt) : "", stock: liveStock[p.slug] !== undefined ? String(liveStock[p.slug]) : "", bestSeller: p.categories.includes("best-seller"),
   }])) as Record<string, Row>, []);
@@ -21,7 +21,7 @@ export default function ProductsTab() {
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
-  const [editing, setEditing] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(startNew ? "" : null);
 
   // Show edits saved but not yet published.
   useEffect(() => {
@@ -92,9 +92,9 @@ export default function ProductsTab() {
                       <div><div className="font-semibold text-ink">{p.name}</div><div className="text-xs text-muted">{p.sku}</div></div>
                     </div>
                   </td>
-                  <td className="p-3"><input className="input !py-2" inputMode="decimal" value={r.price} onChange={(e) => set(p.slug, { price: e.target.value })} /></td>
-                  <td className="p-3"><input className="input !py-2" inputMode="decimal" value={r.compareAt} placeholder="–" onChange={(e) => set(p.slug, { compareAt: e.target.value })} /></td>
-                  <td className="p-3"><input className="input !py-2" inputMode="numeric" value={r.stock} placeholder="Made to order" onChange={(e) => set(p.slug, { stock: e.target.value })} /></td>
+                  <td className="p-3"><input type="number" min={0} className="input !py-2" value={r.price} onChange={(e) => set(p.slug, { price: e.target.value })} /></td>
+                  <td className="p-3"><input type="number" min={0} className="input !py-2" value={r.compareAt} placeholder="–" onChange={(e) => set(p.slug, { compareAt: e.target.value })} /></td>
+                  <td className="p-3"><input type="number" min={0} className="input !py-2" value={r.stock} placeholder="Made to order" onChange={(e) => set(p.slug, { stock: e.target.value })} /></td>
                   <td className="p-3"><Toggle on={r.bestSeller} onChange={(v) => set(p.slug, { bestSeller: v })} label={`Best seller: ${p.name}`} /></td>
                   <td className="p-3"><button onClick={() => setEditing(p.slug)} className="inline-flex items-center gap-1 text-brand font-semibold text-sm"><Pencil className="w-4 h-4" /> Edit</button></td>
                 </tr>

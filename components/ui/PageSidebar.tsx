@@ -15,8 +15,8 @@ const links: [string, string][] = [
 ];
 
 /** Right-hand column for About, Terms, Privacy and FAQ: photo, help card, trust points and page links. */
-export default function PageSidebar({ path, image = "florist" }: { path: string; image?: "florist" | "holdingBouquet" }) {
-  const img = image === "florist"
+export default function PageSidebar({ path, image = "florist", src, alt }: { path: string; image?: "florist" | "holdingBouquet"; src?: string; alt?: string }) {
+  const img = src ? { src, alt: alt || "BikaFlora handmade bouquets" } : image === "florist"
     ? { src: siteImages.florist, alt: "BikaFlora florist wrapping a handmade bouquet in KL" }
     : { src: siteImages.holdingBouquet, alt: "Handmade bouquet ready for same-day delivery in KL" };
   return (

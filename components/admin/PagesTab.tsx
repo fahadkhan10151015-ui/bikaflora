@@ -11,14 +11,14 @@ import { products } from "@/data/products";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
 import PostEditor from "./PostEditor";
-import { Field, FaqEditor, uploadPhoto, type QA } from "./fields";
+import { Field, FaqEditor, SingleImage, uploadPhoto, type QA } from "./fields";
 import { card, Note } from "./ui";
 
 type Kind = "collection" | "location" | "page" | "post";
 type Item = { kind: Kind; slug: string; name: string; path: string };
 type Doc = {
   title: string; description: string; keyword?: string; h1?: string; intro?: string; html?: string; faqTitle?: string; faqs?: QA[];
-  featured?: string[]; groups?: { title: string; faqs: QA[] }[]; date?: string; image?: string;
+  featured?: string[]; groups?: { title: string; faqs: QA[] }[]; date?: string; image?: string; imageAlt?: string; name?: string; short?: string;
 };
 
 const pageNames = { home: "Home", about: "About", faq: "FAQ", terms: "Terms & Conditions", privacy: "Privacy Policy" } as const;
@@ -26,7 +26,11 @@ const pagePaths = { home: "/", about: "/about", faq: "/faq", terms: "/terms", pr
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 function current(kind: Kind, slug: string): Doc {
-  if (kind === "collection") { const s = collectionSeo[slug]; const c = allCategories.find((x) => x.slug === slug); return s ? { ...s } : { title: c?.seoTitle ?? "", description: c?.seoDescription ?? "", h1: c?.name ?? "", intro: c?.intro ? `<p>${esc(c.intro)}</p>` : "", html: "", faqTitle: "", faqs: [] }; }
+  if (kind === "collection") {
+    const s = collectionSeo[slug]; const c = allCategories.find((x) => x.slug === slug);
+    const base = { name: c?.name ?? "", short: c?.short ?? "", image: c?.image ?? "", imageAlt: "" };
+    return s ? { ...s, ...base } : { ...base, title: c?.seoTitle ?? "", description: c?.seoDescription ?? "", h1: c?.name ?? "", intro: c?.intro ? `<p>${esc(c.intro)}</p>` : "", html: "", faqTitle: "", faqs: [] };
+  }
   if (kind === "location") { const s = locationSeo[slug]; return s ? { ...s } : { title: "", description: "", h1: "", intro: "", html: "", faqTitle: "", faqs: [], featured: [] }; }
   if (kind === "page") { const s = pageCopy[slug as keyof typeof pageCopy]; return { ...s, html: s.html ?? "", faqs: s.faqs ?? [], faqTitle: s.faqTitle ?? "" }; }
   const p = posts.find((x) => x.slug === slug);
@@ -35,9 +39,9 @@ function current(kind: Kind, slug: string): Doc {
 }
 
 /** Edit category pages, delivery area pages, site pages and blog posts. */
-export default function PagesTab() {
-  const [group, setGroup] = useState<Kind>("collection");
-  const [open, setOpen] = useState<Item | null>(null);
+export default function PagesTab({ kinds = ["collection", "location", "page", "post"], startNew = false }: { kinds?: Kind[]; startNew?: boolean } = {}) {
+  const [group, setGroup] = useState<Kind>(kinds[0]);
+  const [open, setOpen] = useState<Item | null>(startNew && kinds[0] === "post" ? { kind: "post", slug: "", name: "New blog post", path: "" } : null);
   const [q, setQ] = useState("");
   const [drafts, setDrafts] = useState<Item[]>([]);
   // Posts saved in the admin but not live yet (new or scheduled).
@@ -62,19 +66,23 @@ export default function PagesTab() {
   const list = items[group].filter((i) => i.name.toLowerCase().includes(q.toLowerCase()));
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {([["collection", "Category pages"], ["location", "Delivery area pages"], ["page", "Site pages"], ["post", "Blog posts"]] as const).map(([k, l]) => (
+      {kinds.length > 1 && <div className="flex flex-wrap gap-2">
+        {([["collection", "Categories"], ["location", "City pages"], ["page", "Site pages"], ["post", "Blog posts"]] as const).filter(([k]) => kinds.includes(k)).map(([k, l]) => (
           <button key={k} onClick={() => setGroup(k)} className={`btn !py-2 !px-4 text-sm ${group === k ? "btn-primary" : "btn-outline"}`}>{l} ({items[k].length})</button>
         ))}
-      </div>
+      </div>}
       <div className="flex flex-wrap gap-3 justify-between">
         <input className="input max-w-xs" placeholder="Search…" value={q} onChange={(e) => setQ(e.target.value)} />
-        {group === "post" && <button onClick={() => setOpen({ kind: "post", slug: "", name: "New blog post", path: "" })} className="btn btn-outline"><Plus className="w-4 h-4" /> New blog post</button>}
+        {group === "post" && <button onClick={() => setOpen({ kind: "post", slug: "", name: "New blog post", path: "" })} className="btn btn-primary"><Plus className="w-4 h-4" /> New blog post</button>}
+        {group === "collection" && <button onClick={() => setOpen({ kind: "collection", slug: "", name: "New category", path: "" })} className="btn btn-primary"><Plus className="w-4 h-4" /> Add category</button>}
       </div>
       <div className={`${card} divide-y divide-blush-2/60`}>
         {list.map((i) => (
           <button key={i.slug} onClick={() => setOpen(i)} className="w-full text-left px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-blush/40">
-            <span><span className="font-semibold text-ink">{i.name}</span><span className="block text-xs text-muted">{i.path}</span></span>
+            <span className="flex items-center gap-3">
+              {i.kind === "collection" && (() => { const c = allCategories.find((x) => x.slug === i.slug); return c ? <img src={c.image} alt="" className="w-10 h-10 rounded-full object-cover" /> : null; })()}
+              <span><span className="font-semibold text-ink">{i.name}</span><span className="block text-xs text-muted">{i.path}{i.kind === "collection" ? ` · ${products.filter((p) => p.categories.includes(i.slug)).length} products` : ""}</span></span>
+            </span>
             <Pencil className="w-4 h-4 text-brand shrink-0" />
           </button>
         ))}
@@ -83,8 +91,8 @@ export default function PagesTab() {
   );
 }
 
-function PageEditor({ item, onClose }: { item: Item; onClose: () => void }) {
-  const isNewPost = item.kind === "post" && !item.slug;
+export function PageEditor({ item, onClose }: { item: Item; onClose: () => void }) {
+  const isNewPost = !item.slug;
   const [slug, setSlug] = useState(item.slug);
   const [d, setD] = useState<Doc>(current(item.kind, item.slug));
   const [busy, setBusy] = useState(false);
@@ -101,10 +109,18 @@ function PageEditor({ item, onClose }: { item: Item; onClose: () => void }) {
   }, [item, isNewPost]);
 
   const save = async () => {
-    const s = isNewPost ? slug.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") : item.slug;
-    if (!s) return setMsg({ kind: "err", text: "Please add a web address for the post." });
-    if (!d.title.trim()) return setMsg({ kind: "err", text: "Please add a title." });
-    if (isNewPost && posts.some((p) => p.slug === s)) return setMsg({ kind: "err", text: "A post with this web address already exists." });
+    const s = isNewPost ? (slug || d.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") : item.slug;
+    if (item.kind === "collection" && !d.name?.trim()) return setMsg({ kind: "err", text: "Please add the category name." });
+    if (!s) return setMsg({ kind: "err", text: "Please add a web address." });
+    if (isNewPost && allCategories.some((c) => c.slug === s)) return setMsg({ kind: "err", text: "A category with this web address already exists." });
+    // Auto-fill SEO and headings when left empty.
+    if (item.kind === "collection") {
+      d.title = d.title.trim() || `Buy ${d.name} Online in KL | BikaFlora`.slice(0, 60);
+      d.description = d.description.trim() || `Shop ${d.name} from BikaFlora. Handmade bouquets with same-day delivery across KL & Selangor.`;
+      d.h1 = d.h1?.trim() || d.name;
+      d.imageAlt = d.imageAlt?.trim() || `${d.name} by BikaFlora`;
+    }
+    if (!d.title.trim()) return setMsg({ kind: "err", text: "Please add a meta title." });
     setBusy(true); setMsg(null);
     const sb = await loadSupabase();
     const data = { ...d, faqs: d.faqs?.filter((x) => x.q && x.a), groups: d.groups?.map((g) => ({ ...g, faqs: g.faqs.filter((x) => x.q && x.a) })) };
@@ -113,6 +129,12 @@ function PageEditor({ item, onClose }: { item: Item; onClose: () => void }) {
     if (error) return setMsg({ kind: "err", text: `Not saved: ${error.message}` });
     if (isNewPost) setSlug(s);
     setMsg({ kind: "ok", text: "Saved. Press “Publish changes” to put it live." });
+  };
+  const removeCategory = async () => {
+    if (!window.confirm(`Remove the category "${d.name}"? Its page disappears after you publish. Products stay on the website.`)) return;
+    const sb = await loadSupabase();
+    const { error } = await sb!.from("content").upsert({ key: `collection:${item.slug}`, kind: "collection", data: {}, deleted: true, updated_at: new Date().toISOString() });
+    setMsg(error ? { kind: "err", text: error.message } : { kind: "ok", text: "Category removed. Press “Publish changes” to update the website." });
   };
   const removePost = async () => {
     if (!window.confirm(`Delete the blog post "${d.title}"? It disappears after you publish.`)) return;
@@ -129,16 +151,43 @@ function PageEditor({ item, onClose }: { item: Item; onClose: () => void }) {
         <button onClick={onClose} className="inline-flex items-center gap-1 text-brand font-semibold"><ArrowLeft className="w-4 h-4" /> Back</button>
         <div className="flex gap-2">
           {item.kind === "post" && !isNewPost && <button onClick={removePost} className="btn !py-2 text-red-600 hover:bg-red-50"><Trash2 className="w-4 h-4" /> Delete post</button>}
+          {item.kind === "collection" && !isNewPost && <button onClick={removeCategory} className="btn !py-2 text-red-600 hover:bg-red-50"><Trash2 className="w-4 h-4" /> Remove category</button>}
           <button onClick={save} disabled={busy} className="btn btn-primary !py-2">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save</button>
         </div>
       </div>
       <div><h2 className="text-2xl font-semibold">{item.name}</h2>{item.path && <a href={item.path} target="_blank" rel="noopener" className="text-sm text-brand hover:underline">{item.path}</a>}</div>
       {msg && <Note kind={msg.kind}>{msg.text}</Note>}
 
+      {item.kind === "collection" && (
+        <section className={sec}>
+          <h3 className="text-xl font-semibold">Category</h3>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Category name *" value={d.name ?? ""} onChange={(v) => set({ name: v })} />
+            {isNewPost
+              ? <Field label="Web address" value={slug || (d.name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")} onChange={(v) => setSlug(v.toLowerCase().replace(/[^a-z0-9]+/g, "-"))} hint={`bikaflora.my/category/${slug || (d.name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "…"}`} />
+              : <Field label="Short line (under the name in menus)" value={d.short ?? ""} onChange={(v) => set({ short: v })} />}
+          </div>
+          {isNewPost && <Field label="Short line (under the name in menus)" value={d.short ?? ""} onChange={(v) => set({ short: v })} />}
+          <SingleImage label="Category image (round photo on the homepage)" src={d.image ?? ""} alt={d.imageAlt ?? ""} folder="categories" name={d.name || "category"} onChange={(image, imageAlt) => set({ image, imageAlt })} />
+          <p className="text-xs text-muted">A new category shows on the website once at least one product is in it (tick it in the product editor).</p>
+        </section>
+      )}
+      {item.kind === "location" && (
+        <section className={sec}>
+          <h3 className="text-xl font-semibold">Top photo</h3>
+          <SingleImage label="City photo behind the heading" src={d.image ?? ""} alt={d.imageAlt ?? ""} folder="cities" name={item.name} onChange={(image, imageAlt) => set({ image, imageAlt })} hint="Leave empty to keep the current photo. Best size: wide photo, 1600 px." />
+        </section>
+      )}
+      {item.kind === "page" && item.slug !== "home" && (
+        <section className={sec}>
+          <h3 className="text-xl font-semibold">Side photo</h3>
+          <SingleImage label="Photo in the right-hand column" src={d.image ?? ""} alt={d.imageAlt ?? ""} folder="pages" name={item.name} onChange={(image, imageAlt) => set({ image, imageAlt })} hint="Leave empty to keep the current photo." />
+        </section>
+      )}
+
       <section className={sec}>
         <h3 className="text-xl font-semibold">SEO</h3>
-        {isNewPost && <Field label="Web address" value={slug} onChange={setSlug} hint={`bikaflora.my/blog/${slug || "…"}`} />}
-        <Field label={item.kind === "post" ? "Post title" : "Meta title"} value={d.title} max={item.kind === "post" ? undefined : 60} onChange={(v) => set({ title: v })} />
+        <Field label="Meta title" value={d.title} max={60} onChange={(v) => set({ title: v })} hint={item.kind === "collection" ? "Auto if empty." : undefined} />
         <Field label="Meta description" value={d.description} max={160} rows={2} onChange={(v) => set({ description: v })} />
         {item.kind === "collection" && <Field label="Focus keyword" value={d.keyword ?? ""} onChange={(v) => set({ keyword: v })} />}
       </section>

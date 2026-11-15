@@ -7,7 +7,7 @@ import { allCategories } from "@/data/categories";
 import { stock as liveStock } from "@/data/stock";
 import { loadSupabase } from "@/lib/supabase-config";
 import RichText from "./RichText";
-import { Field, LinesEditor, FaqEditor, PhotosEditor, type QA } from "./fields";
+import { Field, LinesEditor, FaqEditor, PhotosEditor, NumberField, BadgeField, type QA } from "./fields";
 import { card, Note, Toggle } from "./ui";
 
 type Form = {
@@ -24,7 +24,7 @@ const nextSku = () => `BF-${String(Math.max(0, ...products.map((p) => Number(p.s
 function fromProduct(p?: Product): Form {
   const s = p ? productSeo[p.slug] : undefined;
   return {
-    slug: p?.slug ?? "", name: p?.name ?? "", nameZh: p?.nameZh ?? "", sku: p?.sku ?? nextSku(), badge: p?.badge ?? "",
+    slug: p?.slug ?? "", name: p?.name ?? "", nameZh: p?.nameZh ?? "", sku: p?.sku ?? nextSku(), badge: p ? p.badge ?? "" : "auto",
     price: p ? String(p.price) : "", compareAt: p?.compareAt ? String(p.compareAt) : "", stock: p && liveStock[p.slug] !== undefined ? String(liveStock[p.slug]) : "",
     bestSeller: p?.categories.includes("best-seller") ?? false, categories: (p?.categories ?? []).filter((c) => c !== "best-seller"),
     instant: p?.instant ?? true, preorder: p?.preorder ?? true, giftCard: p?.giftCard !== false, protectionBag: p?.protectionBag !== false,
@@ -43,6 +43,23 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const set = (patch: Partial<Form>) => setF((x) => ({ ...x, ...patch }));
+  const [cats, setCats] = useState(allCategories.map((c) => ({ slug: c.slug, name: c.name })));
+  // Include categories added in the admin but not published yet, and hide removed ones.
+  useEffect(() => {
+    (async () => {
+      const sb = await loadSupabase();
+      const { data } = await sb!.from("content").select("key,data,deleted").eq("kind", "collection");
+      setCats((cur) => {
+        let list = [...cur];
+        for (const r of (data ?? []) as { key: string; data: { name?: string }; deleted: boolean }[]) {
+          const s = r.key.slice(11);
+          if (r.deleted) list = list.filter((c) => c.slug !== s);
+          else if (r.data?.name) list = list.some((c) => c.slug === s) ? list.map((c) => (c.slug === s ? { ...c, name: r.data.name! } : c)) : [...list, { slug: s, name: r.data.name }];
+        }
+        return list;
+      });
+    })();
+  }, []);
 
   // New product: next free code, counting products saved but not published yet.
   useEffect(() => {
@@ -95,7 +112,7 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
     setBusy(true); setMsg(null);
     const sb = await loadSupabase();
     const data = {
-      name: f.name.trim(), nameZh: f.nameZh.trim() || null, sku: base?.sku ?? f.sku, badge: f.badge.trim() || null, price: Number(f.price),
+      name: f.name.trim(), nameZh: f.nameZh.trim() || null, sku: base?.sku ?? f.sku, badge: (f.badge === "auto" ? (f.bestSeller ? "Top Seller" : isNew ? "New" : !f.instant ? "Pre-order" : "") : f.badge.trim()) || null, price: Number(f.price),
       categories: [...(f.bestSeller ? ["best-seller"] : []), ...f.categories], instant: f.instant, preorder: f.preorder, giftCard: f.giftCard, protectionBag: f.protectionBag,
       short: f.short, description: f.description, design: f.design, durability: f.durability, occasions: f.occasions, size: f.size || null,
       care: f.care.filter(Boolean), includes: f.includes.filter(Boolean), tags: f.tags.split(",").map((x) => x.trim()).filter(Boolean), images: f.images,
@@ -190,9 +207,9 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
         <aside className="space-y-4 lg:sticky lg:top-32">
           <div className={box}>
             <h3 className="font-semibold">Price and stock</h3>
-            <label className="block"><span className="label">Price (RM) <Req /></span><input className="input" inputMode="decimal" value={f.price} onChange={(e) => set({ price: e.target.value })} /></label>
-            <label className="block"><span className="label">Before price (RM)</span><input className="input" inputMode="decimal" placeholder="No sale" value={f.compareAt} onChange={(e) => set({ compareAt: e.target.value })} /></label>
-            <label className="block"><span className="label">Stock</span><input className="input" inputMode="numeric" placeholder="Made to order" value={f.stock} onChange={(e) => set({ stock: e.target.value })} /></label>
+            <NumberField label="Price (RM)" required value={f.price} step={1} onChange={(v) => set({ price: v })} />
+            <NumberField label="Before price (RM)" optional value={f.compareAt} step={1} placeholder="No sale" onChange={(v) => set({ compareAt: v })} hint="Shown crossed out. Leave empty for no sale." />
+            <NumberField label="Stock" optional value={f.stock} step={1} placeholder="Made to order" onChange={(v) => set({ stock: v })} hint="Leave empty for “Made to order”." />
             <div><span className="label">Product code</span><div className="input bg-cream text-muted cursor-not-allowed" aria-readonly>{f.sku}</div><span className="mt-1 block text-xs text-muted">Made automatically and can't be changed.</span></div>
           </div>
 
@@ -201,13 +218,13 @@ export default function ProductEditor({ slug, onClose }: { slug: string; onClose
             {([["bestSeller", "Best seller"], ["instant", "Same-day delivery"], ["preorder", "Pre-order"], ["giftCard", "Gift card option"], ["protectionBag", "Protection bag option"]] as const).map(([k, label]) => (
               <div key={k} className="flex items-center justify-between"><span className="text-sm">{label}</span><Toggle on={f[k]} onChange={(v) => set({ [k]: v } as Partial<Form>)} label={label} /></div>
             ))}
-            <label className="block pt-1"><span className="label">Badge</span><input className="input" placeholder="e.g. Top Seller" value={f.badge} onChange={(e) => set({ badge: e.target.value })} /></label>
+            <div className="pt-1"><BadgeField value={f.badge} onChange={(v) => set({ badge: v })} /></div>
           </div>
 
           <div className={box}>
             <h3 className="font-semibold">Categories</h3>
             <div className="flex flex-wrap gap-1.5">
-              {allCategories.filter((c) => c.slug !== "best-seller").map((c) => {
+              {cats.filter((c) => c.slug !== "best-seller").map((c) => {
                 const on = f.categories.includes(c.slug);
                 return <button key={c.slug} type="button" onClick={() => set({ categories: on ? f.categories.filter((x) => x !== c.slug) : [...f.categories, c.slug] })}
                   className={`px-2.5 py-1 rounded-full text-xs border ${on ? "bg-brand text-white border-brand" : "bg-white border-blush-2 hover:bg-blush"}`}>{c.name}</button>;

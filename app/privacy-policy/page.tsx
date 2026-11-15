@@ -11,7 +11,7 @@ export default function PrivacyPage() {
     <PageShell title={c.h1} path="/privacy-policy" introHtml={c.intro}>
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-8 lg:gap-10 items-start">
         <article className="prose-location bg-white rounded-3xl border border-blush-2/70 px-5 py-8 sm:px-10 sm:py-12" dangerouslySetInnerHTML={{ __html: c.html! }} />
-        <PageSidebar path="/privacy-policy" image="holdingBouquet" />
+        <PageSidebar path="/privacy-policy" image="holdingBouquet" src={c.image} alt={c.imageAlt} />
       </div>
     </PageShell>
   );

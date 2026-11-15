@@ -27,7 +27,7 @@ export default function FaqPage() {
             </section>
           ))}
         </div>
-        <PageSidebar path="/faq" />
+        <PageSidebar path="/faq" src={c.image} alt={c.imageAlt} />
         </div>
       </PageShell>
       <WaCta title="Still have a question?" />

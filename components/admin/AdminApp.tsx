@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText } from "lucide-react";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { LayoutDashboard, Package, Star, Search, Users, Mail, Rocket, ShieldCheck, Loader2, FileText, PenSquare, Tags, ExternalLink, Menu, X, LogOut } from "lucide-react";
+import { useAuth, displayName } from "@/components/auth/AuthProvider";
 import { loadSupabase } from "@/lib/supabase-config";
+import Dashboard from "./Dashboard";
 import ProductsTab from "./ProductsTab";
 import PagesTab from "./PagesTab";
 import ReviewsTab from "./ReviewsTab";
@@ -11,21 +12,26 @@ import SeoTab from "./SeoTab";
 import CustomersTab from "./CustomersTab";
 import MessagesTab from "./MessagesTab";
 
-const tabs = [
-  { id: "products", label: "Products", icon: Package },
-  { id: "pages", label: "Pages & Blog", icon: FileText },
-  { id: "reviews", label: "Reviews", icon: Star },
-  { id: "seo", label: "SEO", icon: Search },
-  { id: "customers", label: "Customers", icon: Users },
-  { id: "messages", label: "Messages", icon: Mail },
+const nav = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, help: "Your shop at a glance." },
+  { id: "products", label: "Products", icon: Package, help: "Edit prices, stock and product pages, or add a new product." },
+  { id: "categories", label: "Categories", icon: Tags, help: "Add, rename or remove product categories and edit their pages." },
+  { id: "blog", label: "Blog", icon: PenSquare, help: "Write, schedule and edit blog posts." },
+  { id: "pages", label: "Pages", icon: FileText, help: "Edit the homepage, About, FAQ, Terms, Privacy and city pages." },
+  { id: "reviews", label: "Reviews", icon: Star, help: "Add, edit, hide or delete reviews. Changes are live straight away." },
+  { id: "seo", label: "SEO", icon: Search, help: "Meta title and description for any page, plus sitemap and Google settings." },
+  { id: "customers", label: "Customers", icon: Users, help: "People with an account on your website." },
+  { id: "messages", label: "Messages", icon: Mail, help: "Messages sent through the contact forms." },
 ] as const;
-type TabId = (typeof tabs)[number]["id"];
+type TabId = (typeof nav)[number]["id"];
 
-/** Private admin panel. Only accounts listed in the Supabase `admins` table can use it. */
+/** Private admin panel. Only accounts in the Supabase `admins` table can use it. */
 export default function AdminApp() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const [allowed, setAllowed] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<TabId>("products");
+  const [tab, setTab] = useState<TabId>("dashboard");
+  const [action, setAction] = useState("");
+  const [menu, setMenu] = useState(false);
   const [pub, setPub] = useState<{ state: "idle" | "busy" | "ok" | "err"; msg?: string }>({ state: "idle" });
 
   useEffect(() => {
@@ -38,6 +44,8 @@ export default function AdminApp() {
     })();
   }, [user, loading]);
 
+  const go = (t: string, a = "") => { setTab(t as TabId); setAction(a); setMenu(false); window.scrollTo(0, 0); };
+
   const publish = async () => {
     setPub({ state: "busy" });
     const sb = await loadSupabase();
@@ -45,6 +53,7 @@ export default function AdminApp() {
     const r = await fetch("/api/admin/publish", { method: "POST", headers: { Authorization: `Bearer ${token}` } });
     const j = await r.json().catch(() => ({}));
     setPub(r.ok ? { state: "ok", msg: "Publishing started. Your changes will be live in about 2 to 3 minutes." } : { state: "err", msg: j.error || "Could not publish." });
+    setTimeout(() => setPub((p) => (p.state === "ok" ? { state: "idle" } : p)), 12000);
   };
 
   if (loading || allowed === null)
@@ -60,44 +69,70 @@ export default function AdminApp() {
       </div>
     );
 
+  const cur = nav.find((n) => n.id === tab)!;
   return (
-    <div className="container-x py-8 md:py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="eyebrow">BikaFlora</div>
-          <h1 className="text-3xl md:text-4xl font-semibold">Admin panel</h1>
+    // Full-screen app on top of the website (no shop header/footer).
+    <div className="fixed inset-0 z-[200] flex bg-[#f6f5f2] text-ink">
+      {/* Sidebar */}
+      <aside className={`${menu ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:static z-20 inset-y-0 left-0 w-64 shrink-0 bg-gradient-to-b from-[#1f2a44] to-[#141c30] text-white flex flex-col transition-transform`}>
+        <div className="px-5 py-5 border-b border-white/10 flex items-center justify-between">
+          <div><div className="font-serif text-2xl">Bika<span className="text-gold">Flora</span></div><div className="text-[11px] tracking-[0.25em] text-white/50 uppercase">Admin</div></div>
+          <button className="lg:hidden p-1" onClick={() => setMenu(false)} aria-label="Close menu"><X className="w-5 h-5" /></button>
         </div>
-        <div className="text-right">
-          <button onClick={publish} disabled={pub.state === "busy"} className="btn btn-primary disabled:opacity-60">
-            {pub.state === "busy" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />} Publish changes
-          </button>
-          <p className="mt-1 text-xs text-muted max-w-xs">Product and SEO edits go live after you publish. Reviews and messages update instantly.</p>
+        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+          {nav.map(({ id, label, icon: Icon }) => (
+            <button key={id} onClick={() => go(id)}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[15px] transition ${tab === id ? "bg-white text-[#1f2a44] font-semibold shadow" : "text-white/75 hover:bg-white/10 hover:text-white"}`}>
+              <Icon className="w-[18px] h-[18px]" /> {label}
+            </button>
+          ))}
+        </nav>
+        <div className="p-3 border-t border-white/10 space-y-1 text-sm">
+          <a href="/" target="_blank" rel="noopener" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-white/75 hover:bg-white/10"><ExternalLink className="w-4 h-4" /> View website</a>
+          <button onClick={() => signOut()} className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-white/75 hover:bg-white/10"><LogOut className="w-4 h-4" /> Log out</button>
         </div>
-      </div>
-      {pub.msg && <div className={`mt-4 rounded-2xl px-4 py-3 text-sm ${pub.state === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{pub.msg}</div>}
+      </aside>
+      {menu && <div className="fixed inset-0 z-10 bg-black/40 lg:hidden" onClick={() => setMenu(false)} />}
 
-      <ol className="mt-5 grid sm:grid-cols-3 gap-2 text-sm">
-        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">1. Edit</b> · open a product, page or post and change what you need.</li>
-        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">2. Save</b> · press Save on that item. Nothing is live yet.</li>
-        <li className="rounded-2xl bg-white border border-blush-2/70 px-4 py-3"><b className="text-brand">3. Publish</b> · press “Publish changes” once. Live in 2–3 minutes.</li>
-      </ol>
+      {/* Main */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="h-16 shrink-0 bg-white border-b border-[#ebe7df] flex items-center gap-3 px-4 sm:px-6">
+          <button className="lg:hidden p-1.5 rounded-lg hover:bg-blush" onClick={() => setMenu(true)} aria-label="Open menu"><Menu className="w-5 h-5" /></button>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-semibold leading-tight truncate">{cur.label}</h1>
+            <p className="hidden sm:block text-xs text-muted truncate">{cur.help}</p>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="hidden md:block text-sm text-muted">Hi, {displayName(user)}</span>
+            <button onClick={publish} disabled={pub.state === "busy"} className="btn btn-primary !py-2 !px-4 text-sm disabled:opacity-60">
+              {pub.state === "busy" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />} <span className="hidden sm:inline">Publish changes</span><span className="sm:hidden">Publish</span>
+            </button>
+          </div>
+        </header>
+        {pub.msg && <div className={`px-6 py-2.5 text-sm ${pub.state === "ok" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-700"}`}>{pub.msg}</div>}
 
-      <nav className="mt-6 flex flex-wrap gap-2 border-b border-blush-2 pb-3">
-        {tabs.map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => setTab(id)}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition ${tab === id ? "bg-brand text-white" : "bg-white border border-blush-2 hover:bg-blush"}`}>
-            <Icon className="w-4 h-4" /> {label}
-          </button>
-        ))}
-      </nav>
-
-      <div className="mt-6">
-        {tab === "products" && <ProductsTab />}
-        {tab === "pages" && <PagesTab />}
-        {tab === "reviews" && <ReviewsTab />}
-        {tab === "seo" && <SeoTab />}
-        {tab === "customers" && <CustomersTab />}
-        {tab === "messages" && <MessagesTab />}
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-[1200px] mx-auto p-4 sm:p-6 lg:p-8">
+            {tab === "dashboard" && (
+              <>
+                <ol className="mb-6 grid sm:grid-cols-3 gap-3 text-sm">
+                  {[["1", "Edit", "Open a product, page or post and change what you need."], ["2", "Save", "Press Save on that item. Nothing is live yet."], ["3", "Publish", "Press “Publish changes” once. Live in 2–3 minutes."]].map(([n, t, d]) => (
+                    <li key={n} className="flex gap-3 rounded-2xl bg-white border border-[#ebe7df] p-4"><span className="w-8 h-8 rounded-full bg-brand text-white grid place-items-center font-semibold shrink-0">{n}</span><span><b className="text-ink">{t}</b><br /><span className="text-muted">{d}</span></span></li>
+                  ))}
+                </ol>
+                <Dashboard go={go} />
+              </>
+            )}
+            {tab === "products" && <ProductsTab key={action} startNew={action === "new"} />}
+            {tab === "categories" && <PagesTab kinds={["collection"]} />}
+            {tab === "blog" && <PagesTab key={action} kinds={["post"]} startNew={action === "new"} />}
+            {tab === "pages" && <PagesTab kinds={["page", "location"]} />}
+            {tab === "reviews" && <ReviewsTab />}
+            {tab === "seo" && <SeoTab />}
+            {tab === "customers" && <CustomersTab />}
+            {tab === "messages" && <MessagesTab />}
+          </div>
+        </main>
       </div>
     </div>
   );
