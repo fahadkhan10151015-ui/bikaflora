@@ -43,8 +43,8 @@ export default function Home() {
   const popular = featuredProducts().slice(0, 4);
   return (
     <>
-      <link rel="preload" as="image" href="/video/hero-vertical-poster-v2.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
-      <link rel="preload" as="image" href="/video/hero-making-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/video/hero-v3-vertical-poster.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/video/hero-v3-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
       <HeroSlider />
 
@@ -67,9 +67,8 @@ export default function Home() {
           items.forEach((p) => used.add(p.slug));
           return { items, total: all.length };
         };
-        // Only 3 product rows on the homepage (Best Sellers + these 2) to keep the page small and fast on phones.
-        // Every other category is one tap away in "Shop by category" above and in the menu.
-        return ["below-100", "chocolate-flower-bouquets"].map((s) => [s]).map(([slug, eyebrow, title]) => {
+        // Best Sellers + these category rows. They sit inside .home-lazy, so phones only draw them when scrolled near.
+        return ["graduation-bouquets", "premium-bouquets", "below-100", "anniversary-valentine-bouquets", "chocolate-flower-bouquets", "crochet-bouquets"].map((s) => [s]).map(([slug, eyebrow, title]) => {
           const c = getCategory(slug);
           if (!c) return null;
           const { items, total } = pick(slug);

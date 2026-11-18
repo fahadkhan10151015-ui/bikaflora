@@ -11,7 +11,7 @@ export type SitemapEntry = { url: string; changeFrequency: "daily" | "weekly" | 
 export type SitemapGroup = { file: string; title: string; entries: SitemapEntry[] };
 
 /** When the site content was last rebuilt by hand (pages not edited in the admin panel keep this date). */
-const SITE_UPDATED = "2026-11-15";
+const SITE_UPDATED = "2026-11-19";
 const lastmods = lastmodJson as Record<string, string>;
 const lastmodFor = (path: string, fallback = SITE_UPDATED) => (lastmods[path] && lastmods[path] > fallback ? lastmods[path] : fallback);
 const s = (path: string, priority: number, changeFrequency: SitemapEntry["changeFrequency"] = "weekly", date?: string): SitemapEntry => ({ url: absoluteUrl(path), priority, changeFrequency, path, lastmod: lastmodFor(path, date) } as SitemapEntry & { path: string });

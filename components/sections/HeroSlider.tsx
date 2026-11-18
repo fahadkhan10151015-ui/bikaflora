@@ -73,7 +73,7 @@ heroEdits?.slides?.forEach((e, i) => {
 const DURATION = 4000;
 
 /** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
-const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~15.6s)
+const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~10s)
 const videoSlide: { eyebrow: string; title: [string, string]; text: string } = { eyebrow: "Online florist in KL & Selangor", title: ["Soap flower bouquets", "that last for months"] as [string, string], text: "Handmade by our florists, then delivered the same day across Kuala Lumpur and Selangor. No cut-off time, and you see a photo before it goes out." };
 if (heroEdits?.video?.title1) videoSlide.title = [heroEdits.video.title1, heroEdits.video.title2 ?? ""];
 if (heroEdits?.video?.eyebrow) videoSlide.eyebrow = heroEdits.video.eyebrow;
@@ -98,9 +98,9 @@ export default function HeroSlider() {
     const pick = () => {
       const w = window.innerWidth, portrait = window.innerHeight > w;
       setSrc(w < 768 || (portrait && w < 1024)
-        ? { v: "/video/hero-v2-vertical.mp4", p: "/video/hero-making-vertical-poster.webp" }
-        : w < 1280 ? { v: "/video/hero-v2-960.mp4", p: "/video/hero-making-poster.webp" }
-        : { v: "/video/hero-v2-1280.mp4", p: "/video/hero-making-poster.webp" });
+        ? { v: "/video/hero-v3-vertical.mp4", p: "/video/hero-v3-vertical-poster.webp" }
+        : w < 1280 ? { v: "/video/hero-v3-960.mp4", p: "/video/hero-v3-poster.webp" }
+        : { v: "/video/hero-v3-1280.mp4", p: "/video/hero-v3-poster.webp" });
     };
     // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
     // The still poster image shows in the meantime.
@@ -172,11 +172,11 @@ export default function HeroSlider() {
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
         {/* Still frame shown instantly (only the right size is downloaded); the video takes over once loaded. */}
         <picture>
-          <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-making-poster.avif" />
-          <source media="(min-width: 768px)" srcSet="/video/hero-making-poster.webp" width={1280} height={720} />
-          <source type="image/avif" srcSet="/video/hero-vertical-poster-v2.avif" width={540} height={960} />
+          <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-v3-poster.avif" />
+          <source media="(min-width: 768px)" srcSet="/video/hero-v3-poster.webp" width={1280} height={720} />
+          <source type="image/avif" srcSet="/video/hero-v3-vertical-poster.avif" width={540} height={960} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/video/hero-making-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
+          <img src="/video/hero-v3-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         </picture>
         {src && (
@@ -199,7 +199,7 @@ export default function HeroSlider() {
           <Sparkles className="w-4 h-4 text-gold" /> Same-day flower delivery in KL & Selangor
         </div>
 
-        <div key={active} className="hero-text-in" aria-live="polite">
+        <div key={active} className={`hero-text-in ${isVideo ? "[text-shadow:0_2px_14px_rgba(16,23,42,.55)]" : ""}`} aria-live="polite">
           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{s.eyebrow}</p>
           <h1 className="mt-3 font-serif text-[2.6rem] sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
             {s.title[0]} <span className="block italic text-petal">{s.title[1]}</span>
