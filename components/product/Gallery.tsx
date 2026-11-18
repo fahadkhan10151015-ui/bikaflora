@@ -2,6 +2,7 @@
 import FillImage from "@/components/ui/FillImage";
 import { getImageProps } from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, Palette, X, ZoomIn } from "lucide-react";
 import { useVariant } from "./VariantProvider";
 
@@ -111,8 +112,9 @@ export default function Gallery({ alt, alts }: { alt: string; alts?: Record<stri
           ))}
         </div>
       )}
-      {zoom && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" role="dialog" aria-label="Zoomed photo"
+      {/* Rendered on <body> so it covers the whole page (the photo column is sticky, which traps z-index). */}
+      {zoom && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[1000] bg-black/95 flex items-center justify-center" role="dialog" aria-label="Zoomed photo"
           onClick={() => setZoom(false)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img key={sharp ? "hi" : "low"} src={sharp ? src : low.src} srcSet={sharp ? undefined : low.srcSet} sizes={sharp ? undefined : low.sizes} alt={alts?.[src] ?? alt} draggable={false} decoding="sync"
@@ -132,7 +134,8 @@ export default function Gallery({ alt, alts }: { alt: string; alts?: Record<stri
             </>
           )}
           <p className="absolute bottom-4 inset-x-0 text-center text-white/70 text-sm">Tap the photo to zoom in · tap outside to close</p>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
