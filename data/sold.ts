@@ -35,6 +35,15 @@ const base: Record<string, number> = {
   "52-roses-heart": 16,
   "99-roses-heart": 15,
   "bouquet-protection-bag": 37,
+  // New arrivals (19 Nov 2026)
+  "blue-serenity": 35,
+  "red-black-imperial": 28,
+  "royal-pearl": 24,
+  "golden-dreams-graduation-bouquet": 40,
+  "blue-dreams-graduation-bouquet": 32,
+  "a-new-beginning-graduation-bouquet": 20,
+  "blue-white-25-roses-premium": 26,
+  "graduation-dream-premium": 38,
 };
 
 export const sold: Record<string, number> = { ...base };
