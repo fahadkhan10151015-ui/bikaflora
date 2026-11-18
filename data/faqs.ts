@@ -30,7 +30,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     "q": "How much is the delivery fee?",
-    "a": "It depends on the delivery address. Send us the address on WhatsApp, and we'll confirm the exact total before you pay."
+    "a": "Delivery is RM10 to RM30, depending on your area. Send us the address on WhatsApp, and we'll confirm the exact fee before you pay."
   },
   {
     "q": "Can I choose a delivery date in the future?",

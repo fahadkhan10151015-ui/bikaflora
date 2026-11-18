@@ -5,7 +5,7 @@ export default function DeliveryFeeNote({ className = "", text }: { className?: 
   return (
     <p className={`flex items-start gap-2 text-sm text-muted ${className}`}>
       <Truck className="w-4 h-4 mt-0.5 shrink-0 text-brand" aria-hidden="true" />
-      <span>{text ?? "Price is for the bouquet only. The delivery fee depends on your area, and we tell you the exact fee on WhatsApp before you pay."}</span>
+      <span>{text ?? "Price is for the bouquet only. Delivery is RM10 to RM30 depending on your area, and we tell you the exact fee on WhatsApp before you pay."}</span>
     </p>
   );
 }

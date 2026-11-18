@@ -98,7 +98,7 @@ export default function OrderListDrawer() {
                 <span className="text-muted">Subtotal ({list.count} item{list.count > 1 ? "s" : ""})</span>
                 <span className="text-xl font-semibold text-brand">{formatPrice(list.total)}</span>
               </div>
-              <DeliveryFeeNote className="!text-xs rounded-xl bg-blush/70 px-3 py-2" text="Delivery fee is not included yet. It depends on your area, and we tell you the exact fee on WhatsApp before you pay." />
+              <DeliveryFeeNote className="!text-xs rounded-xl bg-blush/70 px-3 py-2" text="Delivery fee is not included yet. It is RM10 to RM30 depending on your area, and we tell you the exact fee on WhatsApp before you pay." />
               <a href={waLink(message)} target="_blank" rel="noopener" className="btn btn-wa w-full !py-4 text-base shadow-lg shadow-wa/25">
                 <WhatsAppIcon className="w-6 h-6" /> Send order on WhatsApp
               </a>

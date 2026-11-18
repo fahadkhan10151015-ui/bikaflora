@@ -1,3 +1,4 @@
+import { siteReviews } from "@/lib/reviews-data";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Zap, CalendarClock, Camera, ShieldCheck, Truck } from "lucide-react";
@@ -49,6 +50,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const cat = getCategory(p.categories[0]);
   const seo = productSeo[p.slug];
   const prices = [p.price];
+  const reviews = siteReviews.filter((r) => r.product_slug === p.slug && r.rating >= 1 && r.rating <= 5 && r.name && r.comment);
 
   const schema = {
     "@context": "https://schema.org",
@@ -59,6 +61,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     description: seo?.short ?? p.description,
     brand: { "@type": "Brand", name: site.name },
     ...(cat ? { category: cat.name } : {}),
+    // Star rating + reviews, only when this bouquet has real customer reviews (never made up).
+    ...(reviews.length > 0 && {
+      aggregateRating: { "@type": "AggregateRating", ratingValue: (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1), reviewCount: reviews.length, bestRating: 5, worstRating: 1 },
+      review: reviews.slice(0, 10).map((r) => ({ "@type": "Review", author: { "@type": "Person", name: r.name }, datePublished: r.created_at.slice(0, 10), reviewBody: r.comment, reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 } })),
+    }),
     offers: {
       "@type": "Offer",
       priceCurrency: "MYR",
@@ -68,9 +75,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       url: absoluteUrl(`/product/${p.slug}`),
       areaServed: ["Kuala Lumpur", "Selangor"],
       seller: { "@id": absoluteUrl("/#business") },
+      validFrom: "2026-11-01",
       priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
       shippingDetails: {
         "@type": "OfferShippingDetails",
+        // Delivery fee range across KL & Selangor (exact fee confirmed on WhatsApp, also shown on the page).
+        shippingRate: { "@type": "MonetaryAmount", minValue: 10, maxValue: 30, currency: "MYR" },
         shippingDestination: [{ "@type": "DefinedRegion", addressCountry: "MY", addressRegion: "Kuala Lumpur" }, { "@type": "DefinedRegion", addressCountry: "MY", addressRegion: "Selangor" }],
         deliveryTime: {
           "@type": "ShippingDeliveryTime",
