@@ -43,8 +43,8 @@ export default function Home() {
   const popular = featuredProducts().slice(0, 4);
   return (
     <>
-      <link rel="preload" as="image" href="/video/hero-v3-vertical-poster.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
-      <link rel="preload" as="image" href="/video/hero-v3-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/video/hero-v4-vertical-poster.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/video/hero-v4-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
       <HeroSlider />
 

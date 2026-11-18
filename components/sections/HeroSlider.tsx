@@ -73,7 +73,8 @@ heroEdits?.slides?.forEach((e, i) => {
 const DURATION = 4000;
 
 /** Slide 1: a florist making a bouquet from start to finish (Pexels clips 4621364-4621356, free licence, edited and stored on our site). Plays once, then the photo slides follow. */
-const VIDEO_MS = 26000; // safety limit only; the slide moves on when the video ends (~10s)
+const VIDEO_MS = 16000; // safety limit only; the slide moves on when the video ends (10s)
+const VIDEO_LEN = 10000; // progress bar length for the video slide
 const videoSlide: { eyebrow: string; title: [string, string]; text: string } = { eyebrow: "Online florist in KL & Selangor", title: ["Soap flower bouquets", "that last for months"] as [string, string], text: "Handmade by our florists, then delivered the same day across Kuala Lumpur and Selangor. No cut-off time, and you see a photo before it goes out." };
 if (heroEdits?.video?.title1) videoSlide.title = [heroEdits.video.title1, heroEdits.video.title2 ?? ""];
 if (heroEdits?.video?.eyebrow) videoSlide.eyebrow = heroEdits.video.eyebrow;
@@ -92,15 +93,15 @@ export default function HeroSlider() {
   const [ready, setReady] = useState(false);
   const [changed, setChanged] = useState(false);
   useEffect(() => { if (active !== 0) { setReady(true); setChanged(true); } }, [active]);
-  // Phones (portrait) get a small vertical edit (1.4 MB); tablets 960p (1.1 MB); desktop 1280p (1.7 MB). No sound track.
+  // Phones (portrait) get a sharp vertical edit (720x1280, 2 MB); laptops 1280p (2.1 MB); big / retina screens 1080p (3.2 MB). No sound track.
   const [src, setSrc] = useState<{ v: string; p: string } | null>(null);
   useEffect(() => {
     const pick = () => {
-      const w = window.innerWidth, portrait = window.innerHeight > w;
+      const w = window.innerWidth, portrait = window.innerHeight > w, px = w * Math.min(window.devicePixelRatio || 1, 2);
       setSrc(w < 768 || (portrait && w < 1024)
-        ? { v: "/video/hero-v3-vertical.mp4", p: "/video/hero-v3-vertical-poster.webp" }
-        : w < 1280 ? { v: "/video/hero-v3-960.mp4", p: "/video/hero-v3-poster.webp" }
-        : { v: "/video/hero-v3-1280.mp4", p: "/video/hero-v3-poster.webp" });
+        ? { v: "/video/hero-v4-vertical.mp4", p: "/video/hero-v4-vertical-poster.webp" }
+        : px > 1400 ? { v: "/video/hero-v4-1920.mp4", p: "/video/hero-v4-poster.webp" }
+        : { v: "/video/hero-v4-1280.mp4", p: "/video/hero-v4-poster.webp" });
     };
     // Start the video only after the page (photos, text) has loaded, so it doesn't slow them down.
     // The still poster image shows in the meantime.
@@ -172,21 +173,21 @@ export default function HeroSlider() {
       <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
         {/* Still frame shown instantly (only the right size is downloaded); the video takes over once loaded. */}
         <picture>
-          <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-v3-poster.avif" />
-          <source media="(min-width: 768px)" srcSet="/video/hero-v3-poster.webp" width={1280} height={720} />
-          <source type="image/avif" srcSet="/video/hero-v3-vertical-poster.avif" width={540} height={960} />
+          <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-v4-poster.avif" />
+          <source media="(min-width: 768px)" srcSet="/video/hero-v4-poster.webp" width={1600} height={900} />
+          <source type="image/avif" srcSet="/video/hero-v4-vertical-poster.avif" width={540} height={960} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/video/hero-v3-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
+          <img src="/video/hero-v4-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         </picture>
         {src && (
-          <video key={src.v} ref={video} src={src.v} muted playsInline autoPlay preload="metadata" aria-hidden="true" disablePictureInPicture onEnded={() => setActive(1)}
+          <video key={src.v} ref={video} src={src.v} muted playsInline autoPlay preload="auto" aria-hidden="true" disablePictureInPicture onEnded={() => setActive(1)}
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         )}
       </div>
-      <div className={`absolute inset-0 bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0" : ""}`} />
-      <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "bg-[linear-gradient(to_top,rgba(16,23,42,.95)_0%,rgba(16,23,42,.75)_40%,rgba(16,23,42,0)_65%)] md:bg-gradient-to-t md:from-deep/80 md:via-transparent md:to-deep/30" : "bg-gradient-to-t from-deep/80 via-transparent to-deep/30"}`} />
-      <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />
+      <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "max-lg:opacity-0 bg-[linear-gradient(to_right,rgba(16,23,42,.82)_0%,rgba(16,23,42,.55)_32%,rgba(16,23,42,0)_58%)]" : "bg-gradient-to-r from-deep/95 via-deep/65 to-deep/15"}`} />
+      <div className={`absolute inset-0 transition-opacity duration-700 ${isVideo ? "bg-[linear-gradient(to_top,rgba(16,23,42,.9)_0%,rgba(16,23,42,.6)_34%,rgba(16,23,42,0)_58%)] lg:bg-none" : "bg-gradient-to-t from-deep/80 via-transparent to-deep/30"}`} />
+      {!isVideo && <div className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-petal/10 blur-3xl" />}
       {!isVideo && <Petals />}
 
       {/* arrows */}
@@ -195,11 +196,11 @@ export default function HeroSlider() {
 
       <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
       <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
-        <div className="inline-flex items-center gap-2 glass !bg-white/10 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
+        <div className="inline-flex items-center gap-2 bg-deep/45 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
           <Sparkles className="w-4 h-4 text-gold" /> Same-day flower delivery in KL & Selangor
         </div>
 
-        <div key={active} className={`hero-text-in ${isVideo ? "[text-shadow:0_2px_14px_rgba(16,23,42,.55)]" : ""}`} aria-live="polite">
+        <div key={active} className={`hero-text-in ${isVideo ? "[text-shadow:0_2px_16px_rgba(16,23,42,.75)]" : ""}`} aria-live="polite">
           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{s.eyebrow}</p>
           <h1 className="mt-3 font-serif text-[2.6rem] sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
             {s.title[0]} <span className="block italic text-petal">{s.title[1]}</span>
@@ -219,7 +220,7 @@ export default function HeroSlider() {
           {["How we make a bouquet", ...slides.map((sl) => sl.alt)].map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={`Show ${label}`} onClick={() => setActive(i)}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
-              {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? 15600 : DURATION}ms` }} />}
+              {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? VIDEO_LEN : DURATION}ms` }} />}
             </button>
           ))}
           </div>

@@ -30,7 +30,7 @@ export default function Shop() {
       <CategoryCircles compact />
       <div className="container-x mt-10">
         <DeliveryFeeNote className="mb-5" />
-        <ShopGrid items={products.map(toCard)} showChips={false} />
+        <ShopGrid items={[...products].sort((a, b) => Number(b.badge === "New Arrival") - Number(a.badge === "New Arrival")).map(toCard)} showChips={false} />
         <CollectionGuide name="Shop" html={seo.html} faqTitle={seo.faqTitle} faqs={seo.faqs} />
       </div>
       <WaCta />
