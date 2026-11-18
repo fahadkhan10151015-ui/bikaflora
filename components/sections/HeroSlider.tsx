@@ -2,7 +2,7 @@
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import Petals from "./Petals";
 import { siteImages } from "@/lib/images";
@@ -92,13 +92,33 @@ export default function HeroSlider() {
   // has loaded — the video slide shows first, so the first load stays light and fast.
   const [ready, setReady] = useState(false);
   const [changed, setChanged] = useState(false);
-  useEffect(() => { if (active !== 0) { setReady(true); setChanged(true); } }, [active]);
+  // Phones skip the video: they start on the first photo slide (red rose heart), text on top, bouquet below.
+  const [mobile, setMobile] = useState(false);
+  const auto = useRef(false);
+  useEffect(() => {
+    const m = window.matchMedia("(max-width: 767px)");
+    const on = () => {
+      setMobile(m.matches);
+      if (m.matches) { auto.current = true; setReady(true); setActive((a) => (a === 0 ? 1 : a)); }
+    };
+    on();
+    m.addEventListener("change", on);
+    return () => m.removeEventListener("change", on);
+  }, []);
+  useEffect(() => {
+    if (active === 0) return;
+    setReady(true);
+    // The automatic switch on phones looks identical to the first paint, so no entry animation for it.
+    if (auto.current) { auto.current = false; return; }
+    setChanged(true);
+  }, [active]);
   // Phones (portrait) get a sharp vertical edit (720x1280, 2 MB); laptops 1280p (2.1 MB); big / retina screens 1080p (3.2 MB). No sound track.
   const [src, setSrc] = useState<{ v: string; p: string } | null>(null);
   useEffect(() => {
     const pick = () => {
       const w = window.innerWidth, portrait = window.innerHeight > w, px = w * Math.min(window.devicePixelRatio || 1, 2);
-      setSrc(w < 768 || (portrait && w < 1024)
+      if (w < 768) { setSrc(null); return; }
+      setSrc(portrait && w < 1024
         ? { v: "/video/hero-v4-vertical.mp4", p: "/video/hero-v4-vertical-poster.webp" }
         : px > 1400 ? { v: "/video/hero-v4-1920.mp4", p: "/video/hero-v4-poster.webp" }
         : { v: "/video/hero-v4-1280.mp4", p: "/video/hero-v4-poster.webp" });
@@ -146,11 +166,15 @@ export default function HeroSlider() {
 
   useEffect(() => {
     if (paused) return;
-    const t = setTimeout(() => setActive((a) => (a + 1) % total), isVideo ? VIDEO_MS : DURATION);
+    const t = setTimeout(() => setActive((a) => { const n = (a + 1) % total; return mobile && n === 0 ? 1 : n; }), isVideo ? VIDEO_MS : DURATION);
     return () => clearTimeout(t);
-  }, [active, paused, isVideo, total]);
+  }, [active, paused, isVideo, total, mobile]);
 
-  const go = (d: number) => setActive((a) => (a + d + total) % total);
+  const go = (d: number) => setActive((a) => {
+    const n = (a + d + total) % total;
+    return mobile && n === 0 ? (d > 0 ? 1 : total - 1) : n;
+  });
+  const first = getImageProps({ src: slides[0].image, alt: slides[0].alt, width: 500, height: 500, quality: 80 }).props;
   const s = isVideo ? videoSlide : slides[active - 1];
 
   return (
@@ -170,14 +194,14 @@ export default function HeroSlider() {
         </div>
       ))}
       {/* slide 1: video */}
-      <div className={`absolute inset-0 transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+      <div className={`absolute inset-0 max-md:hidden transition-opacity duration-[1200ms] ${isVideo ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
         {/* Still frame shown instantly (only the right size is downloaded); the video takes over once loaded. */}
         <picture>
+          <source media="(max-width: 767px)" srcSet="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
           <source media="(min-width: 768px)" type="image/avif" srcSet="/video/hero-v4-poster.avif" />
           <source media="(min-width: 768px)" srcSet="/video/hero-v4-poster.webp" width={1600} height={900} />
-          <source type="image/avif" srcSet="/video/hero-v4-vertical-poster.avif" width={540} height={960} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/video/hero-v4-vertical-poster.webp" alt="" width={540} height={960} fetchPriority="high" decoding="async"
+          <img src="/video/hero-v4-vertical-poster.webp" alt="" width={540} height={960} /* tablets in portrait */ fetchPriority="high" decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_18%]" />
         </picture>
         {src && (
@@ -195,12 +219,12 @@ export default function HeroSlider() {
       <button onClick={() => go(1)} aria-label="Next slide" className="hidden md:grid absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 place-items-center hover:bg-white/20 transition"><ChevronRight className="w-6 h-6" /></button>
 
       <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-      <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
+      <div className="max-w-2xl order-1 text-center lg:text-left">
         <div className="inline-flex items-center gap-2 bg-deep/45 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
           <Sparkles className="w-4 h-4 text-gold" /> Same-day flower delivery in KL & Selangor
         </div>
 
-        <div key={active} className={`hero-text-in ${isVideo ? "[text-shadow:0_2px_16px_rgba(16,23,42,.75)]" : ""}`} aria-live="polite">
+        <div key={active} className={`hero-text-in ${isVideo ? "max-md:hidden [text-shadow:0_2px_16px_rgba(16,23,42,.75)]" : ""}`} aria-live="polite">
           <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{s.eyebrow}</p>
           <h1 className="mt-3 font-serif text-[2.6rem] sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
             {s.title[0]} <span className="block italic text-petal">{s.title[1]}</span>
@@ -208,6 +232,16 @@ export default function HeroSlider() {
           <p className="mt-5 text-lg md:text-xl text-white/85 leading-relaxed max-w-xl mx-auto lg:mx-0">{s.text}</p>
         </div>
 
+        {/* Phones, before the page script runs: the same text the first photo slide shows (no jump when it takes over). */}
+        {isVideo && (
+          <div className="md:hidden" aria-hidden="true">
+            <p className="mt-6 text-sm uppercase tracking-[0.25em] text-gold font-semibold">{slides[0].eyebrow}</p>
+            <p className="mt-3 font-serif text-[2.6rem] sm:text-6xl xl:text-7xl font-semibold leading-[1.05]">
+              {slides[0].title[0]} <span className="block italic text-petal">{slides[0].title[1]}</span>
+            </p>
+            <p className="mt-5 text-lg md:text-xl text-white/85 leading-relaxed max-w-xl mx-auto lg:mx-0">{slides[0].text}</p>
+          </div>
+        )}
         <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
           <Link href="/shop" className="btn bg-white text-brand hover:bg-blush !px-7 !py-4">Shop Bouquets <ArrowRight className="w-4 h-4" /></Link>
           <WhatsAppButton label="Order on WhatsApp" className="btn btn-wa !px-7 !py-4 shadow-xl shadow-wa/30" />
@@ -219,7 +253,7 @@ export default function HeroSlider() {
           <div className="flex items-center gap-2" role="tablist" aria-label="Featured bouquets">
           {["How we make a bouquet", ...slides.map((sl) => sl.alt)].map((label, i) => (
             <button key={label} role="tab" aria-selected={i === active} aria-label={`Show ${label}`} onClick={() => setActive(i)}
-              className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
+              className={`relative h-1.5 rounded-full overflow-hidden transition-all ${i === 0 ? "max-md:hidden " : ""}${i === active ? "w-14 bg-white/25" : "w-6 bg-white/25 hover:bg-white/40"}`}>
               {i === active && <span key={`${active}-${paused}`} className={`absolute inset-y-0 left-0 bg-gold ${paused ? "w-full" : "hero-progress"}`} style={{ animationDuration: `${isVideo ? VIDEO_LEN : DURATION}ms` }} />}
             </button>
           ))}
@@ -227,7 +261,15 @@ export default function HeroSlider() {
           <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
         </div>
       </div>
-      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "opacity-0 pointer-events-none" : "opacity-100"}`}>{ready ? <HeroStage slides={slides} active={isVideo ? -1 : active - 1} /> : <div className="w-full max-w-[560px] aspect-square mx-auto" />}</div>
+      <div className={`order-2 transition-opacity duration-700 ${isVideo ? "md:opacity-0 md:pointer-events-none" : "opacity-100"}`}>
+        {ready ? <HeroStage slides={slides} active={isVideo ? -1 : active - 1} /> : (
+          <div className="relative w-full max-w-[560px] aspect-square mx-auto">
+            {/* Phones: the red rose heart shows straight away, in the same spot the animated stage puts it. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img {...first} alt={slides[0].alt} fetchPriority="high" decoding="async" className="md:hidden absolute inset-[10%] w-[80%] h-[80%] object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)]" />
+          </div>
+        )}
+      </div>
       </div>
     </section>
   );

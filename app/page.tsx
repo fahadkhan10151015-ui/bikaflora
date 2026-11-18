@@ -1,3 +1,4 @@
+import { getImageProps } from "next/image";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import Image from "next/image";
@@ -37,13 +38,16 @@ const reasons = [
   { icon: Truck, title: "KL & Selangor wide", text: "32 delivery areas, instant delivery or pre-order." },
 ];
 
+const heroRose = getImageProps({ src: "/images/hero/red-soap-rose-heart-large.webp", alt: "", width: 500, height: 500, quality: 80 }).props;
+
 export default function Home() {
   // Hero picture hints: React lifts these <link> tags into <head>, so the picture starts downloading straight away
   // (before the inline styles). Plain <link> elements (not preload()) only apply on this page, not on prefetches.
   const popular = featuredProducts().slice(0, 4);
   return (
     <>
-      <link rel="preload" as="image" href="/video/hero-v4-vertical-poster.avif" type="image/avif" media="(max-width: 767px)" fetchPriority="high" />
+      {/* Phones start on the red rose heart photo (no video), so that is the picture to fetch first there. */}
+      <link rel="preload" as="image" imageSrcSet={heroRose.srcSet} href={heroRose.src} media="(max-width: 767px)" fetchPriority="high" />
       <link rel="preload" as="image" href="/video/hero-v4-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
       <HeroSlider />
