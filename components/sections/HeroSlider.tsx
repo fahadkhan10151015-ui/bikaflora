@@ -219,7 +219,7 @@ export default function HeroSlider() {
       <button onClick={() => go(1)} aria-label="Next slide" className="hidden md:grid absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 border border-white/25 place-items-center hover:bg-white/20 transition"><ChevronRight className="w-6 h-6" /></button>
 
       <div className="relative container-x pt-8 pb-14 lg:py-16 grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-      <div className="max-w-2xl order-1 text-center lg:text-left">
+      <div className="max-w-2xl order-2 lg:order-1 text-center lg:text-left">
         <div className="inline-flex items-center gap-2 bg-deep/45 border border-white/25 rounded-full px-4 py-1.5 text-xs font-semibold">
           <Sparkles className="w-4 h-4 text-gold" /> Same-day flower delivery in KL & Selangor
         </div>
@@ -261,7 +261,7 @@ export default function HeroSlider() {
           <button onClick={() => go(1)} aria-label="Next slide" className="md:hidden w-8 h-8 rounded-full bg-white/10 grid place-items-center ml-1"><ChevronRight className="w-4 h-4" /></button>
         </div>
       </div>
-      <div className={`order-2 transition-opacity duration-700 ${isVideo ? "md:opacity-0 md:pointer-events-none" : "opacity-100"}`}>
+      <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "md:opacity-0 md:pointer-events-none" : "opacity-100"}`}>
         {ready ? <HeroStage slides={slides} active={isVideo ? -1 : active - 1} /> : (
           <div className="relative w-full max-w-[560px] aspect-square mx-auto">
             {/* Phones: the red rose heart shows straight away, in the same spot the animated stage puts it. */}
