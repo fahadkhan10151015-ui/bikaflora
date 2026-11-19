@@ -1,4 +1,5 @@
 "use client";
+import { gaEvent } from "./ga";
 /** Logs page views and WhatsApp button clicks (no personal data) so the admin panel can show them. */
 
 const KINDS: [RegExp, string][] = [
@@ -45,7 +46,7 @@ export const STAFF_KEY = "bf-staff";
 export function isStaffDevice() { try { return localStorage.getItem(STAFF_KEY) === "1"; } catch { return false; } }
 export function setStaffDevice(on: boolean) { try { if (on) localStorage.setItem(STAFF_KEY, "1"); else localStorage.removeItem(STAFF_KEY); } catch {} }
 
-function skip() {
+export function skip() {
   return window.location.pathname.startsWith("/admin") || isStaffDevice() || navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent);
 }
 
@@ -73,7 +74,10 @@ export function trackWa(text: string, button?: string) {
     if (skip()) return;
     const page = window.location.pathname;
     const product = (text.match(/\/product\/([a-z0-9-]+)/i)?.[1] ?? page.match(/^\/product\/([a-z0-9-]+)/)?.[1]) || null;
-    send("wa_clicks", { page: page.slice(0, 300), kind: waKind(text), button: button?.trim().replace(/\s+/g, " ").slice(0, 80) || null, product, device: device(), source: visitSource() });
+    const kind = waKind(text), btn = button?.trim().replace(/\s+/g, " ").slice(0, 80) || null;
+    send("wa_clicks", { page: page.slice(0, 300), kind, button: btn, product, device: device(), source: visitSource() });
+    // Google Analytics: every WhatsApp tap / contact form is a lead.
+    gaEvent("generate_lead", { method: kind === "Contact form" ? "Contact form" : "WhatsApp", lead_type: kind, button_text: btn ?? undefined, product: product ?? undefined, page_path: page });
   } catch {}
 }
 
