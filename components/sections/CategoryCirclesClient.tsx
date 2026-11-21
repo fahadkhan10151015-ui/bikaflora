@@ -28,15 +28,15 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
     el.scrollBy({ left: dir * (item + 16), behavior: "smooth" });
   };
 
-  // One category at a time: wait, then slide smoothly by one circle (right to left), and repeat.
+  // Slides slowly right to left, one circle after another with no stop in between.
   // The list is shown twice so it loops with no jump back to the start.
   // It pauses while someone touches, hovers or swipes, when it is off screen, and when the tab is hidden.
   useEffect(() => {
     const el = track.current;
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const WAIT = 2200, SLIDE = 1100; // ms still, ms moving
+    const WAIT = 0, SLIDE = 2600; // no stop between circles; each circle takes 2.6s to slide past
     let visible = false, raf = 0, timer = 0;
-    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const ease = (t: number) => t; // even speed, so the moves join into one slow, steady slide
     const slideOne = () => {
       const w = loopWidth();
       if (!visible || document.hidden || Date.now() < pausedUntil.current || !w || el.scrollWidth <= el.clientWidth + 4) { timer = window.setTimeout(slideOne, 600); return; }
@@ -59,7 +59,7 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
     };
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
     io.observe(el);
-    timer = window.setTimeout(slideOne, WAIT);
+    timer = window.setTimeout(slideOne, 1500);
     return () => { cancelAnimationFrame(raf); clearTimeout(timer); io.disconnect(); };
   }, [categories.length]);
 
