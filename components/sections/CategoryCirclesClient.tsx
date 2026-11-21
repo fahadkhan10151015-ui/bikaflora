@@ -34,8 +34,9 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
     const el = track.current;
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const SPEED = 35; // px per second
-    let raf = 0, last = 0, visible = true, pos = el.scrollLeft, held = false;
+    let raf = 0, last = 0, visible = false, pos = el.scrollLeft, held = false, started = false;
     const tick = (t: number) => {
+      if (!visible) return; // stopped until it scrolls back into view
       raf = requestAnimationFrame(tick);
       const dt = last ? Math.min(t - last, 50) : 0;
       last = t;
@@ -47,10 +48,17 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
       if (pos >= w) pos -= w;
       el.scrollLeft = pos;
     };
-    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
-    io.observe(el);
-    raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+    // The loop only runs while the row is on screen, and only after the page has finished loading,
+    // so it never competes with the first paint (it was costing phones a lot of main-thread time).
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      cancelAnimationFrame(raf);
+      if (visible && started) { last = 0; raf = requestAnimationFrame(tick); }
+    });
+    let wait = 0;
+    const start = () => { wait = window.setTimeout(() => { started = true; io.observe(el); }, 2500); };
+    if (document.readyState === "complete") start(); else window.addEventListener("load", start, { once: true });
+    return () => { cancelAnimationFrame(raf); clearTimeout(wait); window.removeEventListener("load", start); io.disconnect(); };
   }, [categories.length]);
 
   const pause = () => (pausedUntil.current = Date.now() + 1500);

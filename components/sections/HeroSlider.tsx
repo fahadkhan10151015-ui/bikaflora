@@ -2,7 +2,7 @@
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
-import Image, { getImageProps } from "next/image";
+import Image from "next/image";
 import { HERO_BG_MOBILE } from "@/lib/images";
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import Petals from "./Petals";
@@ -182,7 +182,6 @@ export default function HeroSlider() {
     const n = (a + d + total) % total;
     return mobile && n === 0 ? (d > 0 ? 1 : total - 1) : n;
   });
-  const first = getImageProps({ src: slides[0].image, alt: slides[0].alt, width: 500, height: 500, quality: 80 }).props;
   const s = isVideo ? videoSlide : slides[active - 1];
 
   return (
@@ -277,13 +276,8 @@ export default function HeroSlider() {
         </div>
       </div>
       <div className={`order-1 lg:order-2 transition-opacity duration-700 ${isVideo ? "md:opacity-0 md:pointer-events-none" : "opacity-100"}`}>
-        {ready ? <HeroStage slides={slides} active={isVideo ? -1 : active - 1} /> : (
-          <div className="relative w-full max-w-[560px] aspect-square mx-auto">
-            {/* Phones: the red rose heart shows straight away, in the same spot the animated stage puts it. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img {...first} alt={slides[0].alt} loading="eager" fetchPriority="high" decoding="async" className="md:hidden absolute inset-[10%] w-[80%] h-[80%] object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)]" />
-          </div>
-        )}
+        {/* In the page from the start (no swap later), so on phones the first bouquet photo is the LCP image and paints early. */}
+        <HeroStage slides={slides} active={isVideo ? -1 : active - 1} firstOnPhones />
       </div>
       </div>
     </section>
