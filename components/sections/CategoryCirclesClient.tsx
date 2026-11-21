@@ -5,12 +5,11 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/** "Shop by category": round photos that glide slowly right to left on their own; customers can also swipe or use the arrows. */
+/** "Shop by category": round photos that slide one by one, right to left, on their own; customers can also swipe or use the arrows. */
 export default function CategoryCirclesClient({ compact = false, categories }: { compact?: boolean; categories: { slug: string; name: string; image: string }[] }) {
   const track = useRef<HTMLDivElement>(null);
   const pausedUntil = useRef(0);
 
-  const pos = useRef(0);
   const loopWidth = () => {
     const el = track.current;
     const n = categories.length;
@@ -29,28 +28,39 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
     el.scrollBy({ left: dir * (item + 16), behavior: "smooth" });
   };
 
-  // Slow, continuous right-to-left glide (about 28px a second). The list is shown twice so it loops with no jump.
+  // One category at a time: wait, then slide smoothly by one circle (right to left), and repeat.
+  // The list is shown twice so it loops with no jump back to the start.
   // It pauses while someone touches, hovers or swipes, when it is off screen, and when the tab is hidden.
   useEffect(() => {
     const el = track.current;
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let raf = 0, last = 0, visible = false, wasPaused = true;
-    const SPEED = 28; // px per second
-    const tick = (t: number) => {
-      raf = requestAnimationFrame(tick);
-      const dt = last ? Math.min(t - last, 50) : 0;
-      last = t;
+    const WAIT = 2200, SLIDE = 1100; // ms still, ms moving
+    let visible = false, raf = 0, timer = 0;
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const slideOne = () => {
       const w = loopWidth();
-      if (!visible || document.hidden || Date.now() < pausedUntil.current || !w || el.scrollWidth <= el.clientWidth + 4) { wasPaused = true; return; }
-      if (wasPaused) { pos.current = el.scrollLeft; wasPaused = false; } // carry on from wherever the customer left it
-      pos.current += (SPEED * dt) / 1000;
-      if (pos.current >= w) pos.current -= w;
-      el.scrollLeft = pos.current;
+      if (!visible || document.hidden || Date.now() < pausedUntil.current || !w || el.scrollWidth <= el.clientWidth + 4) { timer = window.setTimeout(slideOne, 600); return; }
+      const a = el.querySelector("a") as HTMLElement | null;
+      const gap = parseFloat(getComputedStyle(el).columnGap) || 16;
+      const dist = (a?.offsetWidth || 100) + gap;
+      let from = el.scrollLeft;
+      if (from >= w) { from -= w; el.scrollLeft = from; } // hop to the same spot in the first copy (looks identical)
+      // Line up with the nearest circle so every move ends neatly on one.
+      const target = Math.round((from + dist) / dist) * dist;
+      const t0 = performance.now();
+      const frame = (t: number) => {
+        if (Date.now() < pausedUntil.current) { timer = window.setTimeout(slideOne, 600); return; } // customer took over
+        const k = Math.min((t - t0) / SLIDE, 1);
+        el.scrollLeft = from + (target - from) * ease(k);
+        if (k < 1) raf = requestAnimationFrame(frame);
+        else timer = window.setTimeout(slideOne, WAIT);
+      };
+      raf = requestAnimationFrame(frame);
     };
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
     io.observe(el);
-    raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+    timer = window.setTimeout(slideOne, WAIT);
+    return () => { cancelAnimationFrame(raf); clearTimeout(timer); io.disconnect(); };
   }, [categories.length]);
 
   const pause = () => (pausedUntil.current = Date.now() + 4000);
