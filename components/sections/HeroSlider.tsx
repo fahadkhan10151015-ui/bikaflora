@@ -198,7 +198,7 @@ export default function HeroSlider() {
           the screen paints early. Loading it late made it the LCP element (6-12 s on slow 4G). */}
       <div className={`md:hidden absolute inset-0 transition-opacity duration-[1400ms] ${active <= 1 ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={HERO_BG_MOBILE(slides[0].bg)} alt="" width={640} height={427} fetchPriority="low" decoding="async"
+        <img src={HERO_BG_MOBILE(slides[0].bg)} alt="" width={128} height={85} decoding="async"
           className={`absolute inset-0 w-full h-full object-cover object-center opacity-80 ${active === 1 ? "hero-bg-zoom" : ""}`} />
       </div>
       {ready && slides.map((sl, i) => (
