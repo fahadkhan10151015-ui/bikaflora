@@ -133,9 +133,11 @@ h1, h2, h3, .font-serif { font-family: var(--font-serif); font-weight: 600; lett
 .hero-float { animation: float 6s ease-in-out infinite; }
 .hero-shadow { animation: shadow-pulse 6s ease-in-out infinite; }
 .animate-spin-slow { animation: spin-slow 40s linear infinite; }
+/* Hero text ring: starts turning once the page has loaded (data-live is set then), on its own GPU layer. */
+[data-live] .hero-ring { animation: spin-slow 40s linear infinite; will-change: transform; }
 @keyframes twinkle { 0%,100% { opacity: 0; transform: scale(.4) rotate(0deg) } 50% { opacity: 1; transform: scale(1) rotate(45deg) } }
 .sparkle { animation: twinkle 3.2s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .hero-float, .hero-shadow, .animate-spin-slow { animation: none } }
+@media (prefers-reduced-motion: reduce) { .hero-float, .hero-shadow, .animate-spin-slow, [data-live] .hero-ring { animation: none } }
 
 /* ---------- "How it's made" animation (12s loop, plays only when visible) ---------- */
 .craft :is(.craft-turn, .craft-wrap, .craft-bloom, .craft-ribbon, .craft-flash, .craft-badge-photo, .craft-badge-van, .craft-step, .craft-step-icon) {
@@ -287,3 +289,6 @@ html.dark .prose-blog blockquote { background: rgb(255 255 255 / .05); }
   to { opacity: 1; translate: 0 0; scale: 1; }
 }
 @keyframes card-img-in { from { scale: 1.18; } to { scale: 1; } }
+
+/* Orbiting hero flowers stay hidden until their animation starts (after the page has loaded). */
+.hero-orbiter { opacity: 0; }

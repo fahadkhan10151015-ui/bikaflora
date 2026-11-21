@@ -55,11 +55,21 @@ export default function HeroStage({ slides, active, firstOnPhones = false }: { s
         node.style.opacity = String(0.5 + (depth + 1) * 0.25);
         node.style.filter = depth < -0.2 ? `blur(${(-depth * 2).toFixed(1)}px)` : "none";
       });
-      raf = requestAnimationFrame(tick);
+      if (on) raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    // The orbit/tilt loop changes styles every frame, which is heavy on phones. Start it only once the page has
+    // fully loaded (plus a short pause), and only while the hero is on screen, so the first paint (LCP) is never held up.
+    let on = false, visible = true, started = false, wait = 0;
+    const run = () => { const want = started && visible && !document.hidden; if (want && !on) { on = true; raf = requestAnimationFrame(tick); } else if (!want && on) { on = false; cancelAnimationFrame(raf); } };
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); });
+    io.observe(el);
+    document.addEventListener("visibilitychange", run);
+    const begin = () => { wait = window.setTimeout(() => { started = true; el.dataset.live = "1"; run(); }, 1500); };
+    if (document.readyState === "complete") begin(); else window.addEventListener("load", begin, { once: true });
     return () => {
-      cancelAnimationFrame(raf);
+      on = false; cancelAnimationFrame(raf); clearTimeout(wait); io.disconnect();
+      window.removeEventListener("load", begin);
+      document.removeEventListener("visibilitychange", run);
       window.removeEventListener("pointermove", onMove);
     };
   }, []);
@@ -72,12 +82,14 @@ export default function HeroStage({ slides, active, firstOnPhones = false }: { s
       <div className="absolute inset-[3%] rounded-full border border-white/10" />
 
       {/* rotating text ring */}
-      <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full animate-spin-slow">
+      <div className="absolute inset-0 hero-ring">
+      <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full">
         <defs><path id="hero-ring" d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0" /></defs>
         <text fill="#e2c98f" fontSize="7" letterSpacing="3">
           <textPath href="#hero-ring" textLength="560" lengthAdjust="spacing">{RING_TEXT}</textPath>
         </text>
       </svg>
+      </div>
 
       {/* twinkling sparkles */}
       {sparkles.map((s, i) => (
@@ -87,7 +99,7 @@ export default function HeroStage({ slides, active, firstOnPhones = false }: { s
       {/* orbiting flowers: the same kinds of flowers as in the bouquet on show */}
       {Array.from({ length: slots }, (_, i) => (
         <div key={i} ref={(n) => { orbit.current[i] = n; }}
-          className="absolute left-1/2 top-[55%] w-[14%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)]">
+          className="hero-orbiter absolute left-1/2 top-[55%] w-[14%] aspect-square will-change-transform drop-shadow-[0_10px_14px_rgba(0,0,0,.35)]">
           {slides.map((sl, si) => (
             <div key={si} className={`absolute inset-0 transition-opacity duration-700 [&>svg]:w-full [&>svg]:h-full ${si === active ? "opacity-100" : "opacity-0"}`}>
               {sl.orbiters[i % sl.orbiters.length]}
