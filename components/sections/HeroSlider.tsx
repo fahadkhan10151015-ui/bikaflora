@@ -3,6 +3,7 @@ import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
 import { useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
+import { HERO_BG_MOBILE } from "@/lib/images";
 import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import Petals from "./Petals";
 import { siteImages } from "@/lib/images";
@@ -99,7 +100,14 @@ export default function HeroSlider() {
     const m = window.matchMedia("(max-width: 767px)");
     const on = () => {
       setMobile(m.matches);
-      if (m.matches) { auto.current = true; setReady(true); setActive((a) => (a === 0 ? 1 : a)); }
+      if (m.matches) {
+        auto.current = true;
+        setActive((a) => (a === 0 ? 1 : a));
+        // Keep the plain first picture (already in the page) until the page has fully loaded, then bring in the animated stage.
+        // Swapping it earlier made a fresh, late-loading image the LCP element on phones.
+        const later = () => setTimeout(() => setReady(true), 2500);
+        if (document.readyState === "complete") later(); else window.addEventListener("load", later, { once: true });
+      }
     };
     on();
     m.addEventListener("change", on);
@@ -107,9 +115,9 @@ export default function HeroSlider() {
   }, []);
   useEffect(() => {
     if (active === 0) return;
-    setReady(true);
-    // The automatic switch on phones looks identical to the first paint, so no entry animation for it.
+    // The automatic switch on phones looks identical to the first paint, so no entry animation (and no stage swap yet).
     if (auto.current) { auto.current = false; return; }
+    setReady(true);
     setChanged(true);
   }, [active]);
   // Phones (portrait) get a sharp vertical edit (720x1280, 2 MB); laptops 1280p (2.1 MB); big / retina screens 1080p (3.2 MB). No sound track.
@@ -187,8 +195,15 @@ export default function HeroSlider() {
         touchX.current = null;
       }}>
       {/* backgrounds: one per slide, cross-fading with a slow zoom */}
+      {/* Phones: the first slide's background is in the page from the start (small, preloaded), so the biggest picture on
+          the screen paints early. Loading it late made it the LCP element (6-12 s on slow 4G). */}
+      <div className={`md:hidden absolute inset-0 transition-opacity duration-[1400ms] ${active <= 1 ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={HERO_BG_MOBILE(slides[0].bg)} alt="" width={640} height={427} fetchPriority="high" decoding="async"
+          className={`absolute inset-0 w-full h-full object-cover object-center opacity-80 ${active === 1 ? "hero-bg-zoom" : ""}`} />
+      </div>
       {ready && slides.map((sl, i) => (
-        <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+        <div key={sl.bg} className={`absolute inset-0 transition-opacity duration-[1400ms] ${i === 0 ? "max-md:hidden " : ""}${i + 1 === active ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
           <FillImage src={sl.bg} alt="" w={1080} h={720} quality={70}
             className={`object-cover object-center opacity-80 ${i + 1 === active ? "hero-bg-zoom" : ""}`} />
         </div>
@@ -266,7 +281,7 @@ export default function HeroSlider() {
           <div className="relative w-full max-w-[560px] aspect-square mx-auto">
             {/* Phones: the red rose heart shows straight away, in the same spot the animated stage puts it. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img {...first} alt={slides[0].alt} fetchPriority="high" decoding="async" className="md:hidden absolute inset-[10%] w-[80%] h-[80%] object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)]" />
+            <img {...first} alt={slides[0].alt} loading="eager" fetchPriority="high" decoding="async" className="md:hidden absolute inset-[10%] w-[80%] h-[80%] object-contain drop-shadow-[0_30px_40px_rgba(5,10,25,.6)]" />
           </div>
         )}
       </div>

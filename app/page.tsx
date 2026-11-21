@@ -1,3 +1,4 @@
+import { HERO_BG_MOBILE, siteImages } from "@/lib/images";
 import { getImageProps } from "next/image";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
@@ -22,7 +23,6 @@ import Faq from "@/components/sections/Faq";
 import MomentsCarousel from "@/components/sections/MomentsCarousel";
 import WhatsAppButton from "@/components/whatsapp/WhatsAppButton";
 import { site } from "@/lib/site";
-import { siteImages } from "@/lib/images";
 import { pageMeta } from "@/lib/seo";
 
 const c = pageCopy.home;
@@ -47,6 +47,7 @@ export default function Home() {
   return (
     <>
       {/* Phones start on the red rose heart photo (no video), so that is the picture to fetch first there. */}
+      <link rel="preload" as="image" href={HERO_BG_MOBILE(siteImages.klNight)} media="(max-width: 767px)" fetchPriority="high" />
       <link rel="preload" as="image" imageSrcSet={heroRose.srcSet} href={heroRose.src} media="(max-width: 767px)" fetchPriority="high" />
       <link rel="preload" as="image" href="/video/hero-v4-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}

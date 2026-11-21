@@ -16,3 +16,6 @@ export const siteImages = {
   klTowers: "/images/site/kl-towers.webp",
   klCity: "/images/site/kl-city.webp",
 };
+
+/** Small, fixed-size version of a hero background for phones (it sits behind a dark gradient, so 640px is plenty). */
+export const HERO_BG_MOBILE = (src: string) => `/_next/image?url=${encodeURIComponent(src)}&w=640&q=60`;
