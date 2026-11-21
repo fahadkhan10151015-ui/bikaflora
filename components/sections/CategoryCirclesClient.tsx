@@ -5,32 +5,55 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/** "Shop by category": round photos that slide by themselves; customers can also swipe or use the arrows. */
+/** "Shop by category": round photos that glide slowly right to left on their own; customers can also swipe or use the arrows. */
 export default function CategoryCirclesClient({ compact = false, categories }: { compact?: boolean; categories: { slug: string; name: string; image: string }[] }) {
   const track = useRef<HTMLDivElement>(null);
   const pausedUntil = useRef(0);
+
+  const pos = useRef(0);
+  const loopWidth = () => {
+    const el = track.current;
+    const n = categories.length;
+    if (!el || el.children.length < n * 2) return 0;
+    return (el.children[n] as HTMLElement).offsetLeft - (el.children[0] as HTMLElement).offsetLeft;
+  };
 
   const step = (dir: 1 | -1) => {
     const el = track.current;
     if (!el) return;
     const item = el.querySelector("a")?.getBoundingClientRect().width || 100;
-    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
-    if (dir === 1 && atEnd) el.scrollTo({ left: 0, behavior: "smooth" });
-    else el.scrollBy({ left: dir * (item + 16), behavior: "smooth" });
+    const w = loopWidth();
+    // Jump to the matching spot in the other copy first, so the arrows never hit an end.
+    if (w && dir === -1 && el.scrollLeft < item + 20) el.scrollLeft += w;
+    if (w && dir === 1 && el.scrollLeft >= w) el.scrollLeft -= w;
+    el.scrollBy({ left: dir * (item + 16), behavior: "smooth" });
   };
 
+  // Slow, continuous right-to-left glide (about 28px a second). The list is shown twice so it loops with no jump.
+  // It pauses while someone touches, hovers or swipes, when it is off screen, and when the tab is hidden.
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-    const id = setInterval(() => {
-      const el = track.current;
-      if (!el || Date.now() < pausedUntil.current || el.scrollWidth <= el.clientWidth + 4) return;
-      step(1);
-    }, 2600);
-    return () => clearInterval(id);
-  }, []);
+    const el = track.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0, last = 0, visible = false, wasPaused = true;
+    const SPEED = 28; // px per second
+    const tick = (t: number) => {
+      raf = requestAnimationFrame(tick);
+      const dt = last ? Math.min(t - last, 50) : 0;
+      last = t;
+      const w = loopWidth();
+      if (!visible || document.hidden || Date.now() < pausedUntil.current || !w || el.scrollWidth <= el.clientWidth + 4) { wasPaused = true; return; }
+      if (wasPaused) { pos.current = el.scrollLeft; wasPaused = false; } // carry on from wherever the customer left it
+      pos.current += (SPEED * dt) / 1000;
+      if (pos.current >= w) pos.current -= w;
+      el.scrollLeft = pos.current;
+    };
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
+    io.observe(el);
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+  }, [categories.length]);
 
-  const pause = () => (pausedUntil.current = Date.now() + 7000);
+  const pause = () => (pausedUntil.current = Date.now() + 4000);
 
   return (
     <section className={`container-x ${compact ? "mt-6" : "mt-10 md:mt-14"}`} aria-labelledby="shop-by-category">
@@ -44,10 +67,12 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
           <button onClick={() => { pause(); step(1); }} className="w-10 h-10 rounded-full border border-brand/25 grid place-items-center hover:bg-blush" aria-label="More categories"><ChevronRight className="w-5 h-5" /></button>
         </div>
       </div>
-      <div ref={track} onPointerDown={pause} onTouchStart={pause} onMouseEnter={pause} onWheel={pause}
-        className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-4 md:gap-7 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {categories.map((c) => (
-          <Link key={c.slug} href={`/category/${c.slug}`} className="group shrink-0 w-[76px] sm:w-[100px] md:w-[124px] text-center">
+      <div ref={track} onPointerDown={pause} onTouchStart={pause} onTouchMove={pause} onMouseEnter={pause} onMouseMove={pause} onWheel={pause}
+        className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-4 md:gap-7 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {[...categories, ...categories].map((c, i) => {
+          const copy = i >= categories.length; // second copy is only for the seamless loop
+          return (
+          <Link key={c.slug + (copy ? "-2" : "")} href={`/category/${c.slug}`} aria-hidden={copy || undefined} tabIndex={copy ? -1 : undefined} className="group shrink-0 w-[76px] sm:w-[100px] md:w-[124px] text-center">
             <span className="block p-[3px] rounded-full bg-gradient-to-br from-gold via-petal to-brand shadow-md shadow-brand/10 group-hover:scale-105 transition">
               <span className="relative block aspect-square rounded-full overflow-hidden border-[3px] border-cream bg-blush">
                 <FillImage src={c.image} alt={c.name} w={124} h={124} className="object-cover group-hover:scale-110 transition duration-500" />
@@ -55,7 +80,8 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
             </span>
             <span className="mt-2 block text-[11px] sm:text-sm font-medium leading-tight line-clamp-2 group-hover:text-brand">{c.name}</span>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
