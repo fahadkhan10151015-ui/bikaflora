@@ -268,3 +268,22 @@ html.dark .cat-hero .bg-white\/80 { background-color: rgb(255 255 255 / .08); bo
 html.dark .prose-blog .key-takeaways { background: #151c2d; }
 html.dark .prose-blog .quick-answers { background: rgb(255 255 255 / .05); }
 html.dark .prose-blog blockquote { background: rgb(255 255 255 / .05); }
+
+/* Product cards: fade up, settle and the photo zooms out as each card scrolls into view.
+   Pure CSS (scroll-driven), so no extra JavaScript. Uses translate/scale (not transform) so the hover tilt still works.
+   Browsers without support simply show the cards as normal. Cards already on screen at load are shown at once. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .card-in { animation: card-in linear both; animation-timeline: view(); animation-range: entry 0% entry 75%; }
+    .card-in:nth-child(4n+2), .card-in:nth-child(2n+2) { animation-range: entry 8% entry 83%; }
+    .card-in:nth-child(4n+3) { animation-range: entry 14% entry 88%; }
+    .card-in:nth-child(4n+4) { animation-range: entry 20% entry 94%; }
+    .card-in-img img { animation: card-img-in linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+  }
+}
+@keyframes card-in {
+  from { opacity: 0; translate: 0 48px; scale: .92; }
+  60% { opacity: 1; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+@keyframes card-img-in { from { scale: 1.18; } to { scale: 1; } }

@@ -13,9 +13,9 @@ import HeartButton from "@/components/favourites/HeartButton";
 export default function ProductCard({ p, priority = false }: { p: CardItem; priority?: boolean }) {
   const second = p.images[1];
   return (
-    <div className="group tilt bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-blush-2/70 flex flex-col h-full">
+    <div className="card-in group tilt bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-blush-2/70 flex flex-col h-full">
       <div className="relative">
-        <Link href={`/product/${p.slug}`} className="relative block aspect-square overflow-hidden bg-blush">
+        <Link href={`/product/${p.slug}`} className="card-in-img relative block aspect-square overflow-hidden bg-blush">
           <Photo src={p.images[0]} alt={`${p.name} – soap flower bouquet delivery KL & Selangor`} w={320} h={320} sizes="(max-width: 639px) 47vw, (max-width: 1023px) 31vw, 290px" quality={70}
              imgClassName="transition duration-700 group-hover:scale-105" priority={priority} />
           {second && (
