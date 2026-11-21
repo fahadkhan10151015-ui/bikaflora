@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/** "Shop by category": round photos that slide one by one, right to left, on their own; customers can also swipe or use the arrows. */
+/** "Shop by category": round photos that move slowly and continuously right to left; customers can also swipe or use the arrows. */
 export default function CategoryCirclesClient({ compact = false, categories }: { compact?: boolean; categories: { slug: string; name: string; image: string }[] }) {
   const track = useRef<HTMLDivElement>(null);
   const pausedUntil = useRef(0);
@@ -28,42 +28,32 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
     el.scrollBy({ left: dir * (item + 16), behavior: "smooth" });
   };
 
-  // Slides slowly right to left, one circle after another with no stop in between.
-  // The list is shown twice so it loops with no jump back to the start.
-  // It pauses while someone touches, hovers or swipes, when it is off screen, and when the tab is hidden.
+  // Moves slowly and continuously right to left, never stopping on its own (about 35px a second).
+  // The list is shown twice so it loops with no jump. It only waits while a customer is actually swiping it.
   useEffect(() => {
     const el = track.current;
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const WAIT = 0, SLIDE = 2600; // no stop between circles; each circle takes 2.6s to slide past
-    let visible = false, raf = 0, timer = 0;
-    const ease = (t: number) => t; // even speed, so the moves join into one slow, steady slide
-    const slideOne = () => {
+    const SPEED = 35; // px per second
+    let raf = 0, last = 0, visible = true, pos = el.scrollLeft, held = false;
+    const tick = (t: number) => {
+      raf = requestAnimationFrame(tick);
+      const dt = last ? Math.min(t - last, 50) : 0;
+      last = t;
       const w = loopWidth();
-      if (!visible || document.hidden || Date.now() < pausedUntil.current || !w || el.scrollWidth <= el.clientWidth + 4) { timer = window.setTimeout(slideOne, 600); return; }
-      const a = el.querySelector("a") as HTMLElement | null;
-      const gap = parseFloat(getComputedStyle(el).columnGap) || 16;
-      const dist = (a?.offsetWidth || 100) + gap;
-      let from = el.scrollLeft;
-      if (from >= w) { from -= w; el.scrollLeft = from; } // hop to the same spot in the first copy (looks identical)
-      // Line up with the nearest circle so every move ends neatly on one.
-      const target = Math.round((from + dist) / dist) * dist;
-      const t0 = performance.now();
-      const frame = (t: number) => {
-        if (Date.now() < pausedUntil.current) { timer = window.setTimeout(slideOne, 600); return; } // customer took over
-        const k = Math.min((t - t0) / SLIDE, 1);
-        el.scrollLeft = from + (target - from) * ease(k);
-        if (k < 1) raf = requestAnimationFrame(frame);
-        else timer = window.setTimeout(slideOne, WAIT);
-      };
-      raf = requestAnimationFrame(frame);
+      if (!visible || document.hidden || !w || el.scrollWidth <= el.clientWidth + 4) return;
+      if (Date.now() < pausedUntil.current) { held = true; return; }
+      if (held) { pos = el.scrollLeft; held = false; } // carry on from where the customer left it
+      pos += (SPEED * dt) / 1000;
+      if (pos >= w) pos -= w;
+      el.scrollLeft = pos;
     };
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; });
     io.observe(el);
-    timer = window.setTimeout(slideOne, 1500);
-    return () => { cancelAnimationFrame(raf); clearTimeout(timer); io.disconnect(); };
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
   }, [categories.length]);
 
-  const pause = () => (pausedUntil.current = Date.now() + 4000);
+  const pause = () => (pausedUntil.current = Date.now() + 1500);
 
   return (
     <section className={`container-x ${compact ? "mt-6" : "mt-10 md:mt-14"}`} aria-labelledby="shop-by-category">
@@ -77,7 +67,7 @@ export default function CategoryCirclesClient({ compact = false, categories }: {
           <button onClick={() => { pause(); step(1); }} className="w-10 h-10 rounded-full border border-brand/25 grid place-items-center hover:bg-blush" aria-label="More categories"><ChevronRight className="w-5 h-5" /></button>
         </div>
       </div>
-      <div ref={track} onPointerDown={pause} onTouchStart={pause} onTouchMove={pause} onMouseEnter={pause} onMouseMove={pause} onWheel={pause}
+      <div ref={track} onPointerDown={pause} onTouchMove={pause} onWheel={pause}
         className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-4 md:gap-7 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[...categories, ...categories].map((c, i) => {
           const copy = i >= categories.length; // second copy is only for the seamless loop
