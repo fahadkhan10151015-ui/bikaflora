@@ -19,3 +19,6 @@ export const siteImages = {
 
 /** Small, fixed-size version of a hero background for phones (it sits behind a dark gradient, so 640px is plenty). */
 export const HERO_BG_MOBILE = (src: string) => `/_next/image?url=${encodeURIComponent(src)}&w=640&q=60`;
+
+/** The hero bouquet is about 300px wide on phones and up to 450px on desktop, so phones get a ~640px file instead of 1080px. */
+export const HERO_BOUQUET_SIZES = "(max-width: 767px) 300px, 450px";

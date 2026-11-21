@@ -1,4 +1,4 @@
-import { HERO_BG_MOBILE, siteImages } from "@/lib/images";
+import { HERO_BOUQUET_SIZES, siteImages } from "@/lib/images";
 import { getImageProps } from "next/image";
 import Link from "next/link";
 import FillImage from "@/components/ui/FillImage";
@@ -38,7 +38,7 @@ const reasons = [
   { icon: Truck, title: "KL & Selangor wide", text: "32 delivery areas, instant delivery or pre-order." },
 ];
 
-const heroRose = getImageProps({ src: "/images/hero/red-soap-rose-heart-large.webp", alt: "", width: 500, height: 500, quality: 80 }).props;
+const heroRose = getImageProps({ src: "/images/hero/red-soap-rose-heart-large.webp", alt: "", width: 500, height: 500, quality: 70, sizes: HERO_BOUQUET_SIZES }).props;
 
 export default function Home() {
   // Hero picture hints: React lifts these <link> tags into <head>, so the picture starts downloading straight away
@@ -47,8 +47,7 @@ export default function Home() {
   return (
     <>
       {/* Phones start on the red rose heart photo (no video), so that is the picture to fetch first there. */}
-      <link rel="preload" as="image" href={HERO_BG_MOBILE(siteImages.klNight)} media="(max-width: 767px)" fetchPriority="high" />
-      <link rel="preload" as="image" imageSrcSet={heroRose.srcSet} href={heroRose.src} media="(max-width: 767px)" fetchPriority="high" />
+      <link rel="preload" as="image" imageSrcSet={heroRose.srcSet} imageSizes={heroRose.sizes} href={heroRose.src} media="(max-width: 767px)" fetchPriority="high" />
       <link rel="preload" as="image" href="/video/hero-v4-poster.avif" type="image/avif" media="(min-width: 768px)" fetchPriority="high" />
       {/* HERO: 4 auto-changing slides (background + bouquet + flowers) */}
       <HeroSlider />
