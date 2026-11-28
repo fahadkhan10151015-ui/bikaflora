@@ -49,6 +49,8 @@ const base: Record<string, number> = {
   "pink-awakening-12-roses": 33,
   "12-pink-roses-heart-balloon": 22,
   "sunshine-lily-graduation-bouquet": 36,
+  "sunflower-rose-graduation-bouquet": 31,
+  "red-rose-convocation-bouquet": 25,
 };
 
 export const sold: Record<string, number> = { ...base };
